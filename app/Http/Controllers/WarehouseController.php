@@ -386,14 +386,37 @@ class WarehouseController extends Controller
     /**
      * Show verification list
      */
-    public function verifikasiIndex()
+    public function verifikasiIndex(Request $request)
     {
-        $incomingGoods = \App\Models\IncomingGood::with('supplier')
-            ->whereIn('status', ['Pending', 'Revised'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $query = \App\Models\IncomingGood::with(['supplier', 'items.product']);
 
-        return view('warehouse.verifikasi-index', compact('incomingGoods'));
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        } else if (!$request->has('status')) {
+            $query->whereIn('status', ['Pending', 'Revised']);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('receipt_number', 'like', "%{$search}%")
+                  ->orWhereHas('supplier', function($sq) use ($search) {
+                      $sq->where('company_name', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $incomingGoods = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        $stats = [
+            'pending' => \App\Models\IncomingGood::where('status', 'Pending')->count(),
+            'revised' => \App\Models\IncomingGood::where('status', 'Revised')->count(),
+            'verified' => \App\Models\IncomingGood::where('status', 'Verified')->count(),
+            'canceled' => \App\Models\IncomingGood::where('status', 'Canceled')->count(),
+        ];
+
+        return view('warehouse.verifikasi-index', compact('incomingGoods', 'stats'));
     }
 
     /**
@@ -414,7 +437,7 @@ class WarehouseController extends Controller
         $incomingGood = \App\Models\IncomingGood::findOrFail($id);
 
         $validated = $request->validate([
-            'action' => 'required|in:verify,revise',
+            'action' => 'required|in:verify,revise,cancel',
             'items' => 'required|array',
             'items.*.id' => 'required|exists:incoming_good_items,id',
             'items.*.quantity' => 'required|integer|min:0',
@@ -422,7 +445,12 @@ class WarehouseController extends Controller
 
         DB::beginTransaction();
         try {
-            if ($validated['action'] === 'verify') {
+            if ($validated['action'] === 'cancel') {
+                $incomingGood->status = 'Canceled';
+                $incomingGood->save();
+
+                $message = 'Penerimaan barang berhasil dibatalkan. Stok tidak ditambahkan.';
+            } else if ($validated['action'] === 'verify') {
                 $incomingGood->status = 'Verified';
                 $incomingGood->save();
 
@@ -439,7 +467,6 @@ class WarehouseController extends Controller
                     $product = $item->product;
                     $product->system_stock += $item->quantity;
                     $product->physical_stock += $item->quantity;
-                    // Note: optionally update price here if needed, but usually price is updated during storeIncomingGoods
                     $product->save();
                 }
 
