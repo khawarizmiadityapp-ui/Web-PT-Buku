@@ -212,7 +212,7 @@ class WarehouseController extends Controller
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'receipt_number' => 'required|string',
             'receive_date' => 'required|date',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'supplier_id' => 'required',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
@@ -230,11 +230,39 @@ class WarehouseController extends Controller
 
         DB::beginTransaction();
         try {
+            $supplierId = $validated['supplier_id'];
+            if ($supplierId === 'NEW' || $request->filled('new_supplier_name')) {
+                $newSupplierName = trim($request->input('new_supplier_name'));
+                if (!empty($newSupplierName)) {
+                    $supplierCode = 'SUP-' . strtoupper(substr(uniqid(), -5));
+                    $newSupplier = \App\Models\Supplier::create([
+                        'supplier_code' => $supplierCode,
+                        'name' => $newSupplierName,
+                        'company_name' => $newSupplierName,
+                        'phone' => '-',
+                        'status' => 'Aktif',
+                    ]);
+                    $supplierId = $newSupplier->id;
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Nama supplier baru tidak boleh kosong.',
+                    ], 422);
+                }
+            }
+
+            $notes = $request->input('notes');
+            if ($request->filled('manual_reference')) {
+                $manualRef = 'Ref Manual/SJ: ' . trim($request->input('manual_reference'));
+                $notes = $notes ? ($manualRef . ' | ' . $notes) : $manualRef;
+            }
+
             $incomingGood = \App\Models\IncomingGood::create([
                 'receipt_number' => $validated['receipt_number'],
                 'receive_date' => $validated['receive_date'],
-                'supplier_id' => $validated['supplier_id'],
+                'supplier_id' => $supplierId,
                 'status' => 'Pending',
+                'notes' => $notes,
             ]);
 
             foreach ($validated['items'] as $item) {

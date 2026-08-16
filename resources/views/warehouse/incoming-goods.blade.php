@@ -122,7 +122,7 @@
     </div>
 
     <!-- Main Form Card -->
-    <div class="card border-0 shadow-sm rounded-squircle overflow-hidden mb-4">
+    <div class="card border-0 shadow-sm rounded-squircle mb-4">
         <div class="card-header bg-white py-3.5 px-4 border-bottom d-flex align-items-center justify-content-between">
             <h5 class="fw-bold text-gray-900 mb-0 d-flex align-items-center gap-2">
                 <i class="fas fa-file-invoice-dollar text-primary"></i> Form Penerimaan Barang Fisik
@@ -136,22 +136,26 @@
                 @csrf
                 
                 <!-- Section Header 1: Document Header Info -->
-                <div class="bg-slate-50/80 p-3.5 rounded-3 border mb-4">
+                <div class="bg-slate-50/80 p-3.5 rounded-3 border mb-4 position-relative">
                     <div class="row g-3">
-                        <!-- PO Reference Select -->
+                        <!-- PO Reference Search Combobox -->
                         <div class="col-md-4">
                             <label class="form-label font-bold text-xs text-uppercase text-gray-700">
-                                <i class="fas fa-file-contract text-primary me-1"></i> Referensi PO (Opsional)
+                                <i class="fas fa-file-contract text-primary me-1"></i> Referensi PO / Surat Jalan (Opsional)
                             </label>
-                            <select class="form-select border-primary-subtle shadow-sm" id="poSelect" onchange="loadPOData(this)">
-                                <option value="">-- Tanpa PO (Input Manual) --</option>
-                                @foreach($purchaseOrders as $po)
-                                    <option value="{{ $po->id }}" data-po="{{ json_encode($po) }}">
-                                        {{ $po->po_number }} - {{ $po->supplier->name ?? ($po->supplier->company_name ?? 'Supplier') }} [{{ $po->status }}]
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="form-text text-xs text-muted">Pilih PO untuk mengisi supplier & item otomatis.</div>
+                            <div class="position-relative" id="poComboboxWrapper">
+                                <div class="input-group input-group-sm shadow-xs">
+                                    <span class="input-group-text bg-white text-muted border-end-0"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 text-xs font-semibold" id="poSearchInput" placeholder="Cari No. PO atau ketik Surat Jalan..." autocomplete="off" onfocus="renderPODropdown(this.value)" oninput="renderPODropdown(this.value)">
+                                    <button class="btn btn-outline-secondary border-start-0 d-none" type="button" id="btnClearPO" onclick="clearPOSelection()" title="Reset PO"><i class="fas fa-xmark"></i></button>
+                                </div>
+                                <input type="hidden" id="poSelect" name="purchase_order_id" value="">
+                                <input type="hidden" id="manualReference" name="manual_reference" value="">
+                                <div id="poSearchResults" class="dropdown-menu shadow-lg w-100 p-1 mt-1 border-0 rounded-3 overflow-auto" style="max-height: 250px; display: none; position: absolute; z-index: 1050;"></div>
+                            </div>
+                            <div class="mt-1.5" id="poSelectedBadge">
+                                <span class="text-xs text-muted"><i class="fas fa-info-circle me-1"></i>Ketik untuk cari PO atau nomor Surat Jalan manual.</span>
+                            </div>
                         </div>
 
                         <!-- Goods Receipt Number -->
@@ -170,17 +174,29 @@
                             <input type="date" class="form-control" name="receive_date" value="{{ date('Y-m-d') }}" required>
                         </div>
 
-                        <!-- Supplier -->
+                        <!-- Supplier Search Combobox -->
                         <div class="col-md-3">
-                            <label class="form-label font-bold text-xs text-uppercase text-gray-700">
-                                <i class="fas fa-building text-muted me-1"></i> Supplier <span class="text-danger">*</span>
-                            </label>
-                            <select class="form-select" name="supplier_id" id="supplierSelect" required>
-                                <option value="">-- Pilih Supplier --</option>
-                                @foreach($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">{{ $supplier->name ?? $supplier->company_name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label font-bold text-xs text-uppercase text-gray-700 mb-0">
+                                    <i class="fas fa-building text-muted me-1"></i> Supplier <span class="text-danger">*</span>
+                                </label>
+                                <button type="button" class="btn btn-link p-0 text-primary text-xs font-semibold text-decoration-none hover:underline" data-bs-toggle="modal" data-bs-target="#quickAddSupplierModal">
+                                    <i class="fas fa-plus-circle me-0.5"></i> + Detail Supplier
+                                </button>
+                            </div>
+                            <div class="position-relative" id="supplierComboboxWrapper">
+                                <div class="input-group input-group-sm shadow-xs">
+                                    <span class="input-group-text bg-white text-muted border-end-0"><i class="fas fa-search text-primary"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 text-xs font-semibold" id="supplierSearchInput" placeholder="Cari / ketik nama supplier..." autocomplete="off" onfocus="renderSupplierDropdown(this.value)" oninput="renderSupplierDropdown(this.value)" onclick="renderSupplierDropdown(this.value)">
+                                    <button class="btn btn-outline-secondary border-start-0 d-none" type="button" id="btnClearSupplier" onclick="clearSupplierSelection()" title="Reset Supplier"><i class="fas fa-xmark"></i></button>
+                                </div>
+                                <input type="hidden" name="supplier_id" id="supplierIdInput" value="">
+                                <input type="hidden" name="new_supplier_name" id="newSupplierNameInput" value="">
+                                <div id="supplierSearchResults" class="dropdown-menu shadow-lg w-100 p-1 mt-1 border-0 rounded-3 overflow-auto" style="max-height: 260px; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 99999 !important;"></div>
+                            </div>
+                            <div class="mt-1.5" id="supplierSelectedBadge">
+                                <span class="text-xs text-muted"><i class="fas fa-info-circle me-1"></i>Ketik nama supplier untuk mencari/membuat baru.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -468,96 +484,82 @@ function calculateSubtotal(elem) {
     updateGrandTotal();
 }
 
-function loadPOData(selectElem) {
-    const selectedOpt = selectElem.options[selectElem.selectedIndex];
-    if (!selectedOpt || !selectedOpt.value || !selectedOpt.dataset.po) return;
+function loadPODataFromObj(po) {
+    if (!po) return;
     
-    try {
-        const po = JSON.parse(selectedOpt.dataset.po);
-        if (!po) return;
+    // Fill items
+    if (po.items && po.items.length > 0) {
+        const tbody = document.getElementById('itemsTable');
+        tbody.innerHTML = '';
         
-        // Set supplier
-        if (po.supplier_id) {
-            document.getElementById('supplierSelect').value = po.supplier_id;
-        }
-        
-        // Fill items
-        if (po.items && po.items.length > 0) {
-            const tbody = document.getElementById('itemsTable');
-            tbody.innerHTML = '';
+        po.items.forEach((item, i) => {
+            let productOptions = '<option value="">-- Pilih Produk --</option>';
+            @foreach($products as $product)
+                productOptions += `<option value="{{ $product->id }}" 
+                    data-code="{{ addslashes($product->product_code) }}" 
+                    data-price="{{ $product->price }}"
+                    data-unit="{{ addslashes($product->unit ?? 'Pcs') }}"
+                    data-stock="{{ $product->physical_stock ?? $product->system_stock ?? 0 }}" ${ {{ $product->id }} == item.product_id ? 'selected' : '' }>
+                    {{ addslashes($product->product_name) }}
+                </option>`;
+            @endforeach
             
-            po.items.forEach((item, i) => {
-                let productOptions = '<option value="">-- Pilih Produk --</option>';
-                @foreach($products as $product)
-                    const isSel = {{ $product->id }} == item.product_id ? 'selected' : '';
-                    productOptions += `<option value="{{ $product->id }}" 
-                        data-code="{{ addslashes($product->product_code) }}" 
-                        data-price="{{ $product->price }}"
-                        data-unit="{{ addslashes($product->unit ?? 'Pcs') }}"
-                        data-stock="{{ $product->physical_stock ?? $product->system_stock ?? 0 }}" ${isSel}>
-                        {{ addslashes($product->product_name) }}
-                    </option>`;
-                @endforeach
-                
-                const itemPrice = item.price || item.unit_price || (item.product ? item.product.price : 0);
-                const itemCode = item.product ? item.product.product_code : '';
-                const itemUnit = item.product ? (item.product.unit || 'Pcs') : 'Pcs';
-                const itemStock = item.product ? (item.product.physical_stock ?? item.product.system_stock ?? 0) : 0;
-                const subtotal = item.quantity * itemPrice;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="text-center font-bold text-muted text-xs row-number">${i + 1}</td>
-                    <td>
-                        <select class="form-select form-select-sm product-select" name="items[${i}][product_id]" onchange="updateProductInfo(this)" required>
-                            ${productOptions}
-                        </select>
-                    </td>
-                    <td>
-                        <div class="d-flex flex-column gap-1">
-                            <input type="text" class="form-control form-control-sm code-input font-mono" value="${itemCode}" placeholder="Kode Barang / SKU" oninput="findProductByCode(this)">
-                            <div class="d-flex align-items-center justify-content-between text-xs px-0.5">
-                                <span class="text-muted text-xs stock-badge"><i class="fas fa-cubes text-info me-1"></i>Stok: ${itemStock}</span>
-                            </div>
+            const itemPrice = item.price || item.unit_price || (item.product ? item.product.price : 0);
+            const itemCode = item.product ? item.product.product_code : '';
+            const itemUnit = item.product ? (item.product.unit || 'Pcs') : 'Pcs';
+            const itemStock = item.product ? (item.product.physical_stock ?? item.product.system_stock ?? 0) : 0;
+            const subtotal = item.quantity * itemPrice;
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="text-center font-bold text-muted text-xs row-number">${i + 1}</td>
+                <td>
+                    <select class="form-select form-select-sm product-select" name="items[${i}][product_id]" onchange="updateProductInfo(this)" required>
+                        ${productOptions}
+                    </select>
+                </td>
+                <td>
+                    <div class="d-flex flex-column gap-1">
+                        <input type="text" class="form-control form-control-sm code-input font-mono" value="${itemCode}" placeholder="Kode Barang / SKU" oninput="findProductByCode(this)">
+                        <div class="d-flex align-items-center justify-content-between text-xs px-0.5">
+                            <span class="text-muted text-xs stock-badge"><i class="fas fa-cubes text-info me-1"></i>Stok: ${itemStock}</span>
                         </div>
-                    </td>
-                    <td>
-                        <div class="input-group input-group-sm">
-                            <input type="number" class="form-control text-center qty-input font-semibold" name="items[${i}][quantity]" value="${item.quantity}" min="1" onchange="calculateSubtotal(this)" onkeyup="calculateSubtotal(this)" required>
-                            <span class="input-group-text text-xs text-muted unit-label">${itemUnit}</span>
-                        </div>
-                    </td>
-                    <td>
-                        <input type="number" class="form-control form-control-sm text-end price-input font-mono" name="items[${i}][price]" value="${itemPrice}" min="0" step="100" onchange="calculateSubtotal(this)" onkeyup="calculateSubtotal(this)" required>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm text-end bg-light font-bold text-gray-900 subtotal-input font-mono" value="${formatNumber(subtotal)}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="removeItem(this)" title="Hapus Baris">
-                            <i class="fas fa-trash-can"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group input-group-sm">
+                        <input type="number" class="form-control text-center qty-input font-semibold" name="items[${i}][quantity]" value="${item.quantity}" min="1" onchange="calculateSubtotal(this)" onkeyup="calculateSubtotal(this)" required>
+                        <span class="input-group-text text-xs text-muted unit-label">${itemUnit}</span>
+                    </div>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm text-end price-input font-mono" name="items[${i}][price]" value="${itemPrice}" min="0" step="100" onchange="calculateSubtotal(this)" onkeyup="calculateSubtotal(this)" required>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm text-end bg-light font-bold text-gray-900 subtotal-input font-mono" value="${formatNumber(subtotal)}" readonly>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="removeItem(this)" title="Hapus Baris">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        renumberRows();
+        updateGrandTotal();
+        
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Item PO Berhasil Dimuat',
+                text: `Impor ${po.items.length} barang dari PO ${po.po_number}`,
+                showConfirmButton: false,
+                timer: 2500
             });
-            renumberRows();
-            updateGrandTotal();
-            
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Item PO Berhasil Dimuat',
-                    text: `Impor ${po.items.length} barang dari PO ${po.po_number}`,
-                    showConfirmButton: false,
-                    timer: 2500
-                });
-            }
         }
-    } catch (err) {
-        console.error('Error parsing PO data:', err);
     }
 }
 
@@ -593,27 +595,312 @@ function formatNumber(num) {
     return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+// --- Live Search Combobox Engine ---
+let rawSuppliersData = @json($suppliers);
+let rawPurchaseOrdersData = @json($purchaseOrders);
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Supplier Combobox Logic
+function renderSupplierDropdown(query = '') {
+    const dropdown = document.getElementById('supplierSearchResults');
+    if (!dropdown) return;
+    const q = (query || '').trim().toLowerCase();
+    
+    let matches = rawSuppliersData.filter(s => {
+        const name = (s.name || '').toLowerCase();
+        const company = (s.company_name || '').toLowerCase();
+        const code = (s.supplier_code || '').toLowerCase();
+        return name.includes(q) || company.includes(q) || code.includes(q);
+    });
+
+    let html = '';
+
+    if (q.length > 0) {
+        const exactMatch = rawSuppliersData.some(s => 
+            (s.name || '').toLowerCase() === q || (s.company_name || '').toLowerCase() === q
+        );
+        if (!exactMatch) {
+            html += `
+                <div class="dropdown-item py-2 px-3 text-primary font-semibold border-bottom cursor-pointer rounded-2 bg-blue-50/80 mb-1" onclick="selectNewSupplierFromSearch('${escapeHtml(query)}')">
+                    <i class="fas fa-plus-circle me-1.5 text-primary"></i> + Buat Supplier Baru: <strong class="text-indigo-700">"${escapeHtml(query)}"</strong>
+                </div>
+            `;
+        }
+    }
+
+    if (matches.length > 0) {
+        matches.forEach(s => {
+            const displayName = s.name || s.company_name;
+            const companySub = (s.company_name && s.company_name !== s.name) ? s.company_name : (s.city ? s.city : 'Supplier');
+            const codeStr = s.supplier_code ? s.supplier_code : '';
+            html += `
+                <div class="dropdown-item py-2.5 px-3 cursor-pointer rounded-2 mb-0.5 d-flex justify-content-between align-items-center hover:bg-slate-100" onclick="selectExistingSupplier(${s.id}, '${escapeHtml(displayName)}')">
+                    <div>
+                        <div class="fw-semibold text-gray-900 text-xs d-flex align-items-center gap-1.5">
+                            <i class="fas fa-building text-primary small"></i>
+                            <span>${escapeHtml(displayName)}</span>
+                        </div>
+                        <div class="text-muted text-xs ms-3.5" style="font-size: 11px;">${escapeHtml(companySub)} ${s.phone ? '• ' + escapeHtml(s.phone) : ''}</div>
+                    </div>
+                    <span class="badge bg-light text-secondary border font-mono text-xs">${escapeHtml(codeStr)}</span>
+                </div>
+            `;
+        });
+    } else if (q.length === 0) {
+        html += `<div class="px-3 py-2 text-muted text-xs"><i class="fas fa-search me-1"></i>Pilih supplier dari daftar atau ketik nama supplier baru...</div>`;
+    } else {
+        html += `<div class="px-3 py-2 text-muted text-xs">Tidak ada supplier terdaftar dengan nama <strong>"${escapeHtml(query)}"</strong>. Klik opsi di atas untuk membuatnya sebagai supplier baru.</div>`;
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.classList.add('show');
+    dropdown.style.setProperty('display', 'block', 'important');
+    dropdown.style.setProperty('z-index', '99999', 'important');
+}
+
+function selectExistingSupplier(id, name) {
+    document.getElementById('supplierIdInput').value = id;
+    document.getElementById('newSupplierNameInput').value = '';
+    document.getElementById('supplierSearchInput').value = name;
+    
+    const dropdown = document.getElementById('supplierSearchResults');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+        dropdown.style.display = 'none';
+    }
+    document.getElementById('btnClearSupplier').classList.remove('d-none');
+    
+    document.getElementById('supplierSelectedBadge').innerHTML = `
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill text-xs">
+            <i class="fas fa-building me-1"></i> ${escapeHtml(name)} (Supplier Terdaftar)
+        </span>
+    `;
+}
+
+function selectNewSupplierFromSearch(name) {
+    document.getElementById('supplierIdInput').value = 'NEW';
+    document.getElementById('newSupplierNameInput').value = name;
+    document.getElementById('supplierSearchInput').value = name;
+    
+    const dropdown = document.getElementById('supplierSearchResults');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+        dropdown.style.display = 'none';
+    }
+    document.getElementById('btnClearSupplier').classList.remove('d-none');
+    
+    document.getElementById('supplierSelectedBadge').innerHTML = `
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill text-xs">
+            <i class="fas fa-plus me-1"></i> Baru: ${escapeHtml(name)} (Didaftarkan saat simpan)
+        </span>
+    `;
+}
+
+function clearSupplierSelection() {
+    document.getElementById('supplierIdInput').value = '';
+    document.getElementById('newSupplierNameInput').value = '';
+    document.getElementById('supplierSearchInput').value = '';
+    
+    const dropdown = document.getElementById('supplierSearchResults');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+        dropdown.style.display = 'none';
+    }
+    document.getElementById('btnClearSupplier').classList.add('d-none');
+    document.getElementById('supplierSelectedBadge').innerHTML = '<span class="text-xs text-muted"><i class="fas fa-info-circle me-1"></i>Ketik nama supplier untuk mencari/membuat baru.</span>';
+}
+
+// PO Combobox Logic
+function renderPODropdown(query = '') {
+    const dropdown = document.getElementById('poSearchResults');
+    if (!dropdown) return;
+    const q = (query || '').trim().toLowerCase();
+
+    let matches = rawPurchaseOrdersData.filter(po => {
+        const poNum = (po.po_number || '').toLowerCase();
+        const suppName = po.supplier ? ((po.supplier.name || '') + ' ' + (po.supplier.company_name || '')).toLowerCase() : '';
+        const status = (po.status || '').toLowerCase();
+        return poNum.includes(q) || suppName.includes(q) || status.includes(q);
+    });
+
+    let html = '';
+
+    if (q.length > 0) {
+        html += `
+            <div class="dropdown-item py-2 px-3 text-indigo-700 font-semibold border-bottom cursor-pointer rounded-2 bg-indigo-50/80 mb-1" onclick="selectManualPORef('${escapeHtml(query)}')">
+                <i class="fas fa-file-signature me-1.5 text-indigo"></i> Gunakan Ref/Surat Jalan Manual: <strong class="text-indigo-900">"${escapeHtml(query)}"</strong>
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="dropdown-item py-2 px-3 text-muted font-normal border-bottom cursor-pointer rounded-2 mb-1" onclick="clearPOSelection()">
+                <i class="fas fa-minus-circle me-1.5"></i> -- Tanpa PO (Input Manual) --
+            </div>
+        `;
+    }
+
+    if (matches.length > 0) {
+        matches.forEach(po => {
+            const suppName = po.supplier ? (po.supplier.name || po.supplier.company_name) : 'Supplier';
+            html += `
+                <div class="dropdown-item py-2.5 px-3 cursor-pointer rounded-2 mb-0.5 d-flex justify-content-between align-items-center hover:bg-slate-100" onclick="selectPOItem(${po.id})">
+                    <div>
+                        <div class="fw-semibold text-gray-900 text-xs d-flex align-items-center gap-1.5">
+                            <i class="fas fa-file-contract text-primary small"></i>
+                            <span>${escapeHtml(po.po_number)}</span>
+                        </div>
+                        <div class="text-muted text-xs ms-3.5" style="font-size: 11px;">Supplier: ${escapeHtml(suppName)}</div>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary text-xs">${escapeHtml(po.status)}</span>
+                </div>
+            `;
+        });
+    } else if (q.length > 0) {
+        html += `<div class="px-3 py-2 text-muted text-xs">Tidak ada PO terdaftar yang cocok. Klik opsi di atas untuk menjadikannya Ref/Surat Jalan Manual.</div>`;
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.classList.add('show');
+    dropdown.style.setProperty('display', 'block', 'important');
+    dropdown.style.setProperty('z-index', '99999', 'important');
+}
+
+function selectPOItem(poId) {
+    const po = rawPurchaseOrdersData.find(p => p.id == poId);
+    if (!po) return;
+    
+    document.getElementById('poSelect').value = po.id;
+    document.getElementById('manualReference').value = '';
+    document.getElementById('poSearchInput').value = po.po_number;
+    
+    const dropdown = document.getElementById('poSearchResults');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+        dropdown.style.display = 'none';
+    }
+    document.getElementById('btnClearPO').classList.remove('d-none');
+    
+    const suppName = po.supplier ? (po.supplier.name || po.supplier.company_name) : 'Supplier';
+    document.getElementById('poSelectedBadge').innerHTML = `
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill text-xs">
+            <i class="fas fa-file-contract me-1"></i> ${escapeHtml(po.po_number)} (${escapeHtml(suppName)})
+        </span>
+    `;
+
+    // Auto select supplier if available in PO
+    if (po.supplier_id) {
+        selectExistingSupplier(po.supplier_id, suppName);
+    }
+    
+    // Fill items from PO
+    loadPODataFromObj(po);
+}
+
+function selectManualPORef(refText) {
+    document.getElementById('poSelect').value = '';
+    document.getElementById('manualReference').value = refText;
+    document.getElementById('poSearchInput').value = refText;
+    
+    const dropdown = document.getElementById('poSearchResults');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+        dropdown.style.display = 'none';
+    }
+    document.getElementById('btnClearPO').classList.remove('d-none');
+
+    document.getElementById('poSelectedBadge').innerHTML = `
+        <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-pill text-xs">
+            <i class="fas fa-file-invoice me-1"></i> Ref Manual: ${escapeHtml(refText)}
+        </span>
+    `;
+}
+
+function clearPOSelection() {
+    document.getElementById('poSelect').value = '';
+    document.getElementById('manualReference').value = '';
+    document.getElementById('poSearchInput').value = '';
+    
+    const dropdown = document.getElementById('poSearchResults');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+        dropdown.style.display = 'none';
+    }
+    document.getElementById('btnClearPO').classList.add('d-none');
+    document.getElementById('poSelectedBadge').innerHTML = '<span class="text-xs text-muted">Tanpa PO (Penerimaan Manual)</span>';
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    const suppWrapper = document.getElementById('supplierComboboxWrapper');
+    if (suppWrapper && !suppWrapper.contains(e.target)) {
+        const suppResults = document.getElementById('supplierSearchResults');
+        if (suppResults) {
+            suppResults.classList.remove('show');
+            suppResults.style.display = 'none';
+        }
+    }
+
+    const poWrapper = document.getElementById('poComboboxWrapper');
+    if (poWrapper && !poWrapper.contains(e.target)) {
+        const poResults = document.getElementById('poSearchResults');
+        if (poResults) {
+            poResults.classList.remove('show');
+            poResults.style.display = 'none';
+        }
+    }
+});
+
 // Handle Form Submit via AJAX & SweetAlert2
 document.getElementById('incomingGoodsForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const formData = new FormData(this);
-    const data = {
-        receipt_number: formData.get('receipt_number'),
-        receive_date: formData.get('receive_date'),
-        supplier_id: formData.get('supplier_id'),
-        items: []
-    };
+    let supplierId = document.getElementById('supplierIdInput') ? document.getElementById('supplierIdInput').value : '';
+    let newSupplierName = document.getElementById('newSupplierNameInput') ? document.getElementById('newSupplierNameInput').value.trim() : '';
+    const typedSupplierSearch = document.getElementById('supplierSearchInput') ? document.getElementById('supplierSearchInput').value.trim() : '';
 
-    if (!data.supplier_id) {
-        if (typeof Swal !== 'undefined') {
-            Swal.fire({ icon: 'warning', title: 'Supplier Belum Dipilih', text: 'Silakan pilih supplier penerimaan barang.', confirmButtonColor: '#4f46e5' });
+    // Auto detect typed supplier name if not explicitly selected from dropdown
+    if (!supplierId && typedSupplierSearch) {
+        const match = rawSuppliersData.find(s => 
+            (s.name || '').toLowerCase() === typedSupplierSearch.toLowerCase() ||
+            (s.company_name || '').toLowerCase() === typedSupplierSearch.toLowerCase()
+        );
+
+        if (match) {
+            supplierId = match.id;
         } else {
-            alert('Silakan pilih supplier penerimaan barang.');
+            supplierId = 'NEW';
+            newSupplierName = typedSupplierSearch;
+        }
+    }
+
+    if (!supplierId && !newSupplierName) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ icon: 'warning', title: 'Supplier Belum Dipilih', text: 'Silakan ketik nama supplier pada kolom pencarian.', confirmButtonColor: '#4f46e5' });
+        } else {
+            alert('Silakan pilih atau ketik supplier penerimaan barang.');
         }
         return;
     }
-    
+
+    const data = {
+        receipt_number: formData.get('receipt_number'),
+        receive_date: formData.get('receive_date'),
+        supplier_id: supplierId || 'NEW',
+        new_supplier_name: newSupplierName,
+        manual_reference: document.getElementById('manualReference') ? document.getElementById('manualReference').value : '',
+        items: []
+    };
+
     // Collect items
     const rows = document.querySelectorAll('#itemsTable tr');
     rows.forEach((row) => {
@@ -698,6 +985,127 @@ document.getElementById('incomingGoodsForm').addEventListener('submit', function
         }
     });
 });
+
+// Quick Add Supplier AJAX
+document.getElementById('quickSupplierForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnSaveQuickSupplier');
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...';
+
+    const data = {
+        name: document.getElementById('quickSupplierName').value,
+        company_name: document.getElementById('quickSupplierCompany').value,
+        phone: document.getElementById('quickSupplierPhone').value,
+        email: document.getElementById('quickSupplierEmail').value,
+        address: document.getElementById('quickSupplierAddress').value,
+    };
+
+    fetch('{{ route("suppliers.quickStore") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+        if (res.success && res.supplier) {
+            // Update rawSuppliersData array and select it!
+            rawSuppliersData.unshift(res.supplier);
+            selectExistingSupplier(res.supplier.id, res.supplier.name || res.supplier.company_name);
+
+            // Hide modal & reset form
+            const modalEl = document.getElementById('quickAddSupplierModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+                modal.hide();
+            } else {
+                const closeBtn = modalEl.querySelector('[data-bs-dismiss="modal"]');
+                if (closeBtn) closeBtn.click();
+            }
+            document.getElementById('quickSupplierForm').reset();
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Supplier Ditambahkan',
+                    text: `Supplier "${res.supplier.name}" berhasil ditambahkan dan dipilih.`,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+        } else {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ icon: 'error', title: 'Gagal', text: res.message || 'Gagal menyimpan supplier.' });
+            } else {
+                alert(res.message || 'Gagal menyimpan supplier.');
+            }
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+        console.error(err);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ icon: 'error', title: 'Terjadi Kesalahan', text: 'Gagal mengontak server.' });
+        } else {
+            alert('Terjadi kesalahan jaringan.');
+        }
+    });
+});
 </script>
+
+<!-- Quick Add Supplier Modal -->
+<div class="modal fade" id="quickAddSupplierModal" tabindex="-1" aria-labelledby="quickAddSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-squircle overflow-hidden">
+            <div class="modal-header bg-primary text-white py-3 px-4">
+                <h6 class="modal-title font-bold d-flex align-items-center gap-2" id="quickAddSupplierModalLabel">
+                    <i class="fas fa-truck-field"></i> Tambah Detail Supplier Baru
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="quickSupplierForm">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label font-semibold text-xs text-gray-700">Nama Supplier / Kontak <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="name" id="quickSupplierName" required placeholder="Contoh: PT Penerbit Harapan / Budi Santoso">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-semibold text-xs text-gray-700">Nama Perusahaan / Toko</label>
+                        <input type="text" class="form-control form-control-sm" name="company_name" id="quickSupplierCompany" placeholder="Contoh: CV Media Kita (Kosongkan jika sama)">
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label font-semibold text-xs text-gray-700">No. HP / Telepon</label>
+                            <input type="text" class="form-control form-control-sm" name="phone" id="quickSupplierPhone" placeholder="081234567890">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-semibold text-xs text-gray-700">Email</label>
+                            <input type="email" class="form-control form-control-sm" name="email" id="quickSupplierEmail" placeholder="supplier@example.com">
+                        </div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label font-semibold text-xs text-gray-700">Alamat Lengkap</label>
+                        <textarea class="form-control form-control-sm" name="address" id="quickSupplierAddress" rows="2" placeholder="Jl. Merdeka No. 123..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-slate-50 py-2.5 px-4 border-top">
+                    <button type="button" class="btn btn-light btn-sm px-3 border" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary btn-sm px-4" id="btnSaveQuickSupplier">
+                        <i class="fas fa-check me-1"></i> Simpan Supplier
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 

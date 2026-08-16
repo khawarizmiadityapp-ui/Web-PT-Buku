@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     // Suppliers Management
     Route::get('suppliers/export', [SupplierController::class, 'export'])->name('suppliers.export');
     Route::resource('suppliers', SupplierController::class);
+    Route::post('suppliers/quick-store', [SupplierController::class, 'quickStore'])->name('suppliers.quickStore');
     
     // Purchase Management (Purchase Orders)
     Route::get('purchases/export', [PurchaseController::class, 'export'])->name('purchases.export');

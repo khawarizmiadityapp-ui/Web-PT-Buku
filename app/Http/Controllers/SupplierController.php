@@ -78,6 +78,44 @@ class SupplierController extends Controller
     }
 
     /**
+     * Store a newly created supplier via AJAX quick modal
+     */
+    public function quickStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => implode(', ', $validator->errors()->all())
+            ], 422);
+        }
+
+        $supplierCode = 'SUP-' . strtoupper(substr(uniqid(), -5));
+        $supplier = Supplier::create([
+            'supplier_code' => $supplierCode,
+            'name' => $request->name,
+            'company_name' => $request->company_name ?: $request->name,
+            'phone' => $request->phone ?: '-',
+            'email' => $request->email,
+            'status' => 'Aktif',
+            'address' => $request->address,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier berhasil ditambahkan!',
+            'supplier' => $supplier,
+        ]);
+    }
+
+    /**
      * Show the form for editing the supplier
      */
     public function edit(Supplier $supplier)
