@@ -3,151 +3,153 @@
 @section('title', 'Verifikasi Barang Masuk - LogiBook WMS')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-4 py-4 max-w-7xl mx-auto">
     <!-- Header Page & Title -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-            <div class="d-flex align-items-center gap-2 mb-1">
-                <span class="badge bg-warning-subtle text-warning-emphasis fw-semibold px-2.5 py-1 rounded-pill text-xs d-inline-flex align-items-center gap-1">
-                    <i class="fas fa-clipboard-check"></i> Inbound Quality Check
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full text-xs inline-flex items-center gap-1.5 border border-indigo-100">
+                    <i class="fas fa-clipboard-check text-indigo-500"></i> Inbound Quality Check
                 </span>
-                <span class="text-muted text-xs">• LogiBook WMS</span>
+                <span class="text-slate-300">•</span>
+                <span class="text-slate-500 text-xs font-medium">LogiBook WMS</span>
             </div>
-            <h1 class="h3 font-bold text-gray-900 mb-0">Verifikasi Barang Masuk</h1>
-            <p class="text-muted text-sm mb-0">Pemeriksaan fisik dan pencocokan kuantitas barang sebelum stok ditambahkan.</p>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Verifikasi Barang Masuk</h1>
+            <p class="text-slate-500 text-sm mt-0.5">Pemeriksaan fisik dan pencocokan kuantitas barang sebelum stok resmi ditambahkan.</p>
         </div>
         <div>
-            <a href="{{ route('warehouse.incoming-goods') }}" class="btn btn-primary rounded-3 shadow-sm d-inline-flex align-items-center gap-2 px-3 py-2 text-sm font-semibold">
-                <i class="fas fa-plus-circle"></i> Input Barang Masuk Baru
+            <a href="{{ route('warehouse.incoming-goods') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm shadow-indigo-500/20 active:scale-95">
+                <i class="fas fa-plus-circle"></i>
+                <span>Input Barang Masuk Baru</span>
             </a>
         </div>
     </div>
 
-    <!-- Live KPI Summary Counters -->
-    <div class="row g-3 mb-4">
+    <!-- Live KPI Summary Counters (4 Cards) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         <!-- Card 1: Menunggu -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Pending']) }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-squircle p-3.5 bg-white hover:shadow-md transition-all border-start border-4 border-warning h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="text-muted text-xs font-semibold text-uppercase tracking-wider">Menunggu Verifikasi</div>
-                            <div class="h2 font-bold text-gray-900 mb-0 mt-1">{{ $stats['pending'] ?? 0 }}</div>
-                            <div class="text-xs text-warning font-medium mt-1 d-flex align-items-center gap-1">
-                                <i class="fas fa-clock"></i> Perlu Pencocokan Fisik
-                            </div>
-                        </div>
-                        <div class="rounded-3 bg-amber-50 text-amber-600 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-boxes-packing fa-lg"></i>
+        <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Pending']) }}" class="block group text-decoration-none">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-blue-300 transition-all h-full relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">MENUNGGU VERIFIKASI</p>
+                        <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['pending'] ?? 0 }}</h3>
+                        <div class="text-xs text-blue-600 font-medium flex items-center gap-1 mt-1">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                            </span>
+                            Perlu Pemeriksaan Fisik
                         </div>
                     </div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-boxes-packing text-xl"></i>
+                    </div>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
 
         <!-- Card 2: Direvisi -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Revised']) }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-squircle p-3.5 bg-white hover:shadow-md transition-all border-start border-4 border-info h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="text-muted text-xs font-semibold text-uppercase tracking-wider">Telah Direvisi</div>
-                            <div class="h2 font-bold text-gray-900 mb-0 mt-1">{{ $stats['revised'] ?? 0 }}</div>
-                            <div class="text-xs text-info font-medium mt-1 d-flex align-items-center gap-1">
-                                <i class="fas fa-pen-to-square"></i> Penyesuaian Qty
-                            </div>
-                        </div>
-                        <div class="rounded-3 bg-blue-50 text-blue-600 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-edit fa-lg"></i>
+        <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Revised']) }}" class="block group text-decoration-none">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-indigo-300 transition-all h-full relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TELAH DIREVISI</p>
+                        <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['revised'] ?? 0 }}</h3>
+                        <div class="text-xs text-indigo-600 font-medium flex items-center gap-1 mt-1">
+                            <i class="fas fa-pen-to-square"></i> Penyesuaian Qty
                         </div>
                     </div>
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-edit text-xl"></i>
+                    </div>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
 
         <!-- Card 3: Terverifikasi -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Verified']) }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-squircle p-3.5 bg-white hover:shadow-md transition-all border-start border-4 border-success h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="text-muted text-xs font-semibold text-uppercase tracking-wider">Terverifikasi (Selesai)</div>
-                            <div class="h2 font-bold text-gray-900 mb-0 mt-1">{{ $stats['verified'] ?? 0 }}</div>
-                            <div class="text-xs text-success font-medium mt-1 d-flex align-items-center gap-1">
-                                <i class="fas fa-check-circle"></i> Stok Berhasil Masuk
-                            </div>
-                        </div>
-                        <div class="rounded-3 bg-emerald-50 text-emerald-600 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-check-double fa-lg"></i>
+        <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Verified']) }}" class="block group text-decoration-none">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all h-full relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TERVERIFIKASI (SELESAI)</p>
+                        <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['verified'] ?? 0 }}</h3>
+                        <div class="text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1">
+                            <i class="fas fa-circle-check"></i> Stok Berhasil Masuk
                         </div>
                     </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-check-double text-xl"></i>
+                    </div>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
 
         <!-- Card 4: Dibatalkan -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Canceled']) }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-squircle p-3.5 bg-white hover:shadow-md transition-all border-start border-4 border-danger h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="text-muted text-xs font-semibold text-uppercase tracking-wider">Dibatalkan / Ditolak</div>
-                            <div class="h2 font-bold text-gray-900 mb-0 mt-1">{{ $stats['canceled'] ?? 0 }}</div>
-                            <div class="text-xs text-danger font-medium mt-1 d-flex align-items-center gap-1">
-                                <i class="fas fa-ban"></i> Tidak Masuk Stok
-                            </div>
-                        </div>
-                        <div class="rounded-3 bg-rose-50 text-rose-600 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-ban fa-lg"></i>
+        <a href="{{ route('warehouse.verifikasi.index', ['status' => 'Canceled']) }}" class="block group text-decoration-none">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-rose-300 transition-all h-full relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">DIBATALKAN / DITOLAK</p>
+                        <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['canceled'] ?? 0 }}</h3>
+                        <div class="text-xs text-rose-600 font-medium flex items-center gap-1 mt-1">
+                            <i class="fas fa-ban"></i> Tidak Masuk Stok
                         </div>
                     </div>
+                    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-ban text-xl"></i>
+                    </div>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
     </div>
 
     <!-- Filters & Main Data Card -->
-    <div class="card border-0 shadow-sm rounded-squircle overflow-hidden mb-4 bg-white">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden mb-6">
         <!-- Filter Header Bar -->
-        <div class="p-3.5 border-bottom bg-slate-50/50">
-            <form method="GET" action="{{ route('warehouse.verifikasi.index') }}" class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center justify-content-between gap-3">
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+            <form method="GET" action="{{ route('warehouse.verifikasi.index') }}" class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
                 
                 <!-- Search Box -->
-                <div class="position-relative flex-grow-1" style="max-width: 420px;">
-                    <i class="fas fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3 text-muted text-xs"></i>
-                    <input type="text" name="search" class="form-control form-control-sm ps-5 pe-3 py-2 rounded-3 bg-white border shadow-xs text-xs" placeholder="Cari No. Penerimaan (GR) atau Supplier..." value="{{ request('search') }}">
+                <div class="relative flex-1 max-w-md">
+                    <i class="fas fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" name="search" 
+                           class="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-xs transition" 
+                           placeholder="Cari No. Penerimaan (GR) atau Supplier..." 
+                           value="{{ request('search') }}">
                 </div>
 
                 <!-- Status Filter Pills Bar -->
-                <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'all'])) }}" 
-                       class="text-decoration-none px-3 py-1.5 rounded-pill text-xs font-semibold d-inline-flex align-items-center gap-1 transition-all {{ request('status', 'Pending') === 'all' ? 'bg-dark text-white shadow-xs' : 'bg-white border text-gray-600 hover:bg-slate-100' }}">
+                       class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status', 'Pending') === 'all' ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
                        Semua
                     </a>
                     
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Pending'])) }}" 
-                       class="text-decoration-none px-3 py-1.5 rounded-pill text-xs font-semibold d-inline-flex align-items-center gap-1 transition-all {{ request('status', 'Pending') === 'Pending' ? 'bg-warning text-dark shadow-xs' : 'bg-white border text-gray-600 hover:bg-slate-100' }}">
-                       <i class="fas fa-clock"></i> Menunggu ({{ $stats['pending'] ?? 0 }})
+                       class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-all {{ request('status', 'Pending') === 'Pending' ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
+                       <span class="w-1.5 h-1.5 rounded-full {{ request('status', 'Pending') === 'Pending' ? 'bg-white' : 'bg-blue-500' }}"></span>
+                       Menunggu ({{ $stats['pending'] ?? 0 }})
                     </a>
                     
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Revised'])) }}" 
-                       class="text-decoration-none px-3 py-1.5 rounded-pill text-xs font-semibold d-inline-flex align-items-center gap-1 transition-all {{ request('status') === 'Revised' ? 'bg-info text-white shadow-xs' : 'bg-white border text-gray-600 hover:bg-slate-100' }}">
+                       class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status') === 'Revised' ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
                        <i class="fas fa-pen-to-square"></i> Direvisi ({{ $stats['revised'] ?? 0 }})
                     </a>
 
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Verified'])) }}" 
-                       class="text-decoration-none px-3 py-1.5 rounded-pill text-xs font-semibold d-inline-flex align-items-center gap-1 transition-all {{ request('status') === 'Verified' ? 'bg-success text-white shadow-xs' : 'bg-white border text-gray-600 hover:bg-slate-100' }}">
-                       <i class="fas fa-check-circle"></i> Selesai ({{ $stats['verified'] ?? 0 }})
+                       class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status') === 'Verified' ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
+                       <i class="fas fa-circle-check"></i> Selesai ({{ $stats['verified'] ?? 0 }})
                     </a>
 
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Canceled'])) }}" 
-                       class="text-decoration-none px-3 py-1.5 rounded-pill text-xs font-semibold d-inline-flex align-items-center gap-1 transition-all {{ request('status') === 'Canceled' ? 'bg-danger text-white shadow-xs' : 'bg-white border text-gray-600 hover:bg-slate-100' }}">
+                       class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status') === 'Canceled' ? 'bg-rose-600 text-white shadow-sm shadow-rose-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
                        <i class="fas fa-ban"></i> Batal ({{ $stats['canceled'] ?? 0 }})
                     </a>
 
                     @if(request()->hasAny(['search', 'status']))
-                    <a href="{{ route('warehouse.verifikasi.index') }}" class="btn btn-outline-secondary btn-sm px-2.5 py-1 rounded-pill text-xs ms-1" title="Reset Filter">
-                        <i class="fas fa-rotate-left"></i>
+                    <a href="{{ route('warehouse.verifikasi.index') }}" class="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition" title="Reset Filter">
+                        <i class="fas fa-rotate-left text-xs"></i>
                     </a>
                     @endif
                 </div>
@@ -155,117 +157,125 @@
         </div>
 
         <!-- Table View -->
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-slate-100 text-gray-700 text-xs text-uppercase font-semibold">
-                    <tr>
-                        <th class="px-4 py-3.5">Tanggal Penerimaan</th>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead>
+                    <tr class="bg-slate-50/90 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200/80">
+                        <th class="px-5 py-3.5">Tanggal Penerimaan</th>
                         <th class="py-3.5">No. Penerimaan (GR)</th>
                         <th class="py-3.5">Supplier / Vendor</th>
                         <th class="py-3.5 text-center">Ringkasan Barang</th>
                         <th class="py-3.5 text-center">Status Verifikasi</th>
-                        <th class="text-end px-4 py-3.5">Aksi Tindakan</th>
+                        <th class="text-right px-5 py-3.5">Aksi Tindakan</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 text-sm">
+                <tbody class="divide-y divide-slate-100">
                     @forelse($incomingGoods as $good)
-                    <tr class="hover:bg-slate-50 transition-all">
+                    <tr class="hover:bg-slate-50/80 transition-colors">
                         <!-- Tanggal -->
-                        <td class="px-4 text-gray-700 font-medium">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="p-2 bg-slate-100 text-muted rounded-2 d-inline-flex">
-                                    <i class="far fa-calendar-alt"></i>
+                        <td class="px-5 py-4 text-slate-700">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0">
+                                    <i class="far fa-calendar-alt text-xs"></i>
                                 </div>
                                 <div>
-                                    <div class="fw-semibold text-gray-900">{{ \Carbon\Carbon::parse($good->receive_date)->format('d M Y') }}</div>
-                                    <div class="text-xs text-muted">{{ \Carbon\Carbon::parse($good->created_at)->format('H:i') }} WIB</div>
+                                    <div class="font-bold text-slate-900 text-xs">{{ \Carbon\Carbon::parse($good->receive_date)->format('d M Y') }}</div>
+                                    <div class="text-[11px] text-slate-400">{{ \Carbon\Carbon::parse($good->created_at)->format('H:i') }} WIB</div>
                                 </div>
                             </div>
                         </td>
 
                         <!-- Receipt Number -->
-                        <td>
-                            <span class="badge bg-primary-subtle text-primary font-mono fw-bold px-2.5 py-1.5 rounded-2 border border-primary-subtle">
-                                <i class="fas fa-barcode me-1 text-primary"></i> {{ $good->receipt_number }}
+                        <td class="py-4">
+                            <span class="font-mono font-bold text-xs text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">
+                                {{ $good->receipt_number }}
                             </span>
                         </td>
 
                         <!-- Supplier -->
-                        <td>
-                            <div class="d-flex align-items-center gap-2.5">
-                                <div class="rounded-circle bg-slate-200 text-slate-700 fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 34px; height: 34px; font-size: 13px;">
+                        <td class="py-4">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs flex-shrink-0 border border-slate-200">
                                     {{ strtoupper(substr($good->supplier->company_name ?? $good->supplier->name ?? 'S', 0, 2)) }}
                                 </div>
                                 <div>
-                                    <div class="fw-semibold text-gray-900">{{ $good->supplier->company_name ?? $good->supplier->name ?? '-' }}</div>
-                                    <div class="text-xs text-muted"><i class="fas fa-city me-1"></i>{{ $good->supplier->city ?? 'Supplier Partner' }}</div>
+                                    <div class="font-bold text-slate-900 text-xs">{{ $good->supplier->company_name ?? $good->supplier->name ?? '-' }}</div>
+                                    <div class="text-[11px] text-slate-400 flex items-center gap-1">
+                                        <i class="fas fa-location-dot text-[10px]"></i>
+                                        {{ $good->supplier->city ?? 'Supplier Partner' }}
+                                    </div>
                                 </div>
                             </div>
                         </td>
 
                         <!-- Ringkasan Items -->
-                        <td class="text-center">
+                        <td class="py-4 text-center">
                             @php
                                 $itemTypesCount = $good->items ? $good->items->count() : 0;
                                 $totalQtySum = $good->items ? $good->items->sum('quantity') : 0;
                             @endphp
-                            <span class="badge bg-light text-dark border px-2.5 py-1 rounded-pill text-xs">
-                                <i class="fas fa-box text-info me-1"></i> {{ $itemTypesCount }} Jenis • {{ $totalQtySum }} Unit
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                                <i class="fas fa-boxes-stacked text-indigo-500 text-[10px]"></i>
+                                {{ $itemTypesCount }} Jenis • {{ number_format($totalQtySum) }} Unit
                             </span>
                         </td>
 
                         <!-- Status -->
-                        <td class="text-center">
+                        <td class="py-4 text-center">
                             @if($good->status == 'Pending')
-                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-1.5 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                                    <span class="spinner-grow spinner-grow-sm text-warning" role="status" style="width: 0.5rem; height: 0.5rem;"></span>
-                                    Menunggu Verifikasi
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80">
+                                    <span class="relative flex h-1.5 w-1.5">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-600"></span>
+                                    </span>
+                                    Menunggu QC
                                 </span>
                             @elseif($good->status == 'Revised')
-                                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-1.5 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                                    <i class="fas fa-pen-to-square"></i> Telah Direvisi
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                                    <i class="fas fa-pen-to-square text-[10px]"></i> Telah Direvisi
                                 </span>
                             @elseif($good->status == 'Verified')
-                                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-1.5 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                                    <i class="fas fa-check-circle"></i> Terverifikasi (Stok Aktif)
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                    <i class="fas fa-circle-check text-[10px]"></i> Terverifikasi
                                 </span>
                             @elseif($good->status == 'Canceled')
-                                <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-3 py-1.5 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                                    <i class="fas fa-ban"></i> Dibatalkan / Ditolak
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+                                    <i class="fas fa-ban text-[10px]"></i> Dibatalkan
                                 </span>
                             @else
-                                <span class="badge bg-secondary text-white px-2.5 py-1 rounded-pill text-xs">{{ $good->status }}</span>
+                                <span class="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700">{{ $good->status }}</span>
                             @endif
                         </td>
 
                         <!-- Action -->
-                        <td class="text-end px-4">
+                        <td class="text-right px-5 py-4">
                             @if($good->status == 'Pending' || $good->status == 'Revised')
-                                <a href="{{ route('warehouse.verifikasi.show', $good->id) }}" class="btn btn-primary btn-sm rounded-3 font-medium px-3 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-xs">
-                                    <i class="fas fa-clipboard-check"></i> Proses Verifikasi
+                                <a href="{{ route('warehouse.verifikasi.show', $good->id) }}" 
+                                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-xs">
+                                    <i class="fas fa-clipboard-check"></i>
+                                    <span>Verifikasi</span>
                                 </a>
                             @else
-                                <a href="{{ route('warehouse.verifikasi.show', $good->id) }}" class="btn btn-outline-secondary btn-sm rounded-3 font-medium px-3 py-1.5 d-inline-flex align-items-center gap-1.5">
-                                    <i class="fas fa-eye"></i> Lihat Detail
+                                <a href="{{ route('warehouse.verifikasi.show', $good->id) }}" 
+                                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition shadow-xs">
+                                    <i class="fas fa-eye text-slate-400"></i>
+                                    <span>Detail</span>
                                 </a>
                             @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <div class="py-4">
-                                <div class="mb-3">
-                                    <div class="p-3 bg-slate-100 text-slate-400 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
-                                        <i class="fas fa-boxes-packing fa-2xl"></i>
-                                    </div>
-                                </div>
-                                <h6 class="fw-bold text-gray-800 mb-1">Tidak Ada Data Verifikasi Barang Masuk</h6>
-                                <p class="text-muted text-xs mb-3">Semua data penerimaan barang fisik telah diperiksa atau belum ada draf penerimaan baru.</p>
-                                <a href="{{ route('warehouse.incoming-goods') }}" class="btn btn-outline-primary btn-sm rounded-3 px-3">
-                                    <i class="fas fa-plus me-1"></i> Buat Penerimaan Barang Masuk
-                                </a>
+                        <td colspan="6" class="text-center py-12">
+                            <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-boxes-packing text-2xl"></i>
                             </div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Tidak Ada Data Verifikasi Barang Masuk</h3>
+                            <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">Semua data penerimaan barang fisik telah diperiksa atau belum ada draf penerimaan baru.</p>
+                            <a href="{{ route('warehouse.incoming-goods') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition">
+                                <i class="fas fa-plus"></i>
+                                <span>Buat Penerimaan Barang Masuk</span>
+                            </a>
                         </td>
                     </tr>
                     @endforelse
@@ -275,9 +285,9 @@
         
         <!-- Pagination -->
         @if($incomingGoods->hasPages())
-        <div class="p-3.5 border-top bg-slate-50/50 d-flex justify-content-between align-items-center">
-            <div class="text-xs text-muted">
-                Menampilkan {{ $incomingGoods->firstItem() }} - {{ $incomingGoods->lastItem() }} dari total {{ $incomingGoods->total() }} transaksi penerimaan
+        <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
+            <div>
+                Menampilkan {{ $incomingGoods->firstItem() }} - {{ $incomingGoods->lastItem() }} dari total {{ $incomingGoods->total() }} transaksi
             </div>
             <div>
                 {{ $incomingGoods->links() }}

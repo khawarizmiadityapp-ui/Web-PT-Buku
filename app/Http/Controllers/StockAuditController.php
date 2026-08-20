@@ -6,6 +6,7 @@ use App\Models\StockAudit;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StockAuditController extends Controller
 {
@@ -91,7 +92,117 @@ class StockAuditController extends Controller
 
     public function startStockCount()
     {
-        return view('warehouse.stock-audit.stock-count');
+        $products = Product::orderBy('product_name')->get();
+        $categories = Product::select('category')->whereNotNull('category')->where('category', '!=', '')->distinct()->pluck('category');
+        
+        $totalProducts = $products->count();
+        $totalDiscrepancy = $products->filter(fn($p) => $p->physical_stock != $p->system_stock)->count();
+        $totalMatched = $products->filter(fn($p) => $p->physical_stock == $p->system_stock)->count();
+        $accuracyRate = $totalProducts > 0 ? round(($totalMatched / $totalProducts) * 100, 1) : 100;
+        $sessionCode = 'SO-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
+
+        return view('warehouse.stock-audit.stock-count', compact(
+            'products',
+            'categories',
+            'totalProducts',
+            'totalDiscrepancy',
+            'totalMatched',
+            'accuracyRate',
+            'sessionCode'
+        ));
+    }
+
+    public function storeStockCount(Request $request)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.physical_stock' => 'required|integer|min:0',
+            'items.*.notes' => 'nullable|string|max:500',
+            'adjustment_mode' => 'required|in:save_only,auto_adjust',
+            'general_notes' => 'nullable|string|max:1000',
+            'session_code' => 'nullable|string|max:50',
+        ]);
+
+        $adjustmentMode = $validated['adjustment_mode'];
+        $generalNotes = $validated['general_notes'] ?? null;
+        $sessionCode = $validated['session_code'] ?? ('SO-' . date('Ymd'));
+        $userName = Auth::user()->name ?? 'Warehouse Staff';
+
+        $totalItems = 0;
+        $discrepancyCount = 0;
+        $adjustedCount = 0;
+
+        DB::transaction(function () use ($validated, $adjustmentMode, $generalNotes, $sessionCode, $userName, &$totalItems, &$discrepancyCount, &$adjustedCount) {
+            foreach ($validated['items'] as $itemData) {
+                $product = Product::find($itemData['product_id']);
+                if (!$product) continue;
+
+                $totalItems++;
+                $newPhysical = (int) $itemData['physical_stock'];
+                $systemStock = (int) $product->system_stock;
+                $difference = $newPhysical - $systemStock;
+                $itemNote = trim($itemData['notes'] ?? '');
+
+                if ($difference != 0) {
+                    $discrepancyCount++;
+                }
+
+                $combinedNotes = $itemNote;
+                if ($generalNotes) {
+                    $combinedNotes = $itemNote ? "[$sessionCode] $itemNote | $generalNotes" : "[$sessionCode] $generalNotes";
+                } elseif ($sessionCode) {
+                    $combinedNotes = $itemNote ? "[$sessionCode] $itemNote" : "[$sessionCode] Sesi Stock Opname";
+                }
+
+                if ($adjustmentMode === 'auto_adjust') {
+                    $adjustmentStatus = ($difference == 0) ? 'No Change' : 'Has Adjusted';
+
+                    StockAudit::create([
+                        'product_id' => $product->id,
+                        'system_stock' => $systemStock,
+                        'physical_stock' => $newPhysical,
+                        'difference' => $difference,
+                        'adjustment_status' => $adjustmentStatus,
+                        'notes' => $combinedNotes,
+                        'audited_by' => $userName,
+                        'audit_date' => now(),
+                    ]);
+
+                    $product->update([
+                        'physical_stock' => $newPhysical,
+                        'system_stock' => $newPhysical,
+                    ]);
+
+                    if ($difference != 0) {
+                        $adjustedCount++;
+                    }
+                } else {
+                    $adjustmentStatus = ($difference == 0) ? 'No Change' : 'Pending Review';
+
+                    StockAudit::create([
+                        'product_id' => $product->id,
+                        'system_stock' => $systemStock,
+                        'physical_stock' => $newPhysical,
+                        'difference' => $difference,
+                        'adjustment_status' => $adjustmentStatus,
+                        'notes' => $combinedNotes,
+                        'audited_by' => $userName,
+                        'audit_date' => now(),
+                    ]);
+
+                    $product->update([
+                        'physical_stock' => $newPhysical,
+                    ]);
+                }
+            }
+        });
+
+        if ($adjustmentMode === 'auto_adjust') {
+            return redirect()->route('warehouse.stock-audit.index')->with('success', "Stock Opname berhasil diselesaikan! {$totalItems} item dihitung, {$adjustedCount} item selisih berhasil disesuaikan ke stok sistem.");
+        } else {
+            return redirect()->route('warehouse.stock-audit.index')->with('success', "Hasil penghitungan fisik berhasil disimpan ({$totalItems} item diperiksa). Catatan selisih tercatat untuk peninjauan (Pending Review).");
+        }
     }
 
     private function calculateAccuracyRate()

@@ -1,241 +1,311 @@
 @extends('layouts.app')
 
-@section('title', 'Detail & Quality Control Verifikasi Barang Masuk - LogiBook WMS')
+@section('title', 'Quality Control & Verifikasi Barang Masuk - LogiBook WMS')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
-    <!-- Header Navigation & Actions -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+<div class="container-fluid px-4 py-4 max-w-7xl mx-auto">
+    <!-- Header Navigation & Status Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-            <div class="d-flex align-items-center gap-2 mb-1">
-                <a href="{{ route('warehouse.verifikasi.index') }}" class="text-decoration-none text-muted text-xs font-semibold hover:text-primary">
-                    <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Verifikasi
+            <!-- Breadcrumb Navigation -->
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-2">
+                <a href="{{ route('warehouse.verifikasi.index') }}" class="inline-flex items-center gap-1.5 text-slate-600 hover:text-indigo-600 transition-colors">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Daftar Verifikasi</span>
                 </a>
-                <span class="text-muted text-xs">• QC Physical Check</span>
+                <span class="text-slate-300">•</span>
+                <span class="text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-md">QC Physical Inspection</span>
             </div>
-            <h1 class="h3 font-bold text-gray-900 mb-0 d-flex align-items-center gap-2">
-                Verifikasi Penerimaan: <span class="text-primary font-mono">{{ $incomingGood->receipt_number }}</span>
-            </h1>
-            <p class="text-muted text-sm mb-0">Formulir pemeriksaan fisik barang, pencocokan kuantitas, dan penyesuaian stok gudang.</p>
+
+            <!-- Page Title & GR Number -->
+            <div class="flex flex-wrap items-center gap-3">
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                    Verifikasi Penerimaan: 
+                    <span class="font-mono text-indigo-600 bg-indigo-50/80 px-3 py-0.5 rounded-lg border border-indigo-100 select-all">
+                        {{ $incomingGood->receipt_number }}
+                    </span>
+                </h1>
+            </div>
+            <p class="text-slate-500 text-sm mt-1">Formulir pemeriksaan fisik barang, pencocokan kuantitas aktual, dan penyesuaian stok gudang.</p>
         </div>
-        <div class="d-flex align-items-center gap-2">
+
+        <!-- Status Badge -->
+        <div class="flex items-center gap-2 flex-shrink-0">
             @if($incomingGood->status == 'Pending')
-                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                    <span class="spinner-grow spinner-grow-sm text-warning" role="status" style="width: 0.5rem; height: 0.5rem;"></span>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 shadow-xs">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                    </span>
                     Menunggu Pencocokan Fisik
-                </span>
+                </div>
             @elseif($incomingGood->status == 'Revised')
-                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                    <i class="fas fa-pen-to-square"></i> Telah Direvisi
-                </span>
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80 shadow-xs">
+                    <i class="fas fa-pen-to-square text-indigo-500"></i>
+                    Telah Direvisi
+                </div>
             @elseif($incomingGood->status == 'Verified')
-                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-2 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                    <i class="fas fa-circle-check"></i> Terverifikasi (Stok Bertambah)
-                </span>
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-xs">
+                    <i class="fas fa-circle-check text-emerald-600"></i>
+                    Terverifikasi (Stok Aktif)
+                </div>
             @elseif($incomingGood->status == 'Canceled')
-                <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-3 py-2 rounded-pill font-semibold text-xs d-inline-flex align-items-center gap-1.5">
-                    <i class="fas fa-ban"></i> Penerimaan Dibatalkan
-                </span>
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80 shadow-xs">
+                    <i class="fas fa-ban text-rose-600"></i>
+                    Penerimaan Dibatalkan
+                </div>
             @endif
         </div>
     </div>
 
-    <!-- Info Overview Banner -->
-    <div class="card border-0 shadow-sm rounded-squircle bg-white mb-4 overflow-hidden">
-        <div class="card-body p-4">
-            <div class="row g-4 align-items-center">
-                <!-- Info 1: Supplier -->
-                <div class="col-md-4 border-end-md">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3 flex-shrink-0" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-building fa-lg"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs text-muted text-uppercase fw-semibold">Supplier / Vendor</div>
-                            <div class="h6 font-bold text-gray-900 mb-0 mt-0.5">{{ $incomingGood->supplier->company_name ?? $incomingGood->supplier->name ?? 'Supplier Umum' }}</div>
-                            <div class="text-xs text-muted"><i class="fas fa-location-dot me-1"></i>{{ $incomingGood->supplier->city ?? 'Lokasi Vendor' }}</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Info Overview Grid (3 Cards) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Card 1: Supplier / Vendor -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                <i class="fas fa-building text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-1">SUPPLIER / VENDOR</p>
+                <h3 class="text-base font-bold text-slate-900 truncate mb-0.5">
+                    {{ $incomingGood->supplier->company_name ?? $incomingGood->supplier->name ?? 'Supplier Umum' }}
+                </h3>
+                <p class="text-xs text-slate-500 flex items-center gap-1.5 truncate">
+                    <i class="fas fa-location-dot text-slate-400"></i>
+                    {{ $incomingGood->supplier->city ?? 'Kantor Pusat / Gudang Vendor' }}
+                </p>
+            </div>
+        </div>
 
-                <!-- Info 2: Date & Receipt Number -->
-                <div class="col-md-4 border-end-md">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="p-3 bg-indigo-subtle text-indigo rounded-3 flex-shrink-0" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-calendar-day fa-lg text-indigo-600"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs text-muted text-uppercase fw-semibold">Tanggal Penerimaan</div>
-                            <div class="h6 font-bold text-gray-900 mb-0 mt-0.5">{{ \Carbon\Carbon::parse($incomingGood->receive_date)->format('d F Y') }}</div>
-                            <div class="text-xs text-muted"><i class="fas fa-clock me-1"></i>Dibuat: {{ \Carbon\Carbon::parse($incomingGood->created_at)->format('H:i') }} WIB</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Card 2: Tanggal & Waktu -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                <i class="fas fa-calendar-check text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-1">TANGGAL PENERIMAAN</p>
+                <h3 class="text-base font-bold text-slate-900 mb-0.5">
+                    {{ \Carbon\Carbon::parse($incomingGood->receive_date)->format('d F Y') }}
+                </h3>
+                <p class="text-xs text-slate-500 flex items-center gap-1.5">
+                    <i class="fas fa-clock text-slate-400"></i>
+                    Dibuat: {{ \Carbon\Carbon::parse($incomingGood->created_at)->format('H:i') }} WIB
+                </p>
+            </div>
+        </div>
 
-                <!-- Info 3: Total Items Summary -->
-                <div class="col-md-4">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="p-3 bg-emerald-subtle text-emerald rounded-3 flex-shrink-0" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-boxes-stacked fa-lg text-emerald-600"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs text-muted text-uppercase fw-semibold">Ringkasan Fisik</div>
-                            <div class="h6 font-bold text-gray-900 mb-0 mt-0.5">
-                                {{ $incomingGood->items->count() }} Jenis Item Barang
-                            </div>
-                            <div class="text-xs text-muted">
-                                Total Qty: <strong class="text-gray-900">{{ $incomingGood->items->sum('quantity') }} Unit</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Card 3: Ringkasan Fisik Items -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                <i class="fas fa-boxes-stacked text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-1">RINGKASAN FISIK</p>
+                <h3 class="text-base font-bold text-slate-900 mb-0.5">
+                    {{ $incomingGood->items->count() }} Jenis Item Barang
+                </h3>
+                <p class="text-xs text-slate-600">
+                    Total Kuantitas: <span class="font-bold text-slate-900">{{ number_format($incomingGood->items->sum('quantity')) }} Unit</span>
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Instruction Helper Banner -->
+    <!-- Instruction Helper Card (Clean Blue & Slate Glassmorphism) -->
     @if($incomingGood->status == 'Pending' || $incomingGood->status == 'Revised')
-    <div class="card border-0 shadow-sm mb-4 bg-gradient-to-r from-amber-50/80 via-blue-50/40 to-white rounded-squircle">
-        <div class="card-body p-3.5 d-flex align-items-start gap-3">
-            <div class="p-2.5 bg-amber-500 text-white rounded-3 shadow-xs flex-shrink-0">
-                <i class="fas fa-circle-info fa-lg"></i>
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-4 md:p-5 text-white shadow-md mb-6 border border-slate-800">
+        <div class="flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fas fa-shield-halved text-sm"></i>
             </div>
-            <div class="flex-grow-1">
-                <h6 class="fw-bold text-gray-900 mb-1 d-flex align-items-center gap-2">
-                    <span>Petunjuk Verifikasi Fisik</span>
-                    <span class="badge bg-warning text-dark rounded-pill font-normal text-xs">Penting</span>
-                </h6>
-                <p class="text-muted text-xs mb-0 leading-relaxed">
-                    Periksa barang secara fisik di area penerimaan gudang. Uji sampel dan hitung jumlah aktual. 
-                    Jika jumlah sesuai, tekan <strong>Verifikasi (Lengkap & Sesuai)</strong>. 
-                    Jika ada selisih/kerusakan, ubah angka pada kolom <strong>QTY FISIK AKTUAL</strong> lalu klik <strong>Revisi</strong>. 
-                    Jika seluruh pengiriman ditolak/batal, pilih <strong>Batalkan / Tolak Penerimaan</strong>.
+            <div class="flex-1 text-xs leading-relaxed text-slate-300">
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-sm font-bold text-white">SOP Verifikasi Fisik & Quality Control</span>
+                    <span class="bg-indigo-500/30 text-indigo-200 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">Instruksi QC</span>
+                </div>
+                <p class="mb-0 text-slate-300">
+                    Lakukan pemeriksaan fisik di *loading bay* gudang. Hitung jumlah aktual dan periksa kondisi segel produk. 
+                    Jika seluruh kuantitas sesuai nota, klik <span class="text-emerald-400 font-semibold">Verifikasi (Sesuai & Tambah Stok)</span>. 
+                    Jika ditemukan selisih atau barang rusak, sesuaikan angka di kolom <span class="text-indigo-300 font-semibold">QTY FISIK AKTUAL</span> lalu tekan <span class="text-slate-100 font-semibold underline">Simpan Revisi Selisih</span>.
                 </p>
             </div>
         </div>
     </div>
     @endif
 
-    <!-- Main Table Inspection Card -->
-    <div class="card border-0 shadow-sm rounded-squircle overflow-hidden mb-4">
-        <div class="card-header bg-white py-3.5 px-4 border-bottom d-flex align-items-center justify-content-between">
-            <h5 class="fw-bold text-gray-900 mb-0 d-flex align-items-center gap-2 text-base">
-                <i class="fas fa-table-list text-primary"></i> Tabel Inspection & Match Quantity
-            </h5>
-            <span class="text-xs text-muted">
-                Status Data: <strong class="text-gray-900 font-mono">{{ $incomingGood->status }}</strong>
-            </span>
+    <!-- Main Inspection Table Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden mb-8">
+        <!-- Card Header -->
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                    <i class="fas fa-list-check text-sm"></i>
+                </div>
+                <div>
+                    <h2 class="text-base font-bold text-slate-900">Tabel Inspection & Match Quantity</h2>
+                    <p class="text-xs text-slate-500">Bandingkan kuantitas surat jalan/nota dengan hitungan fisik riil</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-400 font-medium">Status Dokumen:</span>
+                <span class="font-mono font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">{{ $incomingGood->status }}</span>
+            </div>
         </div>
-        <div class="card-body p-0">
-            <form id="verifikasiForm">
-                @csrf
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-slate-100 text-gray-700 text-xs text-uppercase font-semibold">
-                            <tr>
-                                <th width="5%" class="text-center py-3.5">#</th>
-                                <th width="35%" class="py-3.5">Produk / Barang</th>
-                                <th width="20%" class="py-3.5">Kode Barang (SKU)</th>
-                                <th width="15%" class="text-center py-3.5 bg-slate-200/60">QTY Sistem (Nota)</th>
-                                <th width="25%" class="text-center py-3.5 bg-amber-50">QTY Fisik Aktual <span class="text-danger">*</span></th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            @foreach($incomingGood->items as $index => $item)
-                            <tr class="hover:bg-slate-50/80 transition-all">
-                                <td class="text-center font-bold text-muted text-xs py-3.5">{{ $index + 1 }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2.5">
-                                        <div class="p-2 bg-blue-50 text-blue-600 rounded-2 flex-shrink-0">
-                                            <i class="fas fa-box"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-semibold text-gray-900">{{ $item->product->product_name ?? 'Produk' }}</div>
-                                            <div class="text-xs text-muted">
-                                                Stok Gudang Terkini: <strong class="text-info">{{ $item->product->system_stock ?? 0 }} {{ $item->product->unit ?? 'Pcs' }}</strong>
-                                            </div>
+
+        <!-- Table Form -->
+        <form id="verifikasiForm">
+            @csrf
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="bg-slate-50/90 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200/80">
+                            <th class="py-3.5 px-4 text-center w-12">#</th>
+                            <th class="py-3.5 px-4">PRODUK / BARANG</th>
+                            <th class="py-3.5 px-4">KODE BARANG (SKU)</th>
+                            <th class="py-3.5 px-4 text-center bg-slate-100/60 w-44">QTY SISTEM (NOTA)</th>
+                            <th class="py-3.5 px-4 text-center bg-indigo-50/40 w-56">QTY FISIK AKTUAL <span class="text-rose-500">*</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach($incomingGood->items as $index => $item)
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <!-- Index -->
+                            <td class="py-4 px-4 text-center text-xs font-bold text-slate-400">{{ $index + 1 }}</td>
+
+                            <!-- Product Info -->
+                            <td class="py-4 px-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0 border border-slate-200/60">
+                                        <i class="fas fa-book-open text-sm text-indigo-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 text-sm leading-snug">{{ $item->product->product_name ?? 'Produk' }}</div>
+                                        <div class="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                                            <span>Stok Gudang Terkini:</span>
+                                            <span class="font-semibold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded text-[11px]">
+                                                {{ number_format($item->product->system_stock ?? 0) }} {{ $item->product->unit ?? 'Pcs' }}
+                                            </span>
                                         </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <span class="badge bg-slate-100 text-slate-700 font-mono px-2.5 py-1 rounded border">
-                                        {{ $item->product->product_code ?? '-' }}
-                                    </span>
-                                </td>
-                                <td class="text-center bg-slate-50 font-bold text-gray-900 text-base">
-                                    {{ $item->quantity }} <span class="text-xs font-normal text-muted">{{ $item->product->unit ?? 'Pcs' }}</span>
-                                </td>
-                                <td class="bg-amber-50/50 p-2.5">
-                                    <input type="hidden" name="items[{{ $index }}][id]" value="{{ $item->id }}">
-                                    @if($incomingGood->status == 'Pending' || $incomingGood->status == 'Revised')
-                                    <div class="input-group input-group-sm max-w-xs mx-auto shadow-xs">
-                                        <button type="button" class="btn btn-outline-secondary px-2.5" onclick="adjustQty(this, -1)">-</button>
-                                        <input type="number" class="form-control text-center font-bold text-primary physical-qty" 
+                                </div>
+                            </td>
+
+                            <!-- SKU Badge -->
+                            <td class="py-4 px-4">
+                                <span class="font-mono text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/80">
+                                    #{{ $item->product->product_code ?? '-' }}
+                                </span>
+                            </td>
+
+                            <!-- System Qty -->
+                            <td class="py-4 px-4 text-center bg-slate-50/50">
+                                <div class="font-bold text-slate-900 text-base">
+                                    {{ number_format($item->quantity) }}
+                                    <span class="text-xs font-normal text-slate-500">{{ $item->product->unit ?? 'Pcs' }}</span>
+                                </div>
+                            </td>
+
+                            <!-- Physical Qty Interactive Input -->
+                            <td class="py-4 px-4 bg-indigo-50/20 text-center">
+                                <input type="hidden" name="items[{{ $index }}][id]" value="{{ $item->id }}">
+                                
+                                @if($incomingGood->status == 'Pending' || $incomingGood->status == 'Revised')
+                                <div class="inline-flex flex-col items-center">
+                                    <!-- Stepper Container -->
+                                    <div class="inline-flex items-center rounded-xl border border-slate-300 bg-white p-1 shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                                        <button type="button" 
+                                                class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition active:scale-95"
+                                                onclick="adjustQty(this, -1)">
+                                            <i class="fas fa-minus text-xs"></i>
+                                        </button>
+                                        <input type="number" 
+                                               class="w-20 text-center font-bold text-slate-900 text-base border-0 focus:outline-none focus:ring-0 physical-qty px-2 py-1" 
                                                name="items[{{ $index }}][quantity]" 
                                                value="{{ $item->quantity }}" 
                                                data-original="{{ $item->quantity }}"
-                                               min="0" required onchange="checkQtyMismatch(this)" onkeyup="checkQtyMismatch(this)" style="font-size: 15px;">
-                                        <button type="button" class="btn btn-outline-secondary px-2.5" onclick="adjustQty(this, 1)">+</button>
+                                               min="0" required 
+                                               onchange="checkQtyMismatch(this)" 
+                                               onkeyup="checkQtyMismatch(this)">
+                                        <button type="button" 
+                                                class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition active:scale-95"
+                                                onclick="adjustQty(this, 1)">
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
                                     </div>
-                                    <div class="text-center text-xs mt-1 mismatch-label text-muted">
-                                        <span>Status Qty: <strong class="text-success"><i class="fas fa-check-circle me-1"></i>Sesuai</strong></span>
+
+                                    <!-- Status Indicator Label -->
+                                    <div class="mt-1.5 mismatch-label text-xs">
+                                        <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 text-[11px]">
+                                            <i class="fas fa-check-circle"></i> Status: Sesuai
+                                        </span>
                                     </div>
-                                    @else
-                                    <div class="text-center font-bold text-emerald-600 text-base">
-                                        {{ $item->quantity }} <span class="text-xs font-normal text-muted">{{ $item->product->unit ?? 'Pcs' }}</span>
-                                    </div>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                </div>
+                                @else
+                                <div class="font-bold text-emerald-600 text-base">
+                                    {{ number_format($item->quantity) }} 
+                                    <span class="text-xs font-normal text-slate-500">{{ $item->product->unit ?? 'Pcs' }}</span>
+                                </div>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer Action Controls (No Yellow!) -->
+            @if($incomingGood->status == 'Pending' || $incomingGood->status == 'Revised')
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200/80 flex flex-col md:flex-row items-center justify-between gap-4">
+                <!-- Left: Cancel Action -->
+                <div>
+                    <button type="button" 
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition-all shadow-xs active:scale-95"
+                            onclick="submitVerifikasi('cancel')">
+                        <i class="fas fa-ban"></i>
+                        <span>Batalkan / Tolak Penerimaan Ini</span>
+                    </button>
                 </div>
 
-                <!-- Footer Action Controls -->
-                @if($incomingGood->status == 'Pending' || $incomingGood->status == 'Revised')
-                <div class="card-footer bg-slate-50 p-4 border-top">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                        <!-- Left side: Cancel Button -->
-                        <div>
-                            <button type="button" class="btn btn-outline-danger px-3 py-2 rounded-3 text-xs font-semibold shadow-xs" onclick="submitVerifikasi('cancel')">
-                                <i class="fas fa-ban me-1.5"></i> Batalkan / Tolak Penerimaan Ini
-                            </button>
-                        </div>
+                <!-- Right: Action Buttons (Indigo & Emerald) -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <button type="button" 
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition-all shadow-sm active:scale-95 border border-slate-700"
+                            onclick="submitVerifikasi('revise')">
+                        <i class="fas fa-pen-to-square text-indigo-300"></i>
+                        <span>Simpan Revisi Selisih</span>
+                    </button>
 
-                        <!-- Right side: Submit Actions -->
-                        <div class="d-flex flex-wrap gap-2 justify-content-end">
-                            <button type="button" class="btn btn-warning text-white px-4 py-2 rounded-3 font-semibold shadow-sm" onclick="submitVerifikasi('revise')">
-                                <i class="fas fa-pen-to-square me-1.5"></i> Simpan Revisi Selisih
-                            </button>
-                            <button type="button" class="btn btn-success px-4 py-2 rounded-3 font-semibold shadow-sm" onclick="submitVerifikasi('verify')">
-                                <i class="fas fa-circle-check me-1.5"></i> Verifikasi (Sesuai & Tambah Stok)
-                            </button>
-                        </div>
-                    </div>
+                    <button type="button" 
+                            class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md shadow-emerald-500/20 active:scale-95"
+                            onclick="submitVerifikasi('verify')">
+                        <i class="fas fa-circle-check"></i>
+                        <span>Verifikasi (Sesuai & Tambah Stok)</span>
+                    </button>
                 </div>
-                @else
-                <div class="card-footer bg-slate-50 p-3.5 border-top d-flex justify-content-between align-items-center">
-                    <div class="text-xs text-muted">
-                        <i class="fas fa-lock me-1"></i> Transaksi penerimaan barang ini telah difinalisasi dan tidak dapat diubah lagi.
-                    </div>
-                    <a href="{{ route('warehouse.verifikasi.index') }}" class="btn btn-light btn-sm border px-3">
-                        <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Verifikasi
-                    </a>
+            </div>
+            @else
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200/80 flex items-center justify-between">
+                <div class="text-xs text-slate-500 flex items-center gap-2">
+                    <i class="fas fa-lock text-slate-400"></i>
+                    <span>Transaksi penerimaan barang ini telah difinalisasi dan tidak dapat diubah lagi.</span>
                 </div>
-                @endif
-            </form>
-        </div>
+                <a href="{{ route('warehouse.verifikasi.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-xs transition">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali ke Daftar Verifikasi</span>
+                </a>
+            </div>
+            @endif
+        </form>
     </div>
 </div>
 
-<!-- SweetAlert2 Scripts for interactive modern alerts -->
+<!-- Interactive Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function adjustQty(btn, delta) {
-    const group = btn.closest('.input-group');
-    if (!group) return;
-    const input = group.querySelector('.physical-qty');
+    const parent = btn.closest('.inline-flex');
+    if (!parent) return;
+    const input = parent.querySelector('.physical-qty');
     if (!input) return;
     
     let currentVal = parseInt(input.value) || 0;
@@ -254,13 +324,13 @@ function checkQtyMismatch(input) {
     if (!labelContainer) return;
 
     if (currentQty === origQty) {
-        labelContainer.innerHTML = '<span>Status Qty: <strong class="text-success"><i class="fas fa-check-circle me-1"></i>Sesuai</strong></span>';
+        labelContainer.innerHTML = '<span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 text-[11px]"><i class="fas fa-check-circle"></i> Status: Sesuai</span>';
     } else if (currentQty < origQty) {
         const diff = origQty - currentQty;
-        labelContainer.innerHTML = `<span class="text-amber-600 font-semibold"><i class="fas fa-triangle-exclamation me-1"></i>Kurang ${diff} Unit dari Nota</span>`;
+        labelContainer.innerHTML = `<span class="inline-flex items-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200/60 text-[11px]"><i class="fas fa-triangle-exclamation"></i> Kurang ${diff} Unit dari Nota</span>`;
     } else {
         const diff = currentQty - origQty;
-        labelContainer.innerHTML = `<span class="text-blue-600 font-semibold"><i class="fas fa-circle-plus me-1"></i>Lebih ${diff} Unit dari Nota</span>`;
+        labelContainer.innerHTML = `<span class="inline-flex items-center gap-1 font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200/60 text-[11px]"><i class="fas fa-circle-plus"></i> Lebih ${diff} Unit dari Nota</span>`;
     }
 }
 
@@ -285,10 +355,15 @@ function submitVerifikasi(action) {
             text: 'Dokumen penerimaan akan dibatalkan. Stok barang TIDAK AKAN ditambahkan ke sistem gudang.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#64748b',
             confirmButtonText: 'Ya, Batalkan Penerimaan',
-            cancelButtonText: 'Kembali'
+            cancelButtonText: 'Kembali',
+            customClass: {
+                popup: 'rounded-2xl shadow-xl border border-slate-100',
+                confirmButton: 'rounded-xl px-4 py-2 font-semibold',
+                cancelButton: 'rounded-xl px-4 py-2 font-semibold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 executeVerifikasiApi('cancel', items);
@@ -303,10 +378,15 @@ function submitVerifikasi(action) {
             text: 'Pastikan jumlah fisik sudah benar. Setelah diverifikasi, stok produk di gudang akan otomatis bertambah.',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#10b981',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#059669',
+            cancelButtonColor: '#64748b',
             confirmButtonText: 'Ya, Verifikasi & Tambah Stok',
-            cancelButtonText: 'Cek Kembali'
+            cancelButtonText: 'Cek Kembali',
+            customClass: {
+                popup: 'rounded-2xl shadow-xl border border-slate-100',
+                confirmButton: 'rounded-xl px-4 py-2 font-semibold',
+                cancelButton: 'rounded-xl px-4 py-2 font-semibold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 executeVerifikasiApi('verify', items);
@@ -321,10 +401,15 @@ function submitVerifikasi(action) {
             text: 'Perubahan jumlah fisik aktual akan diperbarui. Data penerimaan akan berstatus Revisi.',
             icon: 'info',
             showCancelButton: true,
-            confirmButtonColor: '#f59e0b',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#1e293b',
+            cancelButtonColor: '#64748b',
             confirmButtonText: 'Ya, Simpan Revisi',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-2xl shadow-xl border border-slate-100',
+                confirmButton: 'rounded-xl px-4 py-2 font-semibold',
+                cancelButton: 'rounded-xl px-4 py-2 font-semibold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 executeVerifikasiApi('revise', items);
@@ -364,7 +449,10 @@ function executeVerifikasiApi(action, items) {
                 icon: 'success',
                 title: 'Berhasil!',
                 text: result.message,
-                confirmButtonColor: '#4f46e5'
+                confirmButtonColor: '#4f46e5',
+                customClass: {
+                    popup: 'rounded-2xl shadow-xl'
+                }
             }).then(() => {
                 window.location.href = '{{ route("warehouse.verifikasi.index") }}';
             });

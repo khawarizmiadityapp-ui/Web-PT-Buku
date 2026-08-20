@@ -174,39 +174,39 @@
         <canvas id="salesChart" height="100"></canvas>
     </div>
 
-    <!-- Top Products Progress Bar -->
-    <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-bold text-gray-900">Barang Terlaris</h3>
-            <a href="{{ route('products.index') }}" title="Lihat Semua Barang" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition inline-block">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
+    <!-- Category Distribution Doughnut Chart -->
+    <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-2">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
+                    Distribusi Kategori Produk
+                </h3>
+                <p class="text-xs text-gray-500 mt-0.5">Proporsi stok fisik per kategori barang</p>
+            </div>
+            <a href="{{ route('products.index') }}" title="Kelola Master Produk" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition inline-block">
+                <i class="fas fa-layer-group text-sm"></i>
             </a>
         </div>
-        <div class="space-y-4">
+        
+        <div class="relative flex items-center justify-center my-auto py-2" style="height: 190px;">
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <div class="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
             @php
-                $maxQty = $topProducts->max('total_qty') ?: 1;
+                $colorDots = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-pink-500', 'bg-cyan-500'];
             @endphp
-            @forelse($topProducts as $prod)
-                @php
-                    $percentage = min(100, max(15, round(($prod->total_qty / $maxQty) * 100)));
-                @endphp
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-medium text-gray-700 truncate max-w-[180px]">{{ $prod->product_name }}</span>
-                        <span class="text-sm font-bold text-gray-900">{{ number_format($prod->total_qty) }} {{ $prod->unit ?? 'Pcs' }}</span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-2">
-                        <div class="bg-blue-600 h-2 rounded-full progress-bar transition-all duration-500" style="width: {{ $percentage }}%"></div>
-                    </div>
+            @forelse($categoryDistribution->take(4) as $idx => $cat)
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-1.5 text-gray-600 truncate max-w-[100px]">
+                        <span class="w-2 h-2 rounded-full {{ $colorDots[$idx % count($colorDots)] }} flex-shrink-0"></span>
+                        <span class="truncate">{{ $cat->category }}</span>
+                    </span>
+                    <span class="font-bold text-gray-900 ml-1">{{ number_format($cat->total_stock) }}</span>
                 </div>
             @empty
-                <div class="text-center py-6 text-gray-500">
-                    <i class="fas fa-inbox text-3xl mb-2 text-gray-300"></i>
-                    <p class="text-sm">Belum ada data barang terlaris</p>
-                </div>
+                <div class="col-span-2 text-center text-gray-400 py-2">Belum ada kategori produk</div>
             @endforelse
         </div>
     </div>
@@ -360,6 +360,57 @@
         });
     }
 
+    function renderCategoryChart() {
+        const categoryCtx = document.getElementById('categoryChart')?.getContext('2d');
+        if (!categoryCtx) return;
+
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json($categoryDistribution->pluck('category')),
+                datasets: [{
+                    data: @json($categoryDistribution->pluck('total_stock')),
+                    backgroundColor: [
+                        '#3B82F6', // Blue
+                        '#10B981', // Emerald
+                        '#F59E0B', // Amber
+                        '#8B5CF6', // Purple
+                        '#EC4899', // Pink
+                        '#06B6D4', // Cyan
+                        '#64748B', // Slate
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1F2937',
+                        padding: 10,
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderWidth: 1,
+                        borderColor: '#374151',
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed || 0;
+                                return ` ${context.label}: ${value.toLocaleString()} Pcs`;
+                            }
+                        }
+                    }
+                },
+                cutout: '68%'
+            }
+        });
+    }
+
     function renderProductPerformanceCharts() {
         // Top Sold Bar Chart
         const topSoldCtx = document.getElementById('topSoldChart')?.getContext('2d');
@@ -422,6 +473,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         fetchSalesChartData('perbulan');
+        renderCategoryChart();
         renderProductPerformanceCharts();
     });
 </script>

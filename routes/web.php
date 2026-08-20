@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::get('warehouse/stock-audit', [StockAuditController::class, 'index'])->name('warehouse.stock-audit.index');
     Route::post('warehouse/stock-audit/process', [StockAuditController::class, 'processAdjustment'])->name('warehouse.stock-audit.process');
     Route::get('warehouse/stock-audit/start', [StockAuditController::class, 'startStockCount'])->name('warehouse.stock-audit.start');
+    Route::post('warehouse/stock-audit/count', [StockAuditController::class, 'storeStockCount'])->name('warehouse.stock-audit.store-count');
     
     // Warehouse - Returns
     Route::get('warehouse/returns', [ProductReturnController::class, 'index'])->name('warehouse.returns.index');

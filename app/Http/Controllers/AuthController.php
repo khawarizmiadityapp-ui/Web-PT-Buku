@@ -129,6 +129,13 @@ class AuthController extends Controller
             ->take(5)
             ->get();
 
+        // Category Stock Distribution for Doughnut Chart
+        $categoryDistribution = Product::select('category', DB::raw('SUM(system_stock) as total_stock'), DB::raw('COUNT(*) as total_items'))
+            ->whereNotNull('category')
+            ->groupBy('category')
+            ->orderByDesc('total_stock')
+            ->get();
+
         $topProducts = $topSellingProducts->map(function($p) {
             return (object)[
                 'product_name' => $p->product_name,
@@ -149,7 +156,8 @@ class AuthController extends Controller
             'pendingPOCount',
             'topProducts',
             'topSellingProducts',
-            'leastSellingProducts'
+            'leastSellingProducts',
+            'categoryDistribution'
         ));
     }
 
