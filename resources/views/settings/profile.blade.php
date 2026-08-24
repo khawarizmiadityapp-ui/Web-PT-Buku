@@ -61,12 +61,13 @@
                                 @endif
                                 <label for="avatar" class="absolute bottom-0 right-0 bg-blue-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-blue-700">
                                     <i class="fas fa-camera text-xs"></i>
-                                    <input type="file" name="avatar" id="avatar" accept="image/*" class="hidden">
+                                    <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden">
                                 </label>
                             </div>
                             <div>
                                 <p class="font-medium text-gray-900">{{ $user->name }}</p>
                                 <p class="text-sm text-gray-500">{{ $user->role ?? 'Staff' }}</p>
+                                @error('avatar')<p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                             </div>
                         </div>
 

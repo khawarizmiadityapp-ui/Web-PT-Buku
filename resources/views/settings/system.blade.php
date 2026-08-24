@@ -73,11 +73,12 @@
                                     <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 mb-4"></i>
                                 @endif
                                 <p class="text-sm font-medium text-gray-700 mb-1">Brand Logo</p>
-                                <p class="text-xs text-gray-500 mb-4">Recommended: 200x60px, PNG or SVG</p>
+                                <p class="text-xs text-gray-500 mb-4">Rekomendasi: 200x60px, PNG, JPG, atau WEBP (Maks 2MB)</p>
                                 <label class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer">
                                     <i class="fas fa-upload mr-2"></i> Upload Logo
-                                    <input type="file" name="logo" accept="image/*" class="hidden">
+                                    <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden">
                                 </label>
+                                @error('logo')<p class="mt-2 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                             </div>
                         </div>
                     </div>

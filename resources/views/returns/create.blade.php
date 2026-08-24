@@ -101,10 +101,13 @@
                                      onclick="document.getElementById('proofImage').click()">
                                     <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-2"></i>
                                     <p class="mb-1">Click to upload or drag-and-drop</p>
-                                    <small class="text-muted">PNG, JPG, PDF - Max. 2MB</small>
+                                    <small class="text-muted">PNG, JPG, JPEG, WEBP - Maks. 2MB</small>
                                     <input type="file" id="proofImage" name="proof_image" class="d-none" 
-                                           accept="image/*" onchange="previewImage(this)">
+                                           accept="image/png,image/jpeg,image/jpg,image/webp" onchange="previewImage(this)">
                                 </div>
+                                @error('proof_image')
+                                    <div class="text-danger small mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</div>
+                                @enderror
                                 
                                 <div id="imagePreview" class="mt-3" style="display: none;">
                                     <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">

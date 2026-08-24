@@ -107,7 +107,11 @@ class ProductReturnController extends Controller
             'refund_method' => 'required|in:Cash,QRIS',
             'restocking_fee' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
-            'proof_image' => 'nullable|image|max:2048',
+            'proof_image' => 'nullable|file|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ], [
+            'proof_image.image' => 'Bukti foto harus berupa file gambar yang valid',
+            'proof_image.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau WEBP',
+            'proof_image.max' => 'Ukuran file gambar maksimal 2MB',
         ]);
 
         DB::beginTransaction();

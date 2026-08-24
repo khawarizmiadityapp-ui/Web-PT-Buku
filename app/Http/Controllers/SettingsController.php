@@ -117,12 +117,15 @@ class SettingsController extends Controller
             'phone' => 'nullable|string|max:20',
             'position' => 'nullable|string|max:255',
             'bio' => 'nullable|string|max:1000',
-            'avatar' => 'nullable|image|max:2048',
+            'avatar' => 'nullable|file|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
             'name.required' => 'Nama wajib diisi',
             'email.required' => 'Email wajib diisi',
             'email.email' => 'Format email tidak valid',
             'email.unique' => 'Email sudah digunakan',
+            'avatar.image' => 'File avatar harus berupa gambar yang valid',
+            'avatar.mimes' => 'Format avatar harus JPG, JPEG, PNG, atau WEBP',
+            'avatar.max' => 'Ukuran avatar maksimal 2MB',
         ]);
 
         if ($validator->fails()) {
@@ -231,9 +234,12 @@ class SettingsController extends Controller
             'company_name' => 'required|string|max:255',
             'tax_id' => 'nullable|string|max:50',
             'address' => 'nullable|string|max:1000',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|file|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
             'company_name.required' => 'Nama perusahaan wajib diisi',
+            'logo.image' => 'File logo harus berupa gambar yang valid',
+            'logo.mimes' => 'Format logo harus JPG, JPEG, PNG, atau WEBP',
+            'logo.max' => 'Ukuran logo maksimal 2MB',
         ]);
 
         if ($validator->fails()) {
