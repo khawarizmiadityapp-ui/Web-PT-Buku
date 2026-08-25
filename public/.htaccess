@@ -3,6 +3,14 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    # Disable server signatures
+    ServerSignature Off
+
+    # Hide PHP / Web Server disclosure headers if mod_headers is enabled
+    <IfModule mod_headers.c>
+        Header unset X-Powered-By
+    </IfModule>
+
     RewriteEngine On
 
     # Handle Authorization Header

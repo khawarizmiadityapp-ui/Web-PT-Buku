@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PurchaseController extends Controller
@@ -128,7 +129,8 @@ class PurchaseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal membuat PO: ' . $e->getMessage())->withInput();
+            Log::error('Purchase store error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return back()->with('error', 'Gagal membuat Purchase Order. Silakan periksa kembali data Anda atau hubungi admin.')->withInput();
         }
     }
 
@@ -217,7 +219,8 @@ class PurchaseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal mengupdate PO: ' . $e->getMessage())->withInput();
+            Log::error('Purchase update error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return back()->with('error', 'Gagal memperbarui Purchase Order. Silakan periksa kembali data Anda atau hubungi admin.')->withInput();
         }
     }
 

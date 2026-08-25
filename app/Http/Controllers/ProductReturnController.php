@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\SalesInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
@@ -157,8 +158,9 @@ class ProductReturnController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('ProductReturn store error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return back()->withInput()
-                ->with('error', 'Failed to create return: ' . $e->getMessage());
+                ->with('error', 'Gagal memproses pengajuan retur. Silakan periksa kembali data Anda atau hubungi admin.');
         }
     }
 
@@ -203,7 +205,8 @@ class ProductReturnController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Failed to update status: ' . $e->getMessage());
+            Log::error('ProductReturn updateStatus error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return back()->with('error', 'Gagal memperbarui status retur. Silakan coba beberapa saat lagi.');
         }
     }
 

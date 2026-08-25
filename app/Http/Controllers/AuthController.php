@@ -15,7 +15,9 @@ use App\Models\IncomingGood;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class AuthController extends Controller
@@ -29,18 +31,29 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle login request
+     * Handle login request with brute-force protection
      */
     public function login(Request $request)
     {
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')) . '|' . $request->ip());
+
+        // Check if user has exceeded max login attempts (5 attempts, then 30-minute lockout)
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $timeText = $seconds >= 60 ? ceil($seconds / 60) . ' menit' : "{$seconds} detik";
+            return back()
+                ->withErrors(['email' => "Terlalu banyak percobaan login gagal. Akses ditangguhkan sementara demi keamanan. Silakan coba lagi dalam {$timeText}."])
+                ->withInput($request->only('email', 'remember'));
+        }
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6',
         ], [
-            'email.required' => 'Email is required',
-            'email.email' => 'Please enter a valid email address',
-            'password.required' => 'Password is required',
-            'password.min' => 'Password must be at least 6 characters',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Masukkan format email yang valid',
+            'password.required' => 'Password wajib diisi',
+            'password.min' => 'Password minimal 6 karakter',
         ]);
 
         if ($validator->fails()) {
@@ -53,12 +66,16 @@ class AuthController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
             AuditLogService::log('LOGIN', 'User logged in successfully', 'users', Auth::id(), null, $request);
 
             return redirect()->intended('dashboard')->with('success', 'Welcome back!');
         }
+
+        // Record failed attempt with a 30-minute (1800s) lockout duration
+        RateLimiter::hit($throttleKey, 1800);
 
         return back()
             ->withErrors(['email' => 'The provided credentials do not match our records.'])

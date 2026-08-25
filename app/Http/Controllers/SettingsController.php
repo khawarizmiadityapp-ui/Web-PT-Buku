@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class SettingsController extends Controller
 {
@@ -160,11 +161,18 @@ class SettingsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
+            'new_password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
         ], [
             'current_password.required' => 'Password saat ini wajib diisi',
             'new_password.required' => 'Password baru wajib diisi',
-            'new_password.min' => 'Password minimal 6 karakter',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 

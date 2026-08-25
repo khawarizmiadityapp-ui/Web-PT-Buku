@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use App\Models\StockOut;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class WarehouseController extends Controller
@@ -283,9 +284,10 @@ class WarehouseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Warehouse storeIncomingGoods error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Gagal mencatat penerimaan barang. Silakan periksa kembali data atau hubungi admin.',
             ], 422);
         }
     }
@@ -523,9 +525,10 @@ class WarehouseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Warehouse verifikasiProcess error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Gagal memproses verifikasi barang. Silakan periksa kembali data atau hubungi admin.',
             ], 422);
         }
     }

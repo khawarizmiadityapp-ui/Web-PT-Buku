@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\ProductReturn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class CashierController extends Controller
@@ -204,11 +205,17 @@ class CashierController extends Controller
                 'change' => $paidAmount - $total,
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
+            Log::error('Cashier processTransaction error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            
+            $userMessage = ($e instanceof \PDOException || $e instanceof \Illuminate\Database\QueryException)
+                ? 'Terjadi kesalahan sistem saat memproses transaksi kasir.'
+                : $e->getMessage();
+
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $userMessage,
             ], 422);
         }
     }

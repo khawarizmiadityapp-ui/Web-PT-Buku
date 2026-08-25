@@ -135,7 +135,7 @@
                                 <input type="password" name="new_password" id="new_password"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('new_password') border-red-500 @enderror">
                                 @error('new_password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                                <p class="mt-1 text-xs text-gray-500">Minimum 6 characters</p>
+                                <p class="mt-1 text-xs text-gray-500">Minimal 8 karakter, kombinasi huruf besar, huruf kecil, angka & simbol</p>
                             </div>
                             <div>
                                 <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>

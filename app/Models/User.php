@@ -43,4 +43,33 @@ class User extends Authenticatable
 
         return (int) round(($filled / count($fields)) * 100);
     }
+
+    /**
+     * Check if user has any of the given roles.
+     */
+    public function hasRole(string|array $roles): bool
+    {
+        $roles = is_array($roles) ? $roles : func_get_args();
+        return in_array($this->role, $roles, true) || $this->role === 'System Admin' || $this->role === 'Admin';
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, ['System Admin', 'Admin'], true);
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === 'Manager' || $this->isAdmin();
+    }
+
+    public function isWarehouse(): bool
+    {
+        return in_array($this->role, ['Warehouse Manager', 'Picker', 'Packer', 'Verifier'], true) || $this->isAdmin();
+    }
+
+    public function isCashier(): bool
+    {
+        return $this->role === 'Cashier' || $this->isAdmin();
+    }
 }

@@ -112,7 +112,7 @@
                             @error('new_password')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-xs text-gray-500">Password minimal 6 karakter</p>
+                            <p class="mt-1 text-xs text-gray-500">Minimal 8 karakter, kombinasi huruf besar, huruf kecil, angka & simbol</p>
                         </div>
 
                         <div>
