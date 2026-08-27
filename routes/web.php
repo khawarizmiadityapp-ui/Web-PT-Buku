@@ -23,6 +23,10 @@ Route::get('/', function () {
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/login/mfa', [AuthController::class, 'showMfaForm'])->name('login.mfa');
+Route::post('/login/mfa', [AuthController::class, 'verifyMfa'])->name('login.mfa.verify');
+Route::post('/login/mfa/resend', [AuthController::class, 'resendMfa'])->name('login.mfa.resend');
+Route::post('/login/mfa/cancel', [AuthController::class, 'cancelMfa'])->name('login.mfa.cancel');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected Routes

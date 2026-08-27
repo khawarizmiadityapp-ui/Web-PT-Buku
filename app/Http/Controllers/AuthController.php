@@ -27,17 +27,21 @@ class AuthController extends Controller
      */
     public function showLoginForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('auth.login');
     }
 
     /**
-     * Handle login request with brute-force protection
+     * Handle login request with brute-force protection and MFA staging
      */
     public function login(Request $request)
     {
         $throttleKey = Str::transliterate(Str::lower($request->input('email')) . '|' . $request->ip());
 
-        // Check if user has exceeded max login attempts (5 attempts, then 30-minute lockout)
+        // Check if user has exceeded max login attempts (5 attempts, then 15-minute lockout)
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             $timeText = $seconds >= 60 ? ceil($seconds / 60) . ' menit' : "{$seconds} detik";
@@ -65,21 +69,148 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
+        if (Auth::validate($credentials)) {
             RateLimiter::clear($throttleKey);
-            $request->session()->regenerate();
 
-            AuditLogService::log('LOGIN', 'User logged in successfully', 'users', Auth::id(), null, $request);
+            $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-            return redirect()->intended('dashboard')->with('success', 'Welcome back!');
+            // Store temporary MFA verification session for 15 minutes
+            $request->session()->put('auth.mfa_user_id', $user->id);
+            $request->session()->put('auth.mfa_remember', $remember);
+            $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
+
+            return redirect()->route('login.mfa');
         }
 
-        // Record failed attempt with a 30-minute (1800s) lockout duration
-        RateLimiter::hit($throttleKey, 1800);
+        // Record failed attempt with a 15-minute (900s) lockout duration
+        RateLimiter::hit($throttleKey, 900);
 
         return back()
             ->withErrors(['email' => 'The provided credentials do not match our records.'])
             ->withInput($request->only('email', 'remember'));
+    }
+
+    /**
+     * Show MFA verification page
+     */
+    public function showMfaForm(Request $request)
+    {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+
+        if (!$request->session()->has('auth.mfa_user_id')) {
+            return redirect()->route('login')->withErrors(['email' => 'Silakan masukkan email dan password terlebih dahulu.']);
+        }
+
+        $expiresAt = $request->session()->get('auth.mfa_expires_at', 0);
+        if (now()->timestamp > $expiresAt) {
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (15 menit). Silakan login kembali.']);
+        }
+
+        $user = \App\Models\User::find($request->session()->get('auth.mfa_user_id'));
+        if (!$user) {
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            return redirect()->route('login');
+        }
+
+        $staticCode = env('MFA_STATIC_CODE', '123456');
+        $remainingSeconds = max(0, $expiresAt - now()->timestamp);
+
+        return view('auth.mfa', compact('user', 'staticCode', 'remainingSeconds'));
+    }
+
+    /**
+     * Verify submitted MFA code
+     */
+    public function verifyMfa(Request $request)
+    {
+        if (!$request->session()->has('auth.mfa_user_id')) {
+            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi tidak ditemukan. Silakan login kembali.']);
+        }
+
+        $expiresAt = $request->session()->get('auth.mfa_expires_at', 0);
+        if (now()->timestamp > $expiresAt) {
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (15 menit). Silakan login kembali.']);
+        }
+
+        $userId = $request->session()->get('auth.mfa_user_id');
+        $throttleKey = 'mfa_verify|' . $userId . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $timeText = $seconds >= 60 ? ceil($seconds / 60) . ' menit' : "{$seconds} detik";
+            return back()->withErrors(['code' => "Terlalu banyak percobaan kode verifikasi yang salah. Silakan coba lagi dalam {$timeText}."]);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string|size:6',
+        ], [
+            'code.required' => 'Kode verifikasi wajib diisi',
+            'code.size' => 'Kode verifikasi harus berupa 6 digit angka',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $staticCode = (string) env('MFA_STATIC_CODE', '123456');
+        $submittedCode = trim((string) $request->input('code'));
+
+        if ($submittedCode !== $staticCode) {
+            RateLimiter::hit($throttleKey, 900);
+            return back()
+                ->withErrors(['code' => "Kode MFA tidak valid. Silakan gunakan kode verifikasi statis: {$staticCode}"])
+                ->withInput();
+        }
+
+        RateLimiter::clear($throttleKey);
+
+        $remember = $request->session()->get('auth.mfa_remember', false);
+        $user = \App\Models\User::findOrFail($userId);
+
+        Auth::login($user, $remember);
+        $request->session()->regenerate();
+        $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+        $request->session()->put('mfa_verified', true);
+
+        AuditLogService::log('LOGIN', 'User logged in successfully with MFA verification', 'users', $user->id, null, $request);
+
+        if ($user->role === 'Cashier') {
+            return redirect()->route('cashier.index')->with('success', 'Verifikasi 2FA berhasil. Selamat datang kembali!');
+        }
+
+        if ($user->role === 'Warehouse Manager') {
+            return redirect()->route('warehouse.index')->with('success', 'Verifikasi 2FA berhasil. Selamat datang kembali!');
+        }
+
+        return redirect()->intended('dashboard')->with('success', 'Verifikasi 2FA berhasil. Selamat datang kembali!');
+    }
+
+    /**
+     * Resend/Refresh MFA code validity
+     */
+    public function resendMfa(Request $request)
+    {
+        if (!$request->session()->has('auth.mfa_user_id')) {
+            return redirect()->route('login');
+        }
+
+        $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
+        $staticCode = env('MFA_STATIC_CODE', '123456');
+
+        return back()->with('success', "Kode verifikasi baru diperbarui (Kode Statis: {$staticCode}). Masa berlaku disetel ulang menjadi 15 menit.");
+    }
+
+    /**
+     * Cancel MFA and return to login
+     */
+    public function cancelMfa(Request $request)
+    {
+        $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+        return redirect()->route('login')->with('info', 'Proses verifikasi MFA dibatalkan.');
     }
 
     /**
