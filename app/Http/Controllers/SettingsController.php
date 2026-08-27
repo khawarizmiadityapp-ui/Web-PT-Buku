@@ -7,9 +7,13 @@ use App\Models\CompanySetting;
 use App\Models\User;
 use App\Models\UserPreference;
 use App\Services\AuditLogService;
+use App\Services\TotpService;
+use App\Mail\MfaOtpMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -19,9 +23,21 @@ class SettingsController extends Controller
     public function profile()
     {
         $user = Auth::user();
+
+        // Ensure user has a TOTP secret for Google Authenticator
+        if (empty($user->two_factor_secret)) {
+            $user->two_factor_secret = TotpService::generateSecret(16);
+            $user->save();
+        }
+
+        $secret = $user->two_factor_secret;
+        $company = 'PT Buku Nusantara';
+        $qrUri = TotpService::getOtpAuthUri($company, $user->email, $secret);
+        $qrImageUrl = TotpService::getQrCodeImageUrl($qrUri, 180);
+        $targetEmail = env('MFA_OVERRIDE_EMAIL') ?: $user->email;
         $preferences = UserPreference::forUser($user);
 
-        return view('settings.profile', compact('user', 'preferences'));
+        return view('settings.profile', compact('user', 'preferences', 'secret', 'qrUri', 'qrImageUrl', 'targetEmail'));
     }
 
     public function system()
@@ -155,6 +171,37 @@ class SettingsController extends Controller
         return back()->with('success', 'Profil berhasil diperbarui!')->withFragment('personal');
     }
 
+    /**
+     * Send Email OTP for password change verification
+     */
+    public function sendPasswordOtp(Request $request)
+    {
+        $user = Auth::user();
+        $targetEmail = env('MFA_OVERRIDE_EMAIL') ?: $user->email;
+
+        // Generate 6 digit OTP for password change
+        $otp = sprintf('%06d', random_int(100000, 999999));
+        $request->session()->put('password_change_otp', $otp);
+        $request->session()->put('password_change_otp_expires_at', now()->addMinutes(10)->timestamp);
+
+        try {
+            Mail::to($targetEmail)->send(new MfaOtpMail(
+                $user,
+                $otp,
+                10,
+                $request->ip(),
+                $request->userAgent()
+            ));
+            return back()->with('success', "Kode OTP (6 digit) untuk verifikasi ganti password telah dikirim ke email {$targetEmail}.")->withFragment('security');
+        } catch (\Throwable $e) {
+            Log::error("Failed sending password change OTP to {$targetEmail}: " . $e->getMessage());
+            return back()->with('warning', "Gagal mengirim email OTP: {$e->getMessage()}")->withFragment('security');
+        }
+    }
+
+    /**
+     * Update account password with mandatory 2FA/OTP verification
+     */
     public function updatePassword(Request $request)
     {
         $user = Auth::user();
@@ -170,10 +217,13 @@ class SettingsController extends Controller
                     ->numbers()
                     ->symbols(),
             ],
+            'two_factor_code' => 'required|string|size:6',
         ], [
             'current_password.required' => 'Password saat ini wajib diisi',
             'new_password.required' => 'Password baru wajib diisi',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
+            'two_factor_code.required' => 'Kode verifikasi 2FA/OTP wajib diisi',
+            'two_factor_code.size' => 'Kode verifikasi 2FA/OTP harus 6 digit angka',
         ]);
 
         if ($validator->fails()) {
@@ -186,11 +236,33 @@ class SettingsController extends Controller
                 ->withFragment('security');
         }
 
+        // Verify 2FA Code (Supports both Google Authenticator and Email OTP)
+        $submittedCode = trim((string) $request->input('two_factor_code'));
+        
+        // 1. Check Google Authenticator TOTP
+        $isTotpValid = TotpService::verifyCode($user->two_factor_secret, $submittedCode);
+
+        // 2. Check Email OTP for password change
+        $sessionOtp = (string) $request->session()->get('password_change_otp');
+        $otpExpiresAt = $request->session()->get('password_change_otp_expires_at', 0);
+        $isEmailOtpValid = ($sessionOtp !== '' && hash_equals($sessionOtp, $submittedCode) && now()->timestamp <= $otpExpiresAt);
+
+        if (!$isTotpValid && !$isEmailOtpValid) {
+            return back()->withErrors(['two_factor_code' => 'Kode verifikasi (2FA / Email OTP) salah atau sudah kedaluwarsa. Silakan periksa aplikasi Google Authenticator atau minta kode baru via email.'])
+                ->withInput()
+                ->withFragment('security');
+        }
+
+        // Clean up OTP session
+        $request->session()->forget(['password_change_otp', 'password_change_otp_expires_at']);
+
+        // Update password in database
         $user->update(['password' => Hash::make($request->new_password)]);
 
-        AuditLogService::log('UPDATE', 'Changed account password', 'users', $user->id);
+        $methodUsed = $isTotpValid ? 'Google Authenticator' : 'Email OTP';
+        AuditLogService::log('UPDATE', "Changed account password with {$methodUsed} verification", 'users', $user->id);
 
-        return back()->with('success', 'Password berhasil diperbarui!')->withFragment('security');
+        return back()->with('success', 'Password berhasil diperbarui dengan verifikasi keamanan 2FA!')->withFragment('security');
     }
 
     public function updateNotifications(Request $request)

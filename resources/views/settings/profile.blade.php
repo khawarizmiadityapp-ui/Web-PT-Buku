@@ -118,46 +118,153 @@
 
                 {{-- Account Security --}}
                 <div id="profile-tab-security" class="profile-tab-content hidden">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-1">Account Security</h2>
-                    <p class="text-sm text-gray-500 mb-6">Manage your password and security settings</p>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-1">Keamanan Akun & Ganti Password</h2>
+                    <p class="text-sm text-gray-500 mb-6">Kelola kata sandi akun dan verifikasi keamanan dua faktor (2FA)</p>
 
-                    <form action="{{ route('settings.password') }}" method="POST" class="max-w-xl">
+                    <!-- Form to request Email OTP for password change (separate form) -->
+                    <form id="sendEmailOtpForm" action="{{ route('settings.password.send_otp') }}" method="POST" class="hidden">
                         @csrf
-                        <div class="space-y-6">
+                    </form>
+
+                    <form action="{{ route('settings.password') }}" method="POST" class="max-w-2xl space-y-6">
+                        @csrf
+                        <div class="space-y-4 bg-white p-5 rounded-2xl border border-gray-200">
+                            <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider mb-2">1. Masukkan Password</h3>
                             <div>
-                                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                                <input type="password" name="current_password" id="current_password"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('current_password') border-red-500 @enderror">
-                                @error('current_password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Password Saat Ini (Lama)</label>
+                                <input type="password" name="current_password" id="current_password" required
+                                       placeholder="Masukkan password yang sedang aktif"
+                                       class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 @error('current_password') border-red-500 @enderror">
+                                @error('current_password')<p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                             </div>
-                            <div>
-                                <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                                <input type="password" name="new_password" id="new_password"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('new_password') border-red-500 @enderror">
-                                @error('new_password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                                <p class="mt-1 text-xs text-gray-500">Minimal 8 karakter, kombinasi huruf besar, huruf kecil, angka & simbol</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
+                                    <input type="password" name="new_password" id="new_password" required
+                                           placeholder="Minimal 8 karakter"
+                                           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 @error('new_password') border-red-500 @enderror">
+                                    @error('new_password')<p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
+                                </div>
+                                <div>
+                                    <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password Baru</label>
+                                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" required
+                                           placeholder="Ketik ulang password baru"
+                                           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
                             </div>
-                            <div>
-                                <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-                                <input type="password" name="new_password_confirmation" id="new_password_confirmation"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-gray-500">
+                                <i class="fas fa-info-circle text-blue-500 mr-1"></i>Kombinasi minimal 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol.
+                            </p>
+                        </div>
+
+                        <!-- 2FA Verification Box -->
+                        <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-5 space-y-3.5">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-xs">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-gray-900">2. Verifikasi Keamanan 2FA (Wajib)</h4>
+                                        <p class="text-xs text-gray-600">Masukkan 6 digit kode dari Google Authenticator atau Email OTP</p>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-[11px] font-bold rounded-full">
+                                    Diperlukan
+                                </span>
+                            </div>
+
+                            <div class="pt-2">
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                                    <div class="relative flex-1">
+                                        <input 
+                                            type="text" 
+                                            name="two_factor_code" 
+                                            id="two_factor_code" 
+                                            maxlength="6" 
+                                            inputmode="numeric" 
+                                            placeholder="Contoh: 123456" 
+                                            value="{{ old('two_factor_code') }}"
+                                            class="w-full pl-10 pr-4 py-2.5 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-bold text-base tracking-widest text-gray-800 bg-white @error('two_factor_code') border-red-500 @enderror"
+                                            required
+                                        >
+                                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-500">
+                                            <i class="fas fa-key text-xs"></i>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        type="submit" 
+                                        form="sendEmailOtpForm" 
+                                        class="px-4 py-2.5 bg-white hover:bg-slate-50 border border-blue-300 text-blue-700 text-xs font-semibold rounded-xl shadow-xs flex items-center justify-center space-x-1.5 transition-colors whitespace-nowrap"
+                                        title="Kirim kode verifikasi ke email"
+                                    >
+                                        <i class="fas fa-paper-plane text-blue-600"></i>
+                                        <span>Kirim OTP ke Email</span>
+                                    </button>
+                                </div>
+                                @error('two_factor_code')
+                                    <p class="mt-1.5 text-xs text-red-600 font-medium">{{ $message }}</p>
+                                @enderror
+                                <p class="text-[11px] text-gray-500 mt-2">
+                                    💡 <strong>Tips:</strong> Anda bisa langsung memasukkan 6 digit kode yang tampil di aplikasi <strong>Google Authenticator</strong> HP Anda, atau klik tombol <em>"Kirim OTP ke Email"</em> untuk menerima kode via inbox <strong>{{ $targetEmail }}</strong>.
+                                </p>
                             </div>
                         </div>
-                        <div class="flex items-center justify-end pt-6 mt-6 border-t border-gray-200">
-                            <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
-                                <i class="fas fa-key mr-2"></i>Update Password
+
+                        <div class="flex items-center justify-end pt-2">
+                            <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-md transition flex items-center space-x-2 text-sm">
+                                <i class="fas fa-save"></i>
+                                <span>Verifikasi & Perbarui Password</span>
                             </button>
                         </div>
                     </form>
 
-                    <div class="mt-8 p-4 border border-gray-200 rounded-lg flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-700">Two Factor Authentication (2FA)</p>
-                            <p class="text-xs text-gray-500">Add an extra layer of security to your account</p>
+                    <!-- Google Authenticator Device Card -->
+                    <div class="mt-10 p-5 bg-slate-50 border border-gray-200 rounded-2xl">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <h4 class="text-sm font-bold text-gray-900">Google Authenticator (2FA)</h4>
+                                        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">
+                                            Aktif & Terlindungi
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-0.5">
+                                        Akun ini telah terhubung dengan otentikasi dua langkah (TOTP). Anda dapat scan ulang barcode di bawah jika berpindah perangkat HP.
+                                    </p>
+                                </div>
+                            </div>
+                            <button 
+                                type="button" 
+                                onclick="document.getElementById('qrCodeDrawer').classList.toggle('hidden')" 
+                                class="px-3.5 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-100 transition shadow-xs whitespace-nowrap"
+                            >
+                                <i class="fas fa-eye mr-1 text-gray-500"></i>Lihat QR Code
+                            </button>
                         </div>
-                        <button type="button" onclick="alert('Fitur 2FA akan segera hadir!')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium">
-                            Enable 2FA
-                        </button>
+
+                        <!-- QR Code Collapsible Details -->
+                        <div id="qrCodeDrawer" class="hidden mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                            <div class="sm:col-span-4 flex justify-center">
+                                <div class="p-2 bg-white rounded-xl shadow-xs border border-gray-200 inline-block">
+                                    <img src="{{ $qrImageUrl }}" alt="QR Code Google Authenticator" class="w-32 h-32 rounded-lg object-contain">
+                                </div>
+                            </div>
+                            <div class="sm:col-span-8 space-y-2 text-xs text-gray-600">
+                                <p><strong>Cara Scan Ulang:</strong> Buka aplikasi Google / Microsoft Authenticator di HP, lalu scan QR Code di samping.</p>
+                                <div>
+                                    <span class="text-gray-500 font-semibold block mb-1">Kunci Rahasia Manual:</span>
+                                    <div class="inline-block bg-white border border-gray-300 rounded-lg px-2.5 py-1 font-mono font-bold text-blue-700 select-all">
+                                        {{ chunk_split($secret, 4, ' ') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

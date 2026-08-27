@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\AuditLogService;
+use App\Services\TotpService;
+use App\Mail\MfaOtpMail;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Customer;
@@ -15,6 +17,8 @@ use App\Models\IncomingGood;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -74,9 +78,19 @@ class AuthController extends Controller
 
             $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-            // Store temporary MFA verification session for 15 minutes
+            // Ensure user has a TOTP secret for Google Authenticator
+            if (empty($user->two_factor_secret)) {
+                $user->two_factor_secret = TotpService::generateSecret(16);
+                $user->save();
+            }
+
+            // Generate initial 6-digit OTP for Email verification option
+            $emailOtp = sprintf('%06d', random_int(100000, 999999));
+
+            // Store temporary MFA verification session
             $request->session()->put('auth.mfa_user_id', $user->id);
             $request->session()->put('auth.mfa_remember', $remember);
+            $request->session()->put('auth.mfa_otp', $emailOtp);
             $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
 
             return redirect()->route('login.mfa');
@@ -91,7 +105,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Show MFA verification page
+     * Get the destination email address for OTP delivery
+     */
+    private function getMfaTargetEmail($user): string
+    {
+        $override = env('MFA_OVERRIDE_EMAIL');
+        if (!empty($override)) {
+            return trim((string) $override);
+        }
+        return $user->email;
+    }
+
+    /**
+     * Show MFA verification page with choices: Authenticator App OR Email OTP
      */
     public function showMfaForm(Request $request)
     {
@@ -105,24 +131,106 @@ class AuthController extends Controller
 
         $expiresAt = $request->session()->get('auth.mfa_expires_at', 0);
         if (now()->timestamp > $expiresAt) {
-            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
             return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (15 menit). Silakan login kembali.']);
         }
 
         $user = \App\Models\User::find($request->session()->get('auth.mfa_user_id'));
         if (!$user) {
-            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
             return redirect()->route('login');
         }
 
-        $staticCode = env('MFA_STATIC_CODE', '123456');
-        $remainingSeconds = max(0, $expiresAt - now()->timestamp);
+        // Ensure user has secret key
+        if (empty($user->two_factor_secret)) {
+            $user->two_factor_secret = TotpService::generateSecret(16);
+            $user->save();
+        }
 
-        return view('auth.mfa', compact('user', 'staticCode', 'remainingSeconds'));
+        $secret = $user->two_factor_secret;
+        $company = 'PT Buku Nusantara';
+        $qrUri = TotpService::getOtpAuthUri($company, $user->email, $secret);
+        $qrImageUrl = TotpService::getQrCodeImageUrl($qrUri, 200);
+        $currentLiveTotp = TotpService::getCode($secret);
+        $remainingCycleSeconds = TotpService::getRemainingSeconds();
+        
+        $targetEmail = $this->getMfaTargetEmail($user);
+        $sessionEmailOtp = $request->session()->get('auth.mfa_otp');
+        $mailSent = $request->session()->get('auth.mfa_mail_sent', false);
+        $mailError = $request->session()->get('auth.mfa_mail_error');
+        $activeTab = $request->query('tab', 'authenticator');
+        $remainingSeconds = max(0, $expiresAt - now()->timestamp);
+        $staticCode = env('MFA_STATIC_CODE');
+
+        return view('auth.mfa', compact(
+            'user',
+            'secret',
+            'qrUri',
+            'qrImageUrl',
+            'currentLiveTotp',
+            'remainingCycleSeconds',
+            'targetEmail',
+            'sessionEmailOtp',
+            'mailSent',
+            'mailError',
+            'activeTab',
+            'remainingSeconds',
+            'staticCode'
+        ));
     }
 
     /**
-     * Verify submitted MFA code
+     * Send or resend OTP to user's real email
+     */
+    public function sendEmailOtp(Request $request)
+    {
+        if (!$request->session()->has('auth.mfa_user_id')) {
+            return redirect()->route('login');
+        }
+
+        $user = \App\Models\User::find($request->session()->get('auth.mfa_user_id'));
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // Generate fresh 6-digit OTP
+        $otp = sprintf('%06d', random_int(100000, 999999));
+        $expiresAt = now()->addMinutes(15)->timestamp;
+
+        $request->session()->put('auth.mfa_otp', $otp);
+        $request->session()->put('auth.mfa_expires_at', $expiresAt);
+
+        $targetEmail = $this->getMfaTargetEmail($user);
+
+        $mailSent = false;
+        $mailError = null;
+
+        try {
+            Mail::to($targetEmail)->send(new MfaOtpMail(
+                $user,
+                $otp,
+                15,
+                $request->ip(),
+                $request->userAgent()
+            ));
+            $mailSent = true;
+        } catch (\Throwable $e) {
+            Log::error("Failed sending MFA OTP email to {$targetEmail}: " . $e->getMessage());
+            $mailError = $e->getMessage();
+        }
+
+        $request->session()->put('auth.mfa_mail_sent', $mailSent);
+        $request->session()->put('auth.mfa_mail_error', $mailError);
+
+        if ($mailSent) {
+            return redirect()->route('login.mfa', ['tab' => 'email'])->with('success', "Kode OTP 6 digit berhasil dikirim ke email {$targetEmail}. Cek kotak masuk atau spam!");
+        } else {
+            return redirect()->route('login.mfa', ['tab' => 'email'])->with('warning', "Kode OTP baru telah dibuat, namun server email melaporkan: {$mailError}");
+        }
+    }
+
+    /**
+     * Verify submitted code (Accepts either Google Authenticator TOTP or Email OTP)
      */
     public function verifyMfa(Request $request)
     {
@@ -132,7 +240,7 @@ class AuthController extends Controller
 
         $expiresAt = $request->session()->get('auth.mfa_expires_at', 0);
         if (now()->timestamp > $expiresAt) {
-            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
             return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (15 menit). Silakan login kembali.']);
         }
 
@@ -156,41 +264,54 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $staticCode = (string) env('MFA_STATIC_CODE', '123456');
         $submittedCode = trim((string) $request->input('code'));
+        $user = \App\Models\User::findOrFail($userId);
+        $staticCode = env('MFA_STATIC_CODE') ? (string) env('MFA_STATIC_CODE') : null;
 
-        if ($submittedCode !== $staticCode) {
+        // Check 1: Google Authenticator TOTP
+        $isTotpValid = TotpService::verifyCode($user->two_factor_secret, $submittedCode);
+
+        // Check 2: Email OTP
+        $sessionEmailOtp = (string) $request->session()->get('auth.mfa_otp');
+        $isEmailOtpValid = ($sessionEmailOtp !== '' && hash_equals($sessionEmailOtp, $submittedCode));
+
+        // Check 3: Static dev fallback
+        $isStaticValid = ($staticCode !== null && hash_equals($staticCode, $submittedCode));
+
+        $isValid = $isTotpValid || $isEmailOtpValid || $isStaticValid;
+
+        if (!$isValid) {
             RateLimiter::hit($throttleKey, 900);
             return back()
-                ->withErrors(['code' => "Kode MFA tidak valid. Silakan gunakan kode verifikasi statis: {$staticCode}"])
+                ->withErrors(['code' => 'Kode verifikasi 6 digit tidak cocok. Silakan periksa kembali kode di aplikasi Authenticator atau email Anda.'])
                 ->withInput();
         }
 
         RateLimiter::clear($throttleKey);
 
         $remember = $request->session()->get('auth.mfa_remember', false);
-        $user = \App\Models\User::findOrFail($userId);
 
         Auth::login($user, $remember);
         $request->session()->regenerate();
-        $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+        $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
         $request->session()->put('mfa_verified', true);
 
-        AuditLogService::log('LOGIN', 'User logged in successfully with MFA verification', 'users', $user->id, null, $request);
+        $methodUsed = $isTotpValid ? 'Google Authenticator' : ($isEmailOtpValid ? 'Email OTP' : 'Static Code');
+        AuditLogService::log('LOGIN', "User logged in successfully via {$methodUsed}", 'users', $user->id, null, $request);
 
         if ($user->role === 'Cashier') {
-            return redirect()->route('cashier.index')->with('success', 'Verifikasi 2FA berhasil. Selamat datang kembali!');
+            return redirect()->route('cashier.index')->with('success', 'Verifikasi berhasil. Selamat datang kembali!');
         }
 
         if ($user->role === 'Warehouse Manager') {
-            return redirect()->route('warehouse.index')->with('success', 'Verifikasi 2FA berhasil. Selamat datang kembali!');
+            return redirect()->route('warehouse.index')->with('success', 'Verifikasi berhasil. Selamat datang kembali!');
         }
 
-        return redirect()->intended('dashboard')->with('success', 'Verifikasi 2FA berhasil. Selamat datang kembali!');
+        return redirect()->intended('dashboard')->with('success', 'Verifikasi berhasil. Selamat datang kembali!');
     }
 
     /**
-     * Resend/Refresh MFA code validity
+     * Generate a new Secret Key and QR Code for the user
      */
     public function resendMfa(Request $request)
     {
@@ -198,10 +319,19 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
-        $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
-        $staticCode = env('MFA_STATIC_CODE', '123456');
+        $user = \App\Models\User::find($request->session()->get('auth.mfa_user_id'));
+        if (!$user) {
+            $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+            return redirect()->route('login');
+        }
 
-        return back()->with('success', "Kode verifikasi baru diperbarui (Kode Statis: {$staticCode}). Masa berlaku disetel ulang menjadi 15 menit.");
+        // Generate and save new TOTP secret
+        $user->two_factor_secret = TotpService::generateSecret(16);
+        $user->save();
+
+        $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
+
+        return redirect()->route('login.mfa', ['tab' => 'authenticator'])->with('success', 'QR Code dan Kunci Rahasia Authenticator baru berhasil dibuat. Silakan scan ulang di aplikasi HP.');
     }
 
     /**
@@ -209,7 +339,7 @@ class AuthController extends Controller
      */
     public function cancelMfa(Request $request)
     {
-        $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at']);
+        $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
         return redirect()->route('login')->with('info', 'Proses verifikasi MFA dibatalkan.');
     }
 

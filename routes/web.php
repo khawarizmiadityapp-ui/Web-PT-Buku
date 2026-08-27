@@ -26,6 +26,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/login/mfa', [AuthController::class, 'showMfaForm'])->name('login.mfa');
 Route::post('/login/mfa', [AuthController::class, 'verifyMfa'])->name('login.mfa.verify');
 Route::post('/login/mfa/resend', [AuthController::class, 'resendMfa'])->name('login.mfa.resend');
+Route::post('/login/mfa/send-email', [AuthController::class, 'sendEmailOtp'])->name('login.mfa.send_email');
 Route::post('/login/mfa/cancel', [AuthController::class, 'cancelMfa'])->name('login.mfa.cancel');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/profile', [SettingsController::class, 'profile'])->name('settings.profile.view');
     Route::post('settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
     Route::post('settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::post('settings/password/send-otp', [SettingsController::class, 'sendPasswordOtp'])->name('settings.password.send_otp');
     Route::post('settings/notifications', [SettingsController::class, 'updateNotifications'])->name('settings.notifications');
 
     // System Settings & Company Branding (Restricted to System Admin)
