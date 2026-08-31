@@ -121,15 +121,9 @@
                             @endforelse
                         </tbody>
                     </table>
-                </div>
 
-                @if($products->hasPages())
-                    <div class="mt-6 flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Menampilkan {{ $products->firstItem() }} dari {{ $products->total() }} barang
-                        </div>
-                        <div>{{ $products->links() }}</div>
-                    </div>
-                @endif
+                    <!-- Pagination Footer -->
+                    @include('partials.pagination', ['paginator' => $products])
+                </div>
 </div>
 @endsection

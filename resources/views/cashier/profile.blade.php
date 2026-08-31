@@ -234,10 +234,37 @@
 
 <script>
 function confirmSignOut() {
-    if(confirm('Are you sure you want to sign out and end your shift?\n\nPlease ensure all transactions are completed.')) {
-        // Submit logout form
-        document.getElementById('logout-form').submit();
-    }
+    Swal.fire({
+        title: 'Konfirmasi Sign Out & End Shift',
+        text: 'Apakah Anda yakin ingin mengakhiri shift dan keluar dari sistem? Pastikan semua transaksi kasir telah selesai.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#EF4444',
+        cancelButtonColor: '#6B7280',
+        confirmButtonText: '<i class="fas fa-sign-out-alt me-1.5"></i> Ya, Sign Out',
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+        focusCancel: true,
+        customClass: {
+            popup: 'rounded-2xl shadow-xl',
+            confirmButton: 'rounded-xl px-4 py-2.5 text-sm font-semibold',
+            cancelButton: 'rounded-xl px-4 py-2.5 text-sm font-semibold'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Sedang keluar...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            document.getElementById('logout-form').submit();
+        }
+    });
 }
 
 function changeTerminalPin() {

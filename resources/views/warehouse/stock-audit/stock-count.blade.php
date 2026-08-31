@@ -1,27 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Mulai Penghitungan Stok - LogiBook WMS')
+@section('title', 'Mulai Penghitungan Stok - PT Nusantara ERP')
 
 @push('styles')
 <style>
-    /* Custom Modern UI Enhancements for Stock Count */
-    .scanner-laser {
-        position: absolute;
-        top: 0;
-        left: 5%;
-        width: 90%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #ef4444, #f87171, transparent);
-        box-shadow: 0 0 12px 3px rgba(239, 68, 68, 0.7);
-        animation: laserScan 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes laserScan {
-        0% { top: 10%; opacity: 0.8; }
-        50% { opacity: 1; }
-        100% { top: 90%; opacity: 0.8; }
-    }
-
     .diff-badge-surplus {
         background-color: #EFF6FF;
         color: #1D4ED8;
@@ -58,7 +40,7 @@
     }
 
     @keyframes rowFlash {
-        0% { background-color: rgba(99, 102, 241, 0.25); }
+        0% { background-color: rgba(59, 130, 246, 0.15); }
         100% { background-color: transparent; }
     }
 
@@ -72,31 +54,32 @@
     /* Floating bottom action bar */
     .floating-bar {
         position: fixed;
-        bottom: 24px;
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 1000;
-        box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.25), 0 10px 15px -5px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 40;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
     }
 </style>
 @endpush
 
 @section('content')
-<div class="container-fluid px-4 py-4 mb-24">
-    <!-- Breadcrumb & Top Controls -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+<div class="space-y-6 pb-20">
+    <!-- Breadcrumb -->
+    <div class="flex items-center text-sm text-gray-500 mb-2">
+        <a href="{{ route('dashboard') }}" class="hover:text-gray-700">Warehouse</a>
+        <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        <a href="{{ route('warehouse.stock-audit.index') }}" class="hover:text-gray-700">Stock Opname & Audit</a>
+        <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        <span class="text-gray-900 font-medium">Sesi Penghitungan</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Warehouse</a>
-                <i class="fas fa-chevron-right text-[10px]"></i>
-                <a href="{{ route('warehouse.stock-audit.index') }}" class="hover:text-indigo-600 transition">Stock Opname & Audit</a>
-                <i class="fas fa-chevron-right text-[10px]"></i>
-                <span class="text-indigo-600">Sesi Penghitungan</span>
-            </div>
             <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Penghitungan Stok Fisik (Stock Opname)</h1>
-                <span class="px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold rounded-full shadow-sm">
+                <h1 class="text-2xl font-bold text-gray-900">Penghitungan Stok Fisik (Stock Opname)</h1>
+                <span class="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold rounded-lg">
                     <i class="fas fa-barcode mr-1"></i> {{ $sessionCode }}
                 </span>
             </div>
@@ -105,157 +88,154 @@
 
         <!-- Action Header Buttons -->
         <div class="flex items-center flex-wrap gap-2.5">
-            <a href="{{ route('warehouse.stock-audit.index') }}" class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
+            <a href="{{ route('warehouse.stock-audit.index') }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
                 <i class="fas fa-arrow-left text-xs"></i>
                 <span>Kembali</span>
             </a>
-            <button type="button" onclick="setAllToSystem()" class="px-4 py-2.5 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl hover:bg-blue-100 font-medium text-sm transition shadow-sm flex items-center gap-2">
+            <button type="button" onclick="setAllToSystem()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
                 <i class="fas fa-wand-magic-sparkles text-blue-600"></i>
                 <span>Set Semua = Sistem</span>
             </button>
-            <button type="button" onclick="resetAllInputs()" class="px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-200 font-medium text-sm transition flex items-center gap-2">
+            <button type="button" onclick="resetAllInputs()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
                 <i class="fas fa-rotate-left text-xs"></i>
                 <span>Reset</span>
             </button>
-            <button type="button" onclick="openReviewModal()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm transition shadow-lg shadow-indigo-200 flex items-center gap-2">
+            <button type="button" onclick="openReviewModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition shadow-sm flex items-center gap-2">
                 <i class="fas fa-check-double"></i>
                 <span>Selesaikan & Simpan</span>
             </button>
         </div>
     </div>
 
-    <!-- Session Info Card Banner -->
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-5 text-white mb-6 shadow-md border border-slate-800">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <!-- Session Info & Progress Card -->
+    <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 text-2xl flex-shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl flex-shrink-0">
                     <i class="fas fa-clipboard-check"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-200 border border-indigo-400/20 uppercase tracking-wider">Live Audit Active</span>
-                        <span class="text-xs text-slate-300">• LogiBook WMS v2.4</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100 uppercase tracking-wider">Live Audit Active</span>
+                        <span class="text-xs text-gray-400">• LogiBook WMS</span>
                     </div>
-                    <h3 class="text-base font-bold text-white mt-1">Sesi Audit: {{ $sessionCode }}</h3>
-                    <p class="text-xs text-slate-300">Auditor: <strong class="text-white">{{ Auth::user()->name }}</strong> ({{ Auth::user()->role ?? 'Staff Gudang' }}) &bull; Waktu: {{ date('d M Y') }}</p>
+                    <h3 class="text-base font-bold text-gray-900 mt-1">Sesi Audit: {{ $sessionCode }}</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Auditor: <strong class="text-gray-700">{{ Auth::user()->name }}</strong> ({{ Auth::user()->role ?? 'Staff Gudang' }}) &bull; Waktu: {{ date('d M Y') }}</p>
                 </div>
             </div>
 
-            <!-- Progress Meter inside Banner -->
-            <div class="bg-slate-800/80 rounded-xl p-3.5 border border-slate-700/60 min-w-[280px]">
-                <div class="flex items-center justify-between text-xs mb-1.5">
-                    <span class="text-slate-300 font-medium">Progress Penghitungan</span>
-                    <span class="font-bold text-indigo-300" id="progressPercentageText">0%</span>
+            <!-- Progress Meter -->
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[320px]">
+                <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-gray-600 font-medium">Progress Penghitungan</span>
+                    <span class="font-bold text-blue-600" id="progressPercentageText">0%</span>
                 </div>
-                <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                    <div id="progressBarFill" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div id="progressBarFill" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
-                <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1.5">
-                    <span><strong id="countedCountText" class="text-white">0</strong> dari {{ $totalProducts }} SKU terhitung</span>
-                    <span id="uncountedCountText" class="text-amber-400">{{ $totalProducts }} belum diisi</span>
+                <div class="flex items-center justify-between text-xs text-gray-500 mt-2">
+                    <span><strong id="countedCountText" class="text-gray-900">0</strong> dari {{ $totalProducts }} SKU terhitung</span>
+                    <span id="uncountedCountText" class="text-amber-600 font-medium">{{ $totalProducts }} belum diisi</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Live KPI Statistic Widgets -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+    <!-- Live KPI Statistic Widgets (6 Cards) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <!-- Total SKU -->
         <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-gray-500 uppercase">Total SKU</span>
-                <div class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 text-xs">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total SKU</span>
+                <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-600 text-xs">
                     <i class="fas fa-boxes-stacked"></i>
                 </div>
             </div>
             <div class="text-2xl font-bold text-gray-900">{{ $totalProducts }}</div>
-            <div class="text-[11px] text-gray-500 mt-1">Item dalam katalog</div>
+            <div class="text-xs text-gray-500 mt-1">Item dalam katalog</div>
         </div>
 
         <!-- Terhitung -->
-        <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-indigo-600 uppercase">Terhitung</span>
-                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 text-xs">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Terhitung</span>
+                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs">
                     <i class="fas fa-list-check"></i>
                 </div>
             </div>
-            <div class="text-2xl font-bold text-indigo-600" id="kpiCounted">0</div>
-            <div class="text-[11px] text-gray-500 mt-1">Barang telah dicek</div>
+            <div class="text-2xl font-bold text-blue-600" id="kpiCounted">0</div>
+            <div class="text-xs text-gray-500 mt-1">Barang telah dicek</div>
         </div>
 
         <!-- Sesuai / Match -->
-        <div class="bg-white rounded-xl p-4 border border-emerald-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-emerald-600 uppercase">Sesuai (Match)</span>
-                <div class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 text-xs">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sesuai (Match)</span>
+                <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600 text-xs">
                     <i class="fas fa-circle-check"></i>
                 </div>
             </div>
-            <div class="text-2xl font-bold text-emerald-600" id="kpiMatched">0</div>
-            <div class="text-[11px] text-gray-500 mt-1">Stok Fisik = Buku</div>
+            <div class="text-2xl font-bold text-green-600" id="kpiMatched">0</div>
+            <div class="text-xs text-gray-500 mt-1">Fisik = Sistem</div>
         </div>
 
         <!-- Selisih Lebih (Surplus) -->
-        <div class="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-blue-600 uppercase">Lebih (Surplus)</span>
-                <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Lebih (Surplus)</span>
+                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs">
                     <i class="fas fa-arrow-trend-up"></i>
                 </div>
             </div>
             <div class="text-2xl font-bold text-blue-600" id="kpiSurplus">0</div>
-            <div class="text-[11px] text-gray-500 mt-1">Fisik > Sistem</div>
+            <div class="text-xs text-gray-500 mt-1">Fisik > Sistem</div>
         </div>
 
         <!-- Selisih Kurang (Deficit) -->
-        <div class="bg-white rounded-xl p-4 border border-rose-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-rose-600 uppercase">Kurang (Defisit)</span>
-                <div class="w-7 h-7 rounded-lg bg-rose-50 flex items-center justify-center text-rose-600 text-xs">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kurang (Defisit)</span>
+                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600 text-xs">
                     <i class="fas fa-arrow-trend-down"></i>
                 </div>
             </div>
-            <div class="text-2xl font-bold text-rose-600" id="kpiDeficit">0</div>
-            <div class="text-[11px] text-gray-500 mt-1">Fisik < Sistem</div>
+            <div class="text-2xl font-bold text-red-600" id="kpiDeficit">0</div>
+            <div class="text-xs text-gray-500 mt-1">Fisik < Sistem</div>
         </div>
 
         <!-- Akurasi Realtime -->
-        <div class="bg-white rounded-xl p-4 border border-amber-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-amber-600 uppercase">Akurasi Audit</span>
-                <div class="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 text-xs">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Akurasi Audit</span>
+                <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 text-xs">
                     <i class="fas fa-percent"></i>
                 </div>
             </div>
             <div class="text-2xl font-bold text-amber-600" id="kpiAccuracy">100%</div>
-            <div class="text-[11px] text-gray-500 mt-1">Rasio kecocokan stok</div>
+            <div class="text-xs text-gray-500 mt-1">Rasio kecocokan stok</div>
         </div>
     </div>
 
-    <!-- Interactive Barcode & SKU Quick Scanner Panel -->
-    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 mb-6">
+    <!-- Quick Scanner & Filter Toolbar -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <!-- Left: Barcode Scanner Input Form -->
+            <!-- Left: Barcode / SKU Scanner -->
             <div class="flex-1">
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    <i class="fas fa-barcode text-indigo-600 mr-1.5"></i> Quick Scanner Barcode / SKU / Cari Produk
-                </label>
                 <div class="relative flex items-center">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
-                        <i class="fas fa-qrcode text-lg"></i>
+                        <i class="fas fa-barcode text-base"></i>
                     </span>
                     <input type="text" 
                            id="barcodeQuickInput" 
-                           placeholder="Scan barcode SKU (atau ketik nama barang lalu tekan ENTER)..." 
-                           class="w-full pl-11 pr-32 py-3 bg-gray-50/80 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium transition"
+                           placeholder="Scan barcode SKU atau ketik nama produk lalu tekan ENTER..." 
+                           class="w-full pl-10 pr-28 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition"
                            autocomplete="off">
                     
-                    <div class="absolute right-2 flex items-center gap-1.5">
-                        <button type="button" onclick="triggerBarcodeScan()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition shadow-sm">
-                            <i class="fas fa-plus mr-1"></i> Scan +1
+                    <div class="absolute right-1.5 flex items-center gap-1">
+                        <button type="button" onclick="triggerBarcodeScan()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition shadow-sm">
+                            <i class="fas fa-plus mr-1"></i> Scan
                         </button>
-                        <button type="button" onclick="openCameraModal()" class="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs transition" title="Gunakan Kamera Scanner">
+                        <button type="button" onclick="openCameraModal()" class="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md text-xs transition" title="Gunakan Kamera Scanner">
                             <i class="fas fa-camera"></i>
                         </button>
                     </div>
@@ -263,78 +243,71 @@
                 <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
                     <div class="flex items-center gap-4">
                         <label class="flex items-center gap-1.5 cursor-pointer select-none">
-                            <input type="checkbox" id="audioBeepToggle" checked class="w-3.5 h-3.5 text-indigo-600 rounded">
+                            <input type="checkbox" id="audioBeepToggle" checked class="w-3.5 h-3.5 text-blue-600 rounded">
                             <span>Audio Beep saat Scan</span>
                         </label>
                         <label class="flex items-center gap-1.5 cursor-pointer select-none">
-                            <input type="radio" name="scanMode" value="increment" checked class="w-3.5 h-3.5 text-indigo-600">
+                            <input type="radio" name="scanMode" value="increment" checked class="w-3.5 h-3.5 text-blue-600">
                             <span>Mode: Auto +1</span>
                         </label>
                         <label class="flex items-center gap-1.5 cursor-pointer select-none">
-                            <input type="radio" name="scanMode" value="focus" class="w-3.5 h-3.5 text-indigo-600">
+                            <input type="radio" name="scanMode" value="focus" class="w-3.5 h-3.5 text-blue-600">
                             <span>Mode: Fokus Baris</span>
                         </label>
                     </div>
-                    <span id="scanFeedbackMsg" class="font-medium text-indigo-600 hidden"></span>
+                    <span id="scanFeedbackMsg" class="font-medium text-blue-600 hidden"></span>
                 </div>
             </div>
 
-            <!-- Right: Quick Action Shortcuts -->
-            <div class="flex items-center flex-wrap gap-2 lg:border-l lg:border-gray-200 lg:pl-6">
-                <div class="w-full text-xs font-bold text-gray-600 uppercase mb-1">Aksi Cepat:</div>
-                <button type="button" onclick="quickFillUncounted()" class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-                    <i class="fas fa-check-circle text-slate-500"></i>
-                    <span>Isi Sisa = Sesuai Buku</span>
-                </button>
-                <button type="button" onclick="quickFilterTab('discrepancy')" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-                    <i class="fas fa-triangle-exclamation text-rose-500"></i>
-                    <span>Tinjau Selisih Saja</span>
-                </button>
+            <!-- Right: Search & Category -->
+            <div class="flex items-center flex-wrap gap-3">
+                <select id="categoryFilter" onchange="applyFilters()" class="py-2 pl-3 pr-8 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat }}">{{ $cat }}</option>
+                    @endforeach
+                </select>
+
+                <div class="relative min-w-[200px]">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" 
+                           id="tableSearchInput" 
+                           oninput="applyFilters()" 
+                           placeholder="Cari di tabel..." 
+                           class="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Filter Tabs & Search Bar -->
-    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <!-- Left: Status Tabs -->
-            <div class="flex items-center flex-wrap gap-1.5 p-1 bg-gray-100/80 rounded-xl">
-                <button type="button" onclick="filterTab('all', this)" class="tab-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold transition bg-white text-indigo-600 shadow-sm">
-                    Semua (<span id="badgeTabAll">{{ $totalProducts }}</span>)
-                </button>
-                <button type="button" onclick="filterTab('uncounted', this)" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-gray-600 hover:text-gray-900">
-                    Belum Dihitung (<span id="badgeTabUncounted">{{ $totalProducts }}</span>)
-                </button>
-                <button type="button" onclick="filterTab('discrepancy', this)" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-gray-600 hover:text-gray-900">
-                    Ada Selisih (<span id="badgeTabDiscrepancy">0</span>)
-                </button>
-                <button type="button" onclick="filterTab('match', this)" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-gray-600 hover:text-gray-900">
-                    Cocok (<span id="badgeTabMatch">0</span>)
-                </button>
-            </div>
+    <!-- Tabs & Filter Bar -->
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-2.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <!-- Status Tabs -->
+        <div class="flex items-center flex-wrap gap-1.5">
+            <button type="button" onclick="filterTab('all', this)" class="tab-btn active px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white text-blue-600 shadow-sm border border-gray-200">
+                Semua (<span id="badgeTabAll">{{ $totalProducts }}</span>)
+            </button>
+            <button type="button" onclick="filterTab('uncounted', this)" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-gray-600 hover:bg-white transition">
+                Belum Dihitung (<span id="badgeTabUncounted">{{ $totalProducts }}</span>)
+            </button>
+            <button type="button" onclick="filterTab('discrepancy', this)" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-gray-600 hover:bg-white transition">
+                Ada Selisih (<span id="badgeTabDiscrepancy">0</span>)
+            </button>
+            <button type="button" onclick="filterTab('match', this)" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-gray-600 hover:bg-white transition">
+                Cocok (<span id="badgeTabMatch">0</span>)
+            </button>
+        </div>
 
-            <!-- Right: Live Filter by Category & Text Search -->
-            <div class="flex items-center gap-3">
-                <div class="relative min-w-[160px]">
-                    <select id="categoryFilter" onchange="applyFilters()" class="w-full py-2 pl-3 pr-8 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Semua Kategori</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}">{{ $cat }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="relative min-w-[200px]">
-                    <input type="text" 
-                           id="tableSearchInput" 
-                           oninput="applyFilters()" 
-                           placeholder="Filter tabel produk..." 
-                           class="w-full py-2 pl-8 pr-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-gray-400">
-                        <i class="fas fa-search text-xs"></i>
-                    </span>
-                </div>
-            </div>
+        <!-- Quick Fill & Review Discrepancy Shortcuts -->
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="quickFillUncounted()" class="px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
+                <i class="fas fa-check-circle text-gray-500"></i>
+                <span>Isi Sisa = Sistem</span>
+            </button>
+            <button type="button" onclick="quickFilterTab('discrepancy')" class="px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-red-600 rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
+                <i class="fas fa-triangle-exclamation text-red-500"></i>
+                <span>Tinjau Selisih</span>
+            </button>
         </div>
     </div>
 
@@ -345,17 +318,17 @@
         <input type="hidden" name="adjustment_mode" id="formAdjustmentMode" value="save_only">
         <input type="hidden" name="general_notes" id="formGeneralNotes" value="">
 
-        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse" id="stockTable">
                     <thead>
-                        <tr class="bg-gray-50/80 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                        <tr class="bg-gray-50 border-b border-gray-200 text-gray-600 text-xs font-semibold uppercase tracking-wider">
                             <th class="py-3.5 px-4 w-12 text-center">No</th>
                             <th class="py-3.5 px-4 min-w-[260px]">Informasi Barang</th>
-                            <th class="py-3.5 px-4 text-center w-36">Stok Buku (Sistem)</th>
+                            <th class="py-3.5 px-4 text-center w-36">Stok Sistem</th>
                             <th class="py-3.5 px-4 text-center min-w-[220px]">Stok Fisik Aktual</th>
                             <th class="py-3.5 px-4 text-center w-36">Selisih</th>
-                            <th class="py-3.5 px-4 min-w-[220px]">Catatan / Alasan Selisih</th>
+                            <th class="py-3.5 px-4 min-w-[220px]">Catatan / Keterangan</th>
                             <th class="py-3.5 px-4 text-center w-24">Aksi</th>
                         </tr>
                     </thead>
@@ -366,7 +339,7 @@
                                 $initPhysical = (int) ($product->physical_stock ?? $sysStock);
                                 $initDiff = $initPhysical - $sysStock;
                             @endphp
-                            <tr class="product-row hover:bg-slate-50/80 transition group" 
+                            <tr class="product-row hover:bg-gray-50/80 transition" 
                                 id="row-{{ $product->id }}"
                                 data-id="{{ $product->id }}"
                                 data-code="{{ strtolower($product->product_code) }}"
@@ -382,20 +355,20 @@
                                 <!-- Product Info -->
                                 <td class="py-3.5 px-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-11 h-11 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0 text-gray-500 overflow-hidden shadow-inner">
+                                        <div class="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0 text-gray-500 overflow-hidden">
                                             @if($product->image)
                                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover">
                                             @else
-                                                <i class="fas fa-box text-base text-gray-400"></i>
+                                                <i class="fas fa-box text-sm text-gray-400"></i>
                                             @endif
                                         </div>
                                         <div>
                                             <div class="flex items-center gap-2">
-                                                <span class="px-2 py-0.5 bg-indigo-50 border border-indigo-100 text-indigo-700 text-[11px] font-bold rounded-md font-mono">
+                                                <span class="px-2 py-0.5 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold rounded font-mono">
                                                     {{ $product->product_code }}
                                                 </span>
                                                 @if($product->category)
-                                                    <span class="text-[11px] text-gray-500 font-medium">
+                                                    <span class="text-xs text-gray-500 font-medium">
                                                         &bull; {{ $product->category }}
                                                     </span>
                                                 @endif
@@ -403,31 +376,30 @@
                                             <div class="font-bold text-gray-900 text-sm mt-0.5 line-clamp-1" title="{{ $product->product_name }}">
                                                 {{ $product->product_name }}
                                             </div>
-                                            <div class="text-[11px] text-gray-400">
-                                                Satuan: <span class="font-semibold text-gray-600">{{ $product->unit ?? 'pcs' }}</span>
+                                            <div class="text-xs text-gray-400">
+                                                Satuan: <span class="font-medium text-gray-600">{{ $product->unit ?? 'pcs' }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Hidden Input product_id -->
                                     <input type="hidden" name="items[{{ $product->id }}][product_id]" value="{{ $product->id }}">
                                 </td>
 
                                 <!-- System Stock -->
                                 <td class="py-3.5 px-4 text-center">
-                                    <div class="inline-block px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-center">
-                                        <span class="text-sm font-extrabold text-slate-800">{{ number_format($sysStock) }}</span>
-                                        <span class="text-[11px] text-slate-500 ml-0.5">{{ $product->unit ?? 'pcs' }}</span>
+                                    <div class="inline-block px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-lg text-center">
+                                        <span class="text-sm font-bold text-gray-800">{{ number_format($sysStock) }}</span>
+                                        <span class="text-xs text-gray-500 ml-0.5">{{ $product->unit ?? 'pcs' }}</span>
                                     </div>
                                 </td>
 
                                 <!-- Physical Stock Input Stepper -->
                                 <td class="py-3.5 px-4 text-center">
                                     <div class="inline-flex flex-col items-center gap-1.5">
-                                        <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl p-1 shadow-inner focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                                        <div class="flex items-center bg-gray-50 border border-gray-300 rounded-lg p-1 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
                                             <button type="button" 
                                                     onclick="stepCount({{ $product->id }}, -1)" 
-                                                    class="stepper-btn w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center font-bold text-sm shadow-sm">
-                                                <i class="fas fa-minus text-xs"></i>
+                                                    class="stepper-btn w-7 h-7 rounded bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center font-bold text-xs shadow-sm">
+                                                <i class="fas fa-minus text-[10px]"></i>
                                             </button>
                                             
                                             <input type="number" 
@@ -436,28 +408,28 @@
                                                    value="{{ $initPhysical }}" 
                                                    min="0"
                                                    oninput="calculateRowDiff({{ $product->id }})" 
-                                                   class="physical-input w-20 text-center font-extrabold text-base bg-transparent border-0 focus:ring-0 text-gray-900 p-0"
+                                                   class="physical-input w-16 text-center font-bold text-base bg-transparent border-0 focus:ring-0 text-gray-900 p-0"
                                                    data-touched="true">
 
                                             <button type="button" 
                                                     onclick="stepCount({{ $product->id }}, 1)" 
-                                                    class="stepper-btn w-8 h-8 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center justify-center font-bold text-sm shadow-sm">
-                                                <i class="fas fa-plus text-xs"></i>
+                                                    class="stepper-btn w-7 h-7 rounded bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center font-bold text-xs shadow-sm">
+                                                <i class="fas fa-plus text-[10px]"></i>
                                             </button>
                                         </div>
 
                                         <!-- Quick Stepper Chips -->
                                         <div class="flex items-center gap-1">
-                                            <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, {{ $sysStock }})" class="quick-chip px-2 py-0.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 rounded text-[10px] font-semibold" title="Set sama dengan stok sistem">
+                                            <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, {{ $sysStock }})" class="quick-chip px-2 py-0.5 bg-gray-100 hover:bg-gray-200 border border-gray-200 text-gray-700 rounded text-[10px] font-medium" title="Set sama dengan stok sistem">
                                                 = Sistem
                                             </button>
-                                            <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, 0)" class="quick-chip px-1.5 py-0.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded text-[10px] font-semibold" title="Kosongkan (0)">
+                                            <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, 0)" class="quick-chip px-1.5 py-0.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded text-[10px] font-medium" title="Kosongkan (0)">
                                                 0
                                             </button>
-                                            <button type="button" onclick="stepCount({{ $product->id }}, 5)" class="quick-chip px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-[10px] font-semibold">
+                                            <button type="button" onclick="stepCount({{ $product->id }}, 5)" class="quick-chip px-1.5 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-[10px] font-medium">
                                                 +5
                                             </button>
-                                            <button type="button" onclick="stepCount({{ $product->id }}, 10)" class="quick-chip px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-[10px] font-semibold">
+                                            <button type="button" onclick="stepCount({{ $product->id }}, 10)" class="quick-chip px-1.5 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-[10px] font-medium">
                                                 +10
                                             </button>
                                         </div>
@@ -466,7 +438,7 @@
 
                                 <!-- Real-time Difference Badge -->
                                 <td class="py-3.5 px-4 text-center">
-                                    <div id="diff-badge-{{ $product->id }}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold shadow-sm">
+                                    <div id="diff-badge-{{ $product->id }}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold">
                                         <span class="diff-val">0</span>
                                     </div>
                                 </td>
@@ -477,18 +449,18 @@
                                         <input type="text" 
                                                name="items[{{ $product->id }}][notes]" 
                                                id="notes-{{ $product->id }}" 
-                                               placeholder="Catatan kondisi/selisih..." 
-                                               class="w-full text-xs px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400">
+                                               placeholder="Catatan kondisi / alasan..." 
+                                               class="w-full text-xs px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400">
                                     </div>
                                 </td>
 
                                 <!-- Quick Row Actions -->
                                 <td class="py-3.5 px-4 text-center">
                                     <div class="flex items-center justify-center gap-1">
-                                        <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, {{ $sysStock }})" class="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Samakan ke Stok Buku">
+                                        <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, {{ $sysStock }})" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Samakan ke Stok Sistem">
                                             <i class="fas fa-check text-xs"></i>
                                         </button>
-                                        <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, 0)" class="p-1.5 text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Reset ke 0">
+                                        <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, 0)" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Reset ke 0">
                                             <i class="fas fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
@@ -509,34 +481,34 @@
                 </table>
             </div>
 
-            <!-- No Results Filter Notification (hidden by default) -->
+            <!-- No Results Filter Notification -->
             <div id="noFilterResults" class="hidden py-12 text-center text-gray-500 border-t border-gray-100">
                 <i class="fas fa-filter-circle-xmark text-3xl text-gray-300 mb-2"></i>
                 <p class="text-sm font-semibold text-gray-700">Tidak ada barang yang cocok dengan filter</p>
-                <button type="button" onclick="resetFilters()" class="mt-2 text-xs font-semibold text-indigo-600 hover:underline">
+                <button type="button" onclick="resetFilters()" class="mt-2 text-xs font-semibold text-blue-600 hover:underline">
                     Reset Filter & Pencarian
                 </button>
             </div>
         </div>
     </form>
 
-    <!-- Floating Bottom Quick Summary & Finalize Bar -->
-    <div class="floating-bar bg-slate-900/95 backdrop-blur-md text-white px-6 py-3.5 rounded-2xl flex items-center gap-6 max-w-4xl w-[92%]">
-        <div class="flex items-center gap-3 flex-1">
-            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm">
+    <!-- Floating Bottom Bar (Clean Theme) -->
+    <div class="floating-bar bg-white border border-gray-200 shadow-xl rounded-xl px-5 py-3 flex items-center justify-between gap-4 max-w-3xl w-[92%]">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
                 <i class="fas fa-calculator"></i>
             </div>
             <div class="text-xs">
-                <div>Status: <strong class="text-white" id="barCounted">0</strong> / {{ $totalProducts }} SKU Dihitung</div>
-                <div class="text-slate-400">Selisih: <span id="barDiscrepancy" class="font-bold text-amber-400">0 Item</span></div>
+                <div>Status: <strong class="text-gray-900" id="barCounted">0</strong> / {{ $totalProducts }} SKU Dihitung</div>
+                <div class="text-gray-500">Selisih: <span id="barDiscrepancy" class="font-semibold text-amber-600">0 Item</span></div>
             </div>
         </div>
 
-        <div class="flex items-center gap-2.5">
-            <button type="button" onclick="quickFillUncounted()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition">
-                <i class="fas fa-magic mr-1"></i> Isi Sisa
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="quickFillUncounted()" class="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition">
+                <i class="fas fa-wand-magic-sparkles mr-1"></i> Isi Sisa
             </button>
-            <button type="button" onclick="openReviewModal()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-md shadow-indigo-500/30 flex items-center gap-2">
+            <button type="button" onclick="openReviewModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
                 <i class="fas fa-paper-plane"></i>
                 <span>Simpan Hasil Opname</span>
             </button>
@@ -544,48 +516,45 @@
     </div>
 </div>
 
-<!-- MODAL 1: Interactive Barcode Camera Scanner -->
-<div id="cameraModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 text-white rounded-2xl max-w-lg w-full border border-slate-700 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+<!-- MODAL 1: Barcode Camera Scanner -->
+<div id="cameraModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white text-gray-900 rounded-xl max-w-lg w-full border border-gray-200 shadow-2xl overflow-hidden">
+        <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
                     <i class="fas fa-camera"></i>
                 </div>
                 <div>
-                    <h4 class="font-bold text-sm text-white">Live Camera Barcode Scanner</h4>
-                    <p class="text-[11px] text-slate-400">Arahkan kamera ke barcode produk di gudang</p>
+                    <h4 class="font-bold text-sm text-gray-900">Scanner Kamera Barcode</h4>
+                    <p class="text-xs text-gray-500">Arahkan kamera ke barcode produk di gudang</p>
                 </div>
             </div>
-            <button type="button" onclick="closeCameraModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+            <button type="button" onclick="closeCameraModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
         <div class="p-5">
-            <!-- Simulated Camera Viewfinder -->
-            <div class="relative bg-black rounded-xl overflow-hidden aspect-video border border-slate-800 flex items-center justify-center">
-                <div class="scanner-laser"></div>
-                
-                <!-- Viewfinder Target Corners -->
-                <div class="absolute inset-8 border-2 border-dashed border-indigo-400/50 rounded-lg pointer-events-none flex items-center justify-center">
-                    <span class="text-xs text-indigo-300 bg-slate-900/80 px-3 py-1 rounded-full backdrop-blur-sm">
-                        <i class="fas fa-expand mr-1"></i> Area Pindai Barcode
+            <!-- Camera Viewfinder -->
+            <div class="relative bg-gray-900 rounded-xl overflow-hidden aspect-video border border-gray-300 flex items-center justify-center">
+                <div class="absolute inset-8 border-2 border-dashed border-blue-400 rounded-lg pointer-events-none flex items-center justify-center">
+                    <span class="text-xs text-white bg-black/60 px-3 py-1 rounded-full">
+                        <i class="fas fa-expand mr-1"></i> Area Barcode
                     </span>
                 </div>
 
-                <div class="text-center text-slate-400 text-xs z-10 px-4">
-                    <i class="fas fa-video text-3xl mb-2 text-indigo-400 animate-pulse"></i>
+                <div class="text-center text-gray-300 text-xs z-10 px-4">
+                    <i class="fas fa-video text-2xl mb-2 text-blue-400"></i>
                     <p>Kamera siap mendeteksi barcode secara otomatis</p>
                 </div>
             </div>
 
-            <!-- Simulated Quick Barcode Buttons for Testing -->
-            <div class="mt-4 pt-3 border-t border-slate-800">
-                <div class="text-xs font-semibold text-slate-400 mb-2">Simulasi Scan Cepat (Pilih SKU):</div>
+            <!-- Quick SKU test list -->
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <div class="text-xs font-semibold text-gray-600 mb-2">Simulasi Scan Cepat (Pilih SKU):</div>
                 <div class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
                     @foreach($products->take(8) as $p)
-                        <button type="button" onclick="handleScannedCode('{{ $p->product_code }}')" class="px-2.5 py-1 bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white rounded-lg text-xs font-mono transition border border-slate-700">
+                        <button type="button" onclick="handleScannedCode('{{ $p->product_code }}')" class="px-2.5 py-1 bg-gray-100 hover:bg-blue-50 hover:text-blue-700 text-gray-700 rounded-md text-xs font-mono transition border border-gray-200">
                             {{ $p->product_code }}
                         </button>
                     @endforeach
@@ -593,9 +562,9 @@
             </div>
         </div>
 
-        <div class="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-            <span>Status: <strong class="text-emerald-400">Kamera Siap</strong></span>
-            <button type="button" onclick="closeCameraModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-medium transition">
+        <div class="p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between text-xs text-gray-600">
+            <span>Status: <strong class="text-green-600">Kamera Siap</strong></span>
+            <button type="button" onclick="closeCameraModal()" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg font-medium transition">
                 Tutup
             </button>
         </div>
@@ -603,12 +572,12 @@
 </div>
 
 <!-- MODAL 2: Review Discrepancy & Final Submission -->
-<div id="reviewModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-2xl w-full border border-gray-200 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
+<div id="reviewModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full border border-gray-200 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
         <!-- Header -->
-        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-indigo-50/60 to-white">
+        <div class="p-5 border-b border-gray-200 flex items-center justify-between bg-gray-50">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-lg shadow-sm">
+                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
                     <i class="fas fa-clipboard-check"></i>
                 </div>
                 <div>
@@ -625,37 +594,37 @@
         <div class="p-6 overflow-y-auto space-y-5 flex-1">
             <!-- Review Summary Badges -->
             <div class="grid grid-cols-4 gap-3 text-center">
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                     <div class="text-xs text-gray-500 font-semibold uppercase">Total SKU</div>
-                    <div class="text-lg font-extrabold text-gray-900 mt-0.5">{{ $totalProducts }}</div>
+                    <div class="text-lg font-bold text-gray-900 mt-0.5">{{ $totalProducts }}</div>
                 </div>
-                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                    <div class="text-xs text-emerald-700 font-semibold uppercase">Cocok</div>
-                    <div class="text-lg font-extrabold text-emerald-700 mt-0.5" id="modalMatchedCount">0</div>
+                <div class="bg-green-50 p-3 rounded-lg border border-green-200">
+                    <div class="text-xs text-green-700 font-semibold uppercase">Cocok</div>
+                    <div class="text-lg font-bold text-green-700 mt-0.5" id="modalMatchedCount">0</div>
                 </div>
-                <div class="bg-blue-50 p-3 rounded-xl border border-blue-200">
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
                     <div class="text-xs text-blue-700 font-semibold uppercase">Surplus (+)</div>
-                    <div class="text-lg font-extrabold text-blue-700 mt-0.5" id="modalSurplusCount">0</div>
+                    <div class="text-lg font-bold text-blue-700 mt-0.5" id="modalSurplusCount">0</div>
                 </div>
-                <div class="bg-rose-50 p-3 rounded-xl border border-rose-200">
-                    <div class="text-xs text-rose-700 font-semibold uppercase">Defisit (-)</div>
-                    <div class="text-lg font-extrabold text-rose-700 mt-0.5" id="modalDeficitCount">0</div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                    <div class="text-xs text-red-700 font-semibold uppercase">Defisit (-)</div>
+                    <div class="text-lg font-bold text-red-700 mt-0.5" id="modalDeficitCount">0</div>
                 </div>
             </div>
 
             <!-- Discrepancy Item List Preview -->
             <div>
                 <div class="flex items-center justify-between mb-2">
-                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <h4 class="text-xs font-semibold text-gray-700 uppercase tracking-wider">
                         <i class="fas fa-triangle-exclamation text-amber-500 mr-1"></i> Rincian Barang dengan Selisih (<span id="modalDiscrepancyTotal">0</span>)
                     </h4>
                 </div>
-                <div class="border border-gray-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto">
+                <div class="border border-gray-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
                     <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 font-bold sticky top-0">
+                        <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold sticky top-0">
                             <tr>
                                 <th class="p-2.5">Barang</th>
-                                <th class="p-2.5 text-center">Buku</th>
+                                <th class="p-2.5 text-center">Sistem</th>
                                 <th class="p-2.5 text-center">Fisik</th>
                                 <th class="p-2.5 text-center">Selisih</th>
                                 <th class="p-2.5">Catatan</th>
@@ -670,15 +639,15 @@
 
             <!-- Audit Processing Mode Selection -->
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
                     Pilih Metode Penyelesaian Audit:
                 </label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <!-- Option A: Save Draft / Pending Review -->
-                    <label class="relative flex flex-col p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/30">
+                    <label class="relative flex flex-col p-4 bg-white border border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20">
                         <div class="flex items-center justify-between mb-1">
                             <span class="font-bold text-sm text-gray-900">1. Simpan Catatan Audit Fisik</span>
-                            <input type="radio" name="modal_adj_mode" value="save_only" checked class="text-indigo-600 focus:ring-indigo-500">
+                            <input type="radio" name="modal_adj_mode" value="save_only" checked class="text-blue-600 focus:ring-blue-500">
                         </div>
                         <p class="text-xs text-gray-500 leading-relaxed">
                             Simpan angka fisik & buat riwayat audit (Status: <em>Pending Review</em>). Stok sistem belum diubah sampai disetujui.
@@ -686,10 +655,10 @@
                     </label>
 
                     <!-- Option B: Auto-Adjust System Stock -->
-                    <label class="relative flex flex-col p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/30">
+                    <label class="relative flex flex-col p-4 bg-white border border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/20">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="font-bold text-sm text-indigo-950">2. Sesuaikan Stok Sistem Langsung</span>
-                            <input type="radio" name="modal_adj_mode" value="auto_adjust" class="text-indigo-600 focus:ring-indigo-500">
+                            <span class="font-bold text-sm text-gray-900">2. Sesuaikan Stok Sistem Langsung</span>
+                            <input type="radio" name="modal_adj_mode" value="auto_adjust" class="text-blue-600 focus:ring-blue-500">
                         </div>
                         <p class="text-xs text-gray-500 leading-relaxed">
                             Otomatis sesuaikan stok sistem ke angka fisik terkini (Status: <em>Has Adjusted</em>). Disarankan jika audit sudah final.
@@ -700,22 +669,22 @@
 
             <!-- General Notes Field -->
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                     Catatan Umum / Berita Acara Opname:
                 </label>
                 <textarea id="modalGeneralNotesInput" 
                           rows="2" 
-                          placeholder="Contoh: Stock Opname Rutin Bulanan Gudang Utama Periode Agustus 2026..." 
-                          class="w-full text-xs p-3 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500"></textarea>
+                          placeholder="Contoh: Stock Opname Rutin Bulanan Gudang Utama..." 
+                          class="w-full text-xs p-3 bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500"></textarea>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-            <button type="button" onclick="closeReviewModal()" class="px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition">
+        <div class="p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+            <button type="button" onclick="closeReviewModal()" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-medium transition">
                 Batal & Lanjut Hitung
             </button>
-            <button type="button" onclick="submitFinalCount()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition shadow-lg shadow-indigo-200 flex items-center gap-2">
+            <button type="button" onclick="submitFinalCount()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition shadow-sm flex items-center gap-2">
                 <i class="fas fa-check-circle"></i>
                 <span>Konfirmasi & Simpan Permanen</span>
             </button>
@@ -763,10 +732,8 @@
     let currentFilterTab = 'all';
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Initial calculation for all rows
         recalculateAllStats();
 
-        // Bind quick barcode input ENTER
         const quickInput = document.getElementById('barcodeQuickInput');
         if (quickInput) {
             quickInput.addEventListener('keypress', function(e) {
@@ -808,8 +775,7 @@
         const physicalStock = parseInt(input.value) || 0;
         const diff = physicalStock - sysStock;
 
-        // Update badge styling
-        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold shadow-sm ';
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ';
         if (diff === 0) {
             badge.classList.add('diff-badge-match');
             badge.innerHTML = `<i class="fas fa-check text-[10px]"></i> <span>0 Cocok</span>`;
@@ -839,7 +805,6 @@
             const physicalStock = parseInt(input.value) || 0;
             const diff = physicalStock - sysStock;
 
-            // Update row status
             if (diff === 0) {
                 totalMatched++;
                 row.dataset.status = 'match';
@@ -901,7 +866,6 @@
         if (barCount) barCount.textContent = totalCounted;
         if (barDisc) barDisc.textContent = `${discrepancyCount} Item (${discrepancyCount > 0 ? 'Perlu review' : 'Aman'})`;
 
-        // Refresh filter view if active
         applyFilters();
     }
 
@@ -921,7 +885,6 @@
         const query = code.toLowerCase();
         let targetRow = null;
 
-        // Match SKU or product name exactly or partially
         const rows = document.querySelectorAll('.product-row');
         for (let row of rows) {
             if (row.dataset.code === query || row.dataset.code.includes(query) || row.dataset.name.includes(query)) {
@@ -943,12 +906,10 @@
                 showScanToast(`Fokus ke: ${targetRow.querySelector('.font-bold').textContent}`);
             }
 
-            // Highlight row with animation
             targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
             targetRow.classList.add('row-highlight-scanned');
             setTimeout(() => targetRow.classList.remove('row-highlight-scanned'), 1500);
 
-            // Close camera modal if open
             closeCameraModal();
         } else {
             playBeep('error');
@@ -960,7 +921,7 @@
         const feedback = document.getElementById('scanFeedbackMsg');
         if (!feedback) return;
         feedback.textContent = msg;
-        feedback.className = isError ? 'font-semibold text-rose-600 text-xs' : 'font-semibold text-emerald-600 text-xs';
+        feedback.className = isError ? 'font-semibold text-red-600 text-xs' : 'font-semibold text-green-600 text-xs';
         feedback.classList.remove('hidden');
         setTimeout(() => feedback.classList.add('hidden'), 3500);
     }
@@ -971,10 +932,10 @@
     function filterTab(tab, btn) {
         currentFilterTab = tab;
         document.querySelectorAll('.tab-btn').forEach(b => {
-            b.classList.remove('active', 'bg-white', 'text-indigo-600', 'shadow-sm');
+            b.classList.remove('active', 'bg-white', 'text-blue-600', 'shadow-sm', 'border', 'border-gray-200');
             b.classList.add('text-gray-600');
         });
-        btn.classList.add('active', 'bg-white', 'text-indigo-600', 'shadow-sm');
+        btn.classList.add('active', 'bg-white', 'text-blue-600', 'shadow-sm', 'border', 'border-gray-200');
         btn.classList.remove('text-gray-600');
         applyFilters();
     }
@@ -1041,7 +1002,7 @@
             showCancelButton: true,
             confirmButtonText: 'Ya, Samakan Semua',
             cancelButtonText: 'Batal',
-            confirmButtonColor: '#4F46E5'
+            confirmButtonColor: '#2563EB'
         }).then((result) => {
             if (result.isConfirmed) {
                 const rows = document.querySelectorAll('.product-row');
@@ -1119,7 +1080,6 @@
     }
 
     function openReviewModal() {
-        // Collect discrepancies for review
         const rows = document.querySelectorAll('.product-row');
         const listBody = document.getElementById('discrepancyListBody');
         if (listBody) listBody.innerHTML = '';
@@ -1152,13 +1112,13 @@
                     tr.className = 'hover:bg-gray-50';
                     tr.innerHTML = `
                         <td class="p-2.5">
-                            <span class="font-mono font-bold text-indigo-600">${code}</span>
+                            <span class="font-mono font-semibold text-blue-600">${code}</span>
                             <div class="font-medium text-gray-800">${name}</div>
                         </td>
                         <td class="p-2.5 text-center font-semibold text-gray-700">${sysStock}</td>
                         <td class="p-2.5 text-center font-bold text-gray-900">${physicalStock}</td>
                         <td class="p-2.5 text-center">
-                            <span class="px-2 py-0.5 rounded font-bold ${diff > 0 ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}">
+                            <span class="px-2 py-0.5 rounded font-semibold ${diff > 0 ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}">
                                 ${diff > 0 ? '+' + diff : diff}
                             </span>
                         </td>
@@ -1172,7 +1132,7 @@
         if (discrepancyRows === 0 && listBody) {
             listBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="p-6 text-center text-emerald-600 font-medium">
+                    <td colspan="5" class="p-6 text-center text-green-600 font-medium">
                         <i class="fas fa-check-circle text-lg mb-1"></i>
                         <div>Luar biasa! Seluruh ${rows.length} barang cocok 100% tanpa selisih.</div>
                     </td>
@@ -1180,7 +1140,6 @@
             `;
         }
 
-        // Set KPI in modal
         const mMatched = document.getElementById('modalMatchedCount');
         const mSurplus = document.getElementById('modalSurplusCount');
         const mDeficit = document.getElementById('modalDeficitCount');
@@ -1209,7 +1168,6 @@
         if (fMode) fMode.value = selectedMode;
         if (fNotes) fNotes.value = generalNotes;
 
-        // Submit form
         document.getElementById('stockCountForm')?.submit();
     }
 </script>

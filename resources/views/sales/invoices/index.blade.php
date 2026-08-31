@@ -217,18 +217,9 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
 
-    <!-- Pagination -->
-    @if($invoices->hasPages())
-        <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-600">
-                Showing {{ $invoices->firstItem() }} to {{ $invoices->lastItem() }} of {{ $invoices->total() }} entries
-            </div>
-            <div>
-                {{ $invoices->links() }}
-            </div>
-        </div>
-    @endif
+        <!-- Pagination Footer -->
+        @include('partials.pagination', ['paginator' => $invoices])
+    </div>
 </div>
 @endsection

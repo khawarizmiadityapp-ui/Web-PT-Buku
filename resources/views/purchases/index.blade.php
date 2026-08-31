@@ -225,19 +225,10 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <!-- Pagination Footer -->
+            @include('partials.pagination', ['paginator' => $purchases])
         </div>
     </div>
-
-    <!-- Pagination -->
-    @if($purchases->hasPages())
-        <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-600">
-                Menampilkan {{ $purchases->firstItem() }} sampai {{ $purchases->lastItem() }} dari {{ $purchases->total() }} PO
-            </div>
-            <div>
-                {{ $purchases->links() }}
-            </div>
-        </div>
-    @endif
 </div>
 @endsection

@@ -126,9 +126,9 @@
                     </div>
                     
                     <div class="border-t border-gray-100 mt-1 pt-1">
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form id="global-logout-form" action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
+                            <button type="button" onclick="confirmLogout(event)" class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
                                 <i class="fas fa-sign-out-alt w-5 mr-3"></i>
                                 <span>Logout</span>
                             </button>

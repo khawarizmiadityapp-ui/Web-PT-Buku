@@ -157,12 +157,8 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
-            @if($returns->hasPages())
-            <div class="mt-3">
-                {{ $returns->links() }}
-            </div>
-            @endif
+            <!-- Pagination Footer -->
+            @include('partials.pagination', ['paginator' => $returns])
             @else
             <!-- Empty State -->
             <div class="text-center py-5">

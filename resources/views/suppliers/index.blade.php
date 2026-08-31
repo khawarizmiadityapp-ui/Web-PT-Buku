@@ -133,18 +133,9 @@
                             @endforelse
                         </tbody>
                     </table>
-                </div>
 
-                <!-- Pagination -->
-                @if($suppliers->hasPages())
-                    <div class="mt-6 flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Menampilkan {{ $suppliers->firstItem() }} - {{ $suppliers->lastItem() }} dari {{ $suppliers->total() }} supplier
-                        </div>
-                        <div class="flex gap-2">
-                            {{ $suppliers->links() }}
-                        </div>
-                    </div>
-                @endif
+                    <!-- Pagination Footer -->
+                    @include('partials.pagination', ['paginator' => $suppliers])
+                </div>
 </div>
 @endsection

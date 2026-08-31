@@ -189,18 +189,9 @@
                             @endforelse
                         </tbody>
                     </table>
-                </div>
 
-                <!-- Pagination -->
-                @if($returns->hasPages())
-                    <div class="mt-6 flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Showing {{ $returns->firstItem() }} to {{ $returns->lastItem() }} of {{ $returns->total() }} entries
-                        </div>
-                        <div>
-                            {{ $returns->links() }}
-                        </div>
-                    </div>
-                @endif
+                    <!-- Pagination Footer -->
+                    @include('partials.pagination', ['paginator' => $returns])
+                </div>
 </div>
 @endsection

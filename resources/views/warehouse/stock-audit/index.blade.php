@@ -222,20 +222,11 @@
                                 @endforelse
                             </tbody>
                         </table>
+
+                        <!-- Pagination Footer -->
+                        @include('partials.pagination', ['paginator' => $products])
                     </form>
                 </div>
-
-                <!-- Pagination -->
-                @if($products->hasPages())
-                    <div class="mt-6 flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Showing {{ $products->firstItem() }} of {{ $products->total() }}
-                        </div>
-                        <div>
-                            {{ $products->links() }}
-                        </div>
-                    </div>
-                @endif
 </div>
 @endsection
 

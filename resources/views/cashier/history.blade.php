@@ -181,54 +181,8 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
-            @if($transactions->hasPages())
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="text-muted small">
-                    Showing {{ $transactions->firstItem() }} to {{ $transactions->lastItem() }} of {{ $transactions->total() }} entries
-                </div>
-                <nav>
-                    <ul class="pagination pagination-sm mb-0">
-                        @if ($transactions->onFirstPage())
-                            <li class="page-item disabled">
-                                <span class="page-link"><i class="fas fa-chevron-left"></i></span>
-                            </li>
-                        @else
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $transactions->previousPageUrl() }}">
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
-                            </li>
-                        @endif
-
-                        @foreach(range(1, min(5, $transactions->lastPage())) as $i)
-                            @if ($i == $transactions->currentPage())
-                                <li class="page-item active"><span class="page-link">{{ $i }}</span></li>
-                            @else
-                                <li class="page-item"><a class="page-link" href="{{ $transactions->url($i) }}">{{ $i }}</a></li>
-                            @endif
-                        @endforeach
-
-                        @if($transactions->lastPage() > 5)
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                            <li class="page-item"><a class="page-link" href="{{ $transactions->url($transactions->lastPage()) }}">{{ $transactions->lastPage() }}</a></li>
-                        @endif
-
-                        @if ($transactions->hasMorePages())
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $transactions->nextPageUrl() }}">
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                            </li>
-                        @else
-                            <li class="page-item disabled">
-                                <span class="page-link"><i class="fas fa-chevron-right"></i></span>
-                            </li>
-                        @endif
-                    </ul>
-                </nav>
-            </div>
-            @endif
+            <!-- Pagination Footer -->
+            @include('partials.pagination', ['paginator' => $transactions])
         </div>
     </div>
 

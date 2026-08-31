@@ -283,17 +283,8 @@
             </table>
         </div>
         
-        <!-- Pagination -->
-        @if($incomingGoods->hasPages())
-        <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
-            <div>
-                Menampilkan {{ $incomingGoods->firstItem() }} - {{ $incomingGoods->lastItem() }} dari total {{ $incomingGoods->total() }} transaksi
-            </div>
-            <div>
-                {{ $incomingGoods->links() }}
-            </div>
-        </div>
-        @endif
+        <!-- Pagination Footer -->
+        @include('partials.pagination', ['paginator' => $incomingGoods])
     </div>
 </div>
 @endsection

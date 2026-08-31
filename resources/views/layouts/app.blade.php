@@ -293,6 +293,67 @@
                 }
             });
         }
+
+        // Confirm Logout (All Roles)
+        function confirmLogout(event) {
+            if (event) event.preventDefault();
+            
+            // Close dropdown menu if currently open
+            const profileDropdown = document.getElementById('profileDropdown');
+            if (profileDropdown) {
+                profileDropdown.classList.add('hidden');
+            }
+
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem? Pastikan semua perubahan atau transaksi Anda telah disimpan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: '<i class="fas fa-sign-out-alt mr-1.5"></i> Ya, Logout',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: {
+                    popup: 'rounded-2xl shadow-xl',
+                    confirmButton: 'rounded-xl px-4 py-2.5 text-sm font-semibold',
+                    cancelButton: 'rounded-xl px-4 py-2.5 text-sm font-semibold'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Sedang keluar...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const form = document.getElementById('global-logout-form') || document.getElementById('logout-form');
+                    if (form) {
+                        form.submit();
+                    } else {
+                        const logoutForm = document.createElement('form');
+                        logoutForm.method = 'POST';
+                        logoutForm.action = '{{ route('logout') }}';
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                        if (csrfToken) {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_token';
+                            input.value = csrfToken;
+                            logoutForm.appendChild(input);
+                        }
+                        document.body.appendChild(logoutForm);
+                        logoutForm.submit();
+                    }
+                }
+            });
+        }
         
         // Format Currency
         function formatCurrency(amount) {

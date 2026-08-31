@@ -175,17 +175,8 @@
                 </table>
             </div>
 
-            <!-- Pagination Info -->
-            @if($customers->hasPages())
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="text-muted small">
-                    Showing {{ $customers->firstItem() }} to {{ $customers->lastItem() }} of {{ $customers->total() }} entries
-                </div>
-                <nav>
-                    {{ $customers->links() }}
-                </nav>
-            </div>
-            @endif
+            <!-- Pagination Footer -->
+            @include('partials.pagination', ['paginator' => $customers])
         </div>
     </div>
 </div>

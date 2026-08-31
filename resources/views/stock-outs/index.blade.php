@@ -156,18 +156,9 @@
             @endforelse
         </tbody>
     </table>
-</div>
 
-<!-- Pagination -->
-@if($stockOuts->hasPages())
-    <div class="mt-6 flex items-center justify-between">
-        <div class="text-sm text-gray-600">
-            Showing {{ $stockOuts->firstItem() }} to {{ $stockOuts->lastItem() }} of {{ $stockOuts->total() }} entries
-        </div>
-        <div class="flex gap-2">
-            {{ $stockOuts->links() }}
-        </div>
-    </div>
-@endif
+    <!-- Pagination Footer -->
+    @include('partials.pagination', ['paginator' => $stockOuts])
+</div>
 @endsection
 

@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Pagination\Paginator::defaultView('vendor.pagination.tailwind');
+
         \Illuminate\Support\Facades\View::composer(['layouts.header', 'layouts.sidebar'], function ($view) {
             $user = \Illuminate\Support\Facades\Auth::user();
             
