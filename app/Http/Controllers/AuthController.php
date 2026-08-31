@@ -91,7 +91,7 @@ class AuthController extends Controller
             $request->session()->put('auth.mfa_user_id', $user->id);
             $request->session()->put('auth.mfa_remember', $remember);
             $request->session()->put('auth.mfa_otp', $emailOtp);
-            $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
+            $request->session()->put('auth.mfa_expires_at', now()->addMinutes(1)->timestamp);
 
             return redirect()->route('login.mfa');
         }
@@ -132,7 +132,7 @@ class AuthController extends Controller
         $expiresAt = $request->session()->get('auth.mfa_expires_at', 0);
         if (now()->timestamp > $expiresAt) {
             $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
-            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (15 menit). Silakan login kembali.']);
+            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (1 menit). Silakan login kembali.']);
         }
 
         $user = \App\Models\User::find($request->session()->get('auth.mfa_user_id'));
@@ -195,7 +195,7 @@ class AuthController extends Controller
 
         // Generate fresh 6-digit OTP
         $otp = sprintf('%06d', random_int(100000, 999999));
-        $expiresAt = now()->addMinutes(15)->timestamp;
+        $expiresAt = now()->addMinutes(1)->timestamp;
 
         $request->session()->put('auth.mfa_otp', $otp);
         $request->session()->put('auth.mfa_expires_at', $expiresAt);
@@ -209,7 +209,7 @@ class AuthController extends Controller
             Mail::to($targetEmail)->send(new MfaOtpMail(
                 $user,
                 $otp,
-                15,
+                1,
                 $request->ip(),
                 $request->userAgent()
             ));
@@ -241,7 +241,7 @@ class AuthController extends Controller
         $expiresAt = $request->session()->get('auth.mfa_expires_at', 0);
         if (now()->timestamp > $expiresAt) {
             $request->session()->forget(['auth.mfa_user_id', 'auth.mfa_remember', 'auth.mfa_expires_at', 'auth.mfa_otp', 'auth.mfa_mail_sent', 'auth.mfa_mail_error']);
-            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (15 menit). Silakan login kembali.']);
+            return redirect()->route('login')->withErrors(['email' => 'Sesi verifikasi MFA telah kedaluwarsa (1 menit). Silakan login kembali.']);
         }
 
         $userId = $request->session()->get('auth.mfa_user_id');
@@ -269,7 +269,7 @@ class AuthController extends Controller
         $staticCode = env('MFA_STATIC_CODE') ? (string) env('MFA_STATIC_CODE') : null;
 
         // Check 1: Google Authenticator TOTP
-        $isTotpValid = TotpService::verifyCode($user->two_factor_secret, $submittedCode);
+        $isTotpValid = !empty($user->two_factor_secret) && TotpService::verifyCode((string) $user->two_factor_secret, $submittedCode);
 
         // Check 2: Email OTP
         $sessionEmailOtp = (string) $request->session()->get('auth.mfa_otp');
@@ -329,7 +329,7 @@ class AuthController extends Controller
         $user->two_factor_secret = TotpService::generateSecret(16);
         $user->save();
 
-        $request->session()->put('auth.mfa_expires_at', now()->addMinutes(15)->timestamp);
+        $request->session()->put('auth.mfa_expires_at', now()->addMinutes(1)->timestamp);
 
         return redirect()->route('login.mfa', ['tab' => 'authenticator'])->with('success', 'QR Code dan Kunci Rahasia Authenticator baru berhasil dibuat. Silakan scan ulang di aplikasi HP.');
     }

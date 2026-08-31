@@ -332,7 +332,7 @@
                             <div class="flex items-center space-x-1.5 text-slate-600 font-medium">
                                 <i class="far fa-clock text-blue-600"></i>
                                 <span>Batas Sesi:</span>
-                                <span id="countdownTimer" class="font-bold font-mono text-blue-700">15:00</span>
+                                <span id="countdownTimer" class="font-bold font-mono text-blue-700">01:00</span>
                             </div>
                             <span class="text-slate-400">Verifikasi otomatis saat 6 digit terisi</span>
                         </div>
@@ -380,7 +380,7 @@
         const digits = document.querySelectorAll('.otp-digit');
         const finalInput = document.getElementById('finalOtpCode');
         const form = document.getElementById('mfaForm');
-        let remainingSeconds = {{ $remainingSeconds ?? 900 }};
+        let remainingSeconds = {{ $remainingSeconds ?? 60 }};
 
         // Tab Switching Logic
         function switchMethod(method) {
@@ -431,7 +431,7 @@
             const timerEl = document.getElementById('countdownTimer');
             if (timerEl) {
                 timerEl.textContent = display;
-                if (remainingSeconds <= 120) {
+                if (remainingSeconds <= 20) {
                     timerEl.classList.remove('text-blue-700');
                     timerEl.classList.add('text-rose-600', 'animate-pulse');
                 }

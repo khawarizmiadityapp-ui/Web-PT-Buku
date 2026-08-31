@@ -15,6 +15,8 @@ class MfaAuthenticationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        putenv('MFA_STATIC_CODE=123456');
+        $_ENV['MFA_STATIC_CODE'] = '123456';
     }
 
     public function test_valid_login_credentials_redirect_to_mfa_page(): void
@@ -33,7 +35,7 @@ class MfaAuthenticationTest extends TestCase
 
         $response->assertRedirect(route('login.mfa'));
         $this->assertFalse(Auth::check(), 'User should not be fully authenticated before MFA verification');
-        $this->assertEquals($user->id, session('auth.mfa_user_id'));
+        $response->assertSessionHas('auth.mfa_user_id', $user->id);
     }
 
     public function test_mfa_page_cannot_be_accessed_without_valid_mfa_session(): void
@@ -55,7 +57,7 @@ class MfaAuthenticationTest extends TestCase
         $this->withSession([
             'auth.mfa_user_id' => $user->id,
             'auth.mfa_remember' => false,
-            'auth.mfa_expires_at' => now()->addMinutes(15)->timestamp,
+            'auth.mfa_expires_at' => now()->addMinutes(1)->timestamp,
         ]);
 
         $response = $this->post('/login/mfa', [
@@ -65,8 +67,8 @@ class MfaAuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard'));
         $this->assertTrue(Auth::check());
         $this->assertEquals($user->id, Auth::id());
-        $this->assertTrue(session('mfa_verified'));
-        $this->assertNull(session('auth.mfa_user_id'));
+        $response->assertSessionHas('mfa_verified', true);
+        $response->assertSessionMissing('auth.mfa_user_id');
     }
 
     public function test_mfa_verification_fails_with_wrong_code(): void
@@ -81,7 +83,7 @@ class MfaAuthenticationTest extends TestCase
         $this->withSession([
             'auth.mfa_user_id' => $user->id,
             'auth.mfa_remember' => false,
-            'auth.mfa_expires_at' => now()->addMinutes(15)->timestamp,
+            'auth.mfa_expires_at' => now()->addMinutes(1)->timestamp,
         ]);
 
         $response = $this->post('/login/mfa', [
@@ -92,7 +94,7 @@ class MfaAuthenticationTest extends TestCase
         $this->assertFalse(Auth::check());
     }
 
-    public function test_mfa_session_expires_after_15_minutes(): void
+    public function test_mfa_session_expires_after_1_minute(): void
     {
         $user = User::create([
             'name' => 'Expired User',
@@ -125,12 +127,12 @@ class MfaAuthenticationTest extends TestCase
         $this->withSession([
             'auth.mfa_user_id' => $user->id,
             'auth.mfa_remember' => false,
-            'auth.mfa_expires_at' => now()->addMinutes(15)->timestamp,
+            'auth.mfa_expires_at' => now()->addMinutes(1)->timestamp,
         ]);
 
         $response = $this->post('/login/mfa/cancel');
         $response->assertRedirect(route('login'));
-        $this->assertNull(session('auth.mfa_user_id'));
+        $response->assertSessionMissing('auth.mfa_user_id');
     }
 
     public function test_cashier_redirected_to_cashier_after_mfa(): void
@@ -145,7 +147,7 @@ class MfaAuthenticationTest extends TestCase
         $this->withSession([
             'auth.mfa_user_id' => $cashier->id,
             'auth.mfa_remember' => false,
-            'auth.mfa_expires_at' => now()->addMinutes(15)->timestamp,
+            'auth.mfa_expires_at' => now()->addMinutes(1)->timestamp,
         ]);
 
         $response = $this->post('/login/mfa', [

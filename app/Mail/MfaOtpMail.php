@@ -22,7 +22,7 @@ class MfaOtpMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, string $otp, int $expiresInMinutes = 15, ?string $ipAddress = null, ?string $userAgent = null)
+    public function __construct(User $user, string $otp, int $expiresInMinutes = 1, ?string $ipAddress = null, ?string $userAgent = null)
     {
         $this->user = $user;
         $this->otp = $otp;
