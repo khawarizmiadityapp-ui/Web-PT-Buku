@@ -143,9 +143,13 @@
 @media print {
     /* Hide layout chrome elements */
     aside,
+    aside *,
     header,
+    header *,
     nav,
+    nav *,
     .no-print,
+    .no-print *,
     button,
     .btn,
     form {
@@ -168,7 +172,7 @@
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
-        padding: 10mm !important;
+        padding: 0 !important;
     }
 
     table {

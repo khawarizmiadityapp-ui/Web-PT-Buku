@@ -138,13 +138,17 @@
         /* Global Print Rules for Clean Document Printing */
         @media print {
             aside,
+            aside *,
             header,
+            header *,
             nav,
+            nav *,
             .no-print,
             .action-header,
             .action-menu-container,
             .btn,
-            button {
+            button,
+            form {
                 display: none !important;
             }
 
@@ -158,7 +162,13 @@
                 overflow: visible !important;
             }
 
-            .flex, .flex-1, main, .overflow-hidden, .overflow-y-auto {
+            body > div {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            main, .flex-1 {
                 display: block !important;
                 overflow: visible !important;
                 height: auto !important;

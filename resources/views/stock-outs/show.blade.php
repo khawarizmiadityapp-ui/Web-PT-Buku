@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto">
     <!-- Page Header -->
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6 flex items-center justify-between no-print">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Detail Barang Keluar (Stock Out)</h1>
             <p class="text-sm text-gray-500 mt-1">Informasi detail transaksi #{{ $stockOut->transaction_id }}</p>

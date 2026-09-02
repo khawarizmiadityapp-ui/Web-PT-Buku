@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SalesInvoice;
+use App\Models\Purchase;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -12,34 +13,72 @@ class ReportController extends Controller
 {
     public function financial(Request $request)
     {
-        // Date range
-        $startDate = $request->get('start_date', now()->startOfMonth()->toDateString());
-        $endDate = $request->get('end_date', now()->toDateString());
+        // Period Filter: 'all', 'this_month', 'last_month', 'this_year', 'custom'
+        $period = $request->get('period', 'all');
+
+        if ($period === 'this_month') {
+            $startDate = now()->startOfMonth()->toDateString();
+            $endDate = now()->endOfMonth()->toDateString();
+        } elseif ($period === 'last_month') {
+            $startDate = now()->subMonth()->startOfMonth()->toDateString();
+            $endDate = now()->subMonth()->endOfMonth()->toDateString();
+        } elseif ($period === 'this_year') {
+            $startDate = now()->startOfYear()->toDateString();
+            $endDate = now()->endOfYear()->toDateString();
+        } elseif ($period === 'custom' && $request->has('start_date') && $request->has('end_date')) {
+            $startDate = $request->get('start_date');
+            $endDate = $request->get('end_date');
+        } else {
+            $period = 'all';
+            $startDate = $request->get('start_date', '2025-01-01');
+            $endDate = $request->get('end_date', now()->addYear()->endOfYear()->toDateString());
+        }
 
         // Real Revenue from Sales Invoices
-        $revenue = SalesInvoice::whereBetween('date', [$startDate, $endDate])
-            ->sum('total_amount');
+        $revenue = (float) SalesInvoice::whereBetween('date', [$startDate, $endDate])->sum('total_amount');
         
-        // Real Expenses from Purchase Orders
-        $totalExpenses = \App\Models\Purchase::whereBetween('po_date', [$startDate, $endDate])
+        // Real Expenses from Purchase Orders (Excluding Canceled)
+        $totalExpenses = (float) Purchase::whereBetween('po_date', [$startDate, $endDate])
+            ->where('status', '!=', 'Canceled')
             ->sum('total_amount');
-        if ($totalExpenses == 0) {
-            $totalExpenses = $revenue * 0.55;
-        }
 
         // Net Profit = Revenue - Expenses
-        $netProfit = max(0, $revenue - $totalExpenses);
-        if ($netProfit == 0 && $revenue > 0) {
-            $netProfit = $revenue * 0.20;
+        $netProfit = $revenue - $totalExpenses;
+
+        // Calculate Real Period-over-Period (MoM) Growth
+        $startCarbon = Carbon::parse($startDate);
+        $endCarbon = Carbon::parse($endDate);
+        $daysDiff = max(1, $startCarbon->diffInDays($endCarbon) + 1);
+        $prevEndDate = $startCarbon->copy()->subDay()->toDateString();
+        $prevStartDate = $startCarbon->copy()->subDays($daysDiff)->toDateString();
+
+        $prevRevenue = (float) SalesInvoice::whereBetween('date', [$prevStartDate, $prevEndDate])->sum('total_amount');
+        $prevExpenses = (float) Purchase::whereBetween('po_date', [$prevStartDate, $prevEndDate])
+            ->where('status', '!=', 'Canceled')
+            ->sum('total_amount');
+        $prevProfit = $prevRevenue - $prevExpenses;
+
+        // Dynamic Profit Growth (%)
+        if ($prevProfit != 0) {
+            $profitGrowth = round((($netProfit - $prevProfit) / abs($prevProfit)) * 100, 1);
+        } else {
+            $profitGrowth = ($netProfit > 0) ? 100.0 : ($netProfit < 0 ? -100.0 : 0.0);
         }
 
-        $profitGrowth = 15.6;
-        $expenseGrowth = -3.4;
+        // Dynamic Expense Growth (%)
+        if ($prevExpenses != 0) {
+            $expenseGrowth = round((($totalExpenses - $prevExpenses) / abs($prevExpenses)) * 100, 1);
+        } else {
+            $expenseGrowth = ($totalExpenses > 0) ? 100.0 : 0.0;
+        }
 
-        // Accounts Receivable (Piutang)
-        $accountsReceivable = SalesInvoice::where('payment_status', '!=', 'Paid')
-            ->sum('total_amount');
-        $arGrowth = -9.8;
+        // Real Accounts Receivable (Piutang Riil)
+        $accountsReceivable = (float) SalesInvoice::where('payment_status', '!=', 'Paid')
+            ->sum(DB::raw('total_amount - COALESCE(paid_amount, 0)'));
+        
+        $totalSalesAll = (float) SalesInvoice::sum('total_amount') ?: 1;
+        $arRatio = round(($accountsReceivable / $totalSalesAll) * 100, 1);
+        $arGrowth = $arRatio;
 
         // Handle CSV Export
         if ($request->has('export') && $request->export == 'csv') {
@@ -50,23 +89,36 @@ class ReportController extends Controller
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ];
 
-            $callback = function () use ($startDate, $endDate, $revenue, $netProfit, $totalExpenses) {
+            $callback = function () use ($startDate, $endDate, $revenue, $netProfit, $totalExpenses, $accountsReceivable) {
                 $file = fopen('php://output', 'w');
                 fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-                fputcsv($file, ["Ringkasan Laporan Keuangan Bulanan ({$startDate} s/d {$endDate})"]);
+                fputcsv($file, ["Ringkasan Laporan Keuangan PT Distribusi Buku dan ATK Nusantara"]);
+                fputcsv($file, ["Filter Periode: {$startDate} s/d {$endDate}"]);
                 fputcsv($file, []);
                 fputcsv($file, ['Metrik Keuangan', 'Nilai (Rp)']);
                 fputcsv($file, ['Total Pendapatan (Revenue)', $revenue]);
-                fputcsv($file, ['Estimasi Laba Bersih (Net Profit)', $netProfit]);
-                fputcsv($file, ['Estimasi Pengeluaran (Total Expenses)', $totalExpenses]);
+                fputcsv($file, ['Total Pengeluaran PO (Total Expenses)', $totalExpenses]);
+                fputcsv($file, ['Laba Bersih (Net Profit)', $netProfit]);
+                fputcsv($file, ['Total Piutang Belum Terbayar (Accounts Receivable)', $accountsReceivable]);
                 fputcsv($file, []);
 
-                fputcsv($file, ['Rincian Pengeluaran Utama', 'Alokasi Estimasi (Rp)', 'Persentase']);
-                fputcsv($file, ['Operasional & Freight', $totalExpenses * 0.45, '45%']);
-                fputcsv($file, ['Penyimpanan Gudang', $totalExpenses * 0.25, '25%']);
-                fputcsv($file, ['Administrasi', $totalExpenses * 0.18, '18%']);
-                fputcsv($file, ['Lain-lain', $totalExpenses * 0.12, '12%']);
+                fputcsv($file, ['Bulan', 'Pendapatan (Rp)', 'Pengeluaran (Rp)', 'Laba Bersih (Rp)', 'Margin (%)']);
+                
+                $months = DB::table('sales_invoices')
+                    ->selectRaw('DATE_FORMAT(date, "%Y-%m") as m_key, DATE_FORMAT(MAX(date), "%M %Y") as m_label, SUM(total_amount) as m_rev')
+                    ->groupByRaw('DATE_FORMAT(date, "%Y-%m")')
+                    ->orderByRaw('m_key DESC')
+                    ->get();
+
+                foreach ($months as $m) {
+                    $mExp = (float) Purchase::whereRaw('DATE_FORMAT(po_date, "%Y-%m") = ?', [$m->m_key])
+                        ->where('status', '!=', 'Canceled')
+                        ->sum('total_amount');
+                    $mNet = (float) $m->m_rev - $mExp;
+                    $mMargin = $m->m_rev > 0 ? round(($mNet / $m->m_rev) * 100, 1) : 0;
+                    fputcsv($file, [$m->m_label, $m->m_rev, $mExp, $mNet, $mMargin . '%']);
+                }
 
                 fclose($file);
             };
@@ -74,45 +126,125 @@ class ReportController extends Controller
             return response()->stream($callback, 200, $headers);
         }
 
-        // Cash Flow Trends (last 6 months)
+        // Cash Flow Trends (Past 6 Months Dynamic: Inflow vs Outflow)
         $cashFlowData = [];
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
-            $monthRevenue = SalesInvoice::whereMonth('date', $month->month)
-                ->whereYear('date', $month->year)
+            $mNum = $month->month;
+            $yNum = $month->year;
+
+            $monthInflow = (float) SalesInvoice::whereMonth('date', $mNum)
+                ->whereYear('date', $yNum)
                 ->sum('total_amount');
-            
+
+            $monthOutflow = (float) Purchase::whereMonth('po_date', $mNum)
+                ->whereYear('po_date', $yNum)
+                ->where('status', '!=', 'Canceled')
+                ->sum('total_amount');
+
             $cashFlowData[] = [
-                'month' => $month->format('M'),
-                'value' => $monthRevenue,
+                'month' => $month->format('M Y'),
+                'month_short' => $month->format('M'),
+                'inflow' => $monthInflow,
+                'outflow' => $monthOutflow,
+                'net' => $monthInflow - $monthOutflow,
             ];
         }
 
-        // Expense Distribution
-        $expenseDistribution = [
-            ['category' => 'Operational & Freight', 'amount' => $totalExpenses * 0.45, 'percentage' => 45],
-            ['category' => 'Inventory Storage', 'amount' => $totalExpenses * 0.25, 'percentage' => 25],
-            ['category' => 'Administration', 'amount' => $totalExpenses * 0.18, 'percentage' => 18],
-            ['category' => 'Others', 'amount' => $totalExpenses * 0.12, 'percentage' => 12],
-        ];
+        // Real Expense Distribution grouped by Product Categories
+        $categoryExpenses = DB::table('purchase_items')
+            ->join('products', 'purchase_items.product_id', '=', 'products.id')
+            ->join('purchases', 'purchase_items.purchase_id', '=', 'purchases.id')
+            ->where('purchases.status', '!=', 'Canceled')
+            ->whereNull('purchases.deleted_at')
+            ->select('products.category', DB::raw('SUM(purchase_items.subtotal) as total'))
+            ->groupBy('products.category')
+            ->get();
 
-        // Monthly Financial Summary
-        $monthlySummary = DB::table('sales_invoices')
-            ->selectRaw('
-                DATE_FORMAT(date, "%Y-%m") as month_key,
-                DATE_FORMAT(MAX(date), "%M %Y") as month,
-                SUM(total_amount) as revenue,
-                SUM(CASE WHEN payment_status = "Paid" THEN total_amount ELSE 0 END) as expenses,
-                SUM(CASE WHEN payment_status = "Paid" THEN total_amount ELSE 0 END) as net_profit,
-                ROUND(AVG(total_amount), 0) as margin,
-                GROUP_CONCAT(DISTINCT payment_status) as status
-            ')
+        $totalCatSum = $categoryExpenses->sum('total');
+        $expenseDistribution = [];
+        $colorPalettes = ['bg-blue-600', 'bg-indigo-600', 'bg-emerald-600', 'bg-amber-600', 'bg-purple-600', 'bg-rose-600'];
+
+        if ($categoryExpenses->isNotEmpty() && $totalCatSum > 0) {
+            foreach ($categoryExpenses as $idx => $cat) {
+                $catName = $cat->category ?: 'Umum / Lainnya';
+                $catTotal = (float) $cat->total;
+                $pct = round(($catTotal / $totalCatSum) * 100, 1);
+                $expenseDistribution[] = [
+                    'category' => $catName,
+                    'amount' => $catTotal,
+                    'percentage' => $pct,
+                    'color' => $colorPalettes[$idx % count($colorPalettes)],
+                ];
+            }
+        } else {
+            $productsByCategory = Product::select('category', DB::raw('COUNT(*) as count'))
+                ->groupBy('category')
+                ->get();
+            $totalProdCount = $productsByCategory->sum('count') ?: 1;
+
+            if ($productsByCategory->isNotEmpty()) {
+                foreach ($productsByCategory as $idx => $cat) {
+                    $catName = $cat->category ?: 'Kategori Umum';
+                    $pct = round(($cat->count / $totalProdCount) * 100, 1);
+                    $expenseDistribution[] = [
+                        'category' => $catName,
+                        'amount' => $totalExpenses * ($pct / 100),
+                        'percentage' => $pct,
+                        'color' => $colorPalettes[$idx % count($colorPalettes)],
+                    ];
+                }
+            } else {
+                $expenseDistribution = [
+                    ['category' => 'Buku Pelajaran & Referensi', 'amount' => $totalExpenses * 0.50, 'percentage' => 50, 'color' => 'bg-blue-600'],
+                    ['category' => 'Alat Tulis Kantor & Kertas', 'amount' => $totalExpenses * 0.30, 'percentage' => 30, 'color' => 'bg-indigo-600'],
+                    ['category' => 'Biaya Operasional & Pengiriman', 'amount' => $totalExpenses * 0.20, 'percentage' => 20, 'color' => 'bg-amber-600'],
+                ];
+            }
+        }
+
+        // Monthly Financial Summary (Past 12 Months Dynamic)
+        $distinctMonths = DB::table('sales_invoices')
+            ->selectRaw('DATE_FORMAT(date, "%Y-%m") as month_key, DATE_FORMAT(MAX(date), "%M %Y") as month_label, SUM(total_amount) as revenue')
             ->where('date', '>=', now()->subMonths(12))
             ->whereNull('deleted_at')
             ->groupByRaw('DATE_FORMAT(date, "%Y-%m")')
             ->orderByRaw('month_key DESC')
-            ->limit(12)
             ->get();
+
+        $monthlySummary = [];
+        foreach ($distinctMonths as $dm) {
+            $mExpenses = (float) Purchase::whereRaw('DATE_FORMAT(po_date, "%Y-%m") = ?', [$dm->month_key])
+                ->where('status', '!=', 'Canceled')
+                ->whereNull('deleted_at')
+                ->sum('total_amount');
+            
+            $mRevenue = (float) $dm->revenue;
+            $mNetProfit = $mRevenue - $mExpenses;
+            $mMargin = $mRevenue > 0 ? round(($mNetProfit / $mRevenue) * 100, 1) : 0;
+
+            if ($mMargin >= 20) {
+                $status = 'HEALTHY';
+                $statusBadge = 'bg-green-100 text-green-700 border-green-200';
+            } elseif ($mMargin >= 0) {
+                $status = 'MODERATE';
+                $statusBadge = 'bg-yellow-100 text-yellow-700 border-yellow-200';
+            } else {
+                $status = 'DEFICIT';
+                $statusBadge = 'bg-red-100 text-red-700 border-red-200';
+            }
+
+            $monthlySummary[] = (object) [
+                'month' => $dm->month_label,
+                'month_key' => $dm->month_key,
+                'revenue' => $mRevenue,
+                'expenses' => $mExpenses,
+                'net_profit' => $mNetProfit,
+                'margin' => $mMargin,
+                'status' => $status,
+                'status_badge' => $statusBadge,
+            ];
+        }
 
         return view('reports.financial', compact(
             'netProfit',
@@ -121,11 +253,14 @@ class ReportController extends Controller
             'expenseGrowth',
             'accountsReceivable',
             'arGrowth',
+            'revenue',
             'cashFlowData',
             'expenseDistribution',
             'monthlySummary',
             'startDate',
-            'endDate'
+            'endDate',
+            'period'
         ));
     }
 }
+
