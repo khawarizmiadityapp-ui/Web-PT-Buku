@@ -108,7 +108,7 @@
                         <tr>
                             <th>CUSTOMER NAME</th>
                             <th>PHONE & EMAIL</th>
-                            <th>ADDRESS</th>
+                            <th>CITY</th>
                             <th>ACTIONS</th>
                         </tr>
                     </thead>
@@ -133,7 +133,10 @@
                                 @endif
                             </td>
                             <td>
-                                <small>{{ Str::limit($customer->address ?? '-', 40) }}</small>
+                                <span class="d-inline-flex align-items-center px-2.5 py-1 rounded-pill bg-light border text-dark fw-medium" style="font-size: 13px;" @if($customer->address) title="{{ $customer->address }}" @endif>
+                                    <i class="fas fa-map-marker-alt text-danger me-1.5" style="font-size: 11px;"></i>
+                                    {{ $customer->city ?: '-' }}
+                                </span>
                             </td>
                             <td>
                                 <div class="relative inline-block text-start action-menu-container">

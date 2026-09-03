@@ -24,6 +24,19 @@
         </div>
     </div>
 
+    <!-- Navigation Tab Switcher -->
+    <div class="flex items-center border-b border-gray-200 gap-6">
+        <a href="{{ route('reports.financial') }}" class="pb-3 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition flex items-center gap-2">
+            <i class="fas fa-coins"></i>
+            <span>Ringkasan Finansial</span>
+        </a>
+        <a href="{{ route('reports.analytics') }}" class="pb-3 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition flex items-center gap-2">
+            <i class="fas fa-brain"></i>
+            <span>Data Science & Prediktif</span>
+            <span class="bg-indigo-100 text-indigo-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
+        </a>
+    </div>
+
     <!-- Period Filter Toolbar -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
         <form method="GET" action="{{ route('reports.financial') }}" class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">

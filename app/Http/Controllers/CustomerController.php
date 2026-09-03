@@ -37,7 +37,8 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customers.create');
+        $customerCode = Customer::generateCode();
+        return view('customers.create', compact('customerCode'));
     }
 
     /**
@@ -47,6 +48,10 @@ class CustomerController extends Controller
     {
         if ($request->has('phone')) {
             $request->merge(['phone' => $this->normalizePhone($request->phone)]);
+        }
+
+        if (!$request->filled('customer_code')) {
+            $request->merge(['customer_code' => Customer::generateCode()]);
         }
 
         $validated = $request->validate([
@@ -134,9 +139,7 @@ class CustomerController extends Controller
         ]);
 
         // Generate customer code
-        $lastCustomer = Customer::orderBy('id', 'desc')->first();
-        $nextNumber = $lastCustomer ? ((int) substr($lastCustomer->customer_code, 4)) + 1 : 1;
-        $validated['customer_code'] = 'CUST' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        $validated['customer_code'] = Customer::generateCode();
         $validated['status'] = 'Active';
         $validated['total_purchases'] = 0;
 

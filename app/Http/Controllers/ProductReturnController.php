@@ -257,20 +257,6 @@ class ProductReturnController extends Controller
      */
     private function generateReturnId()
     {
-        $prefix = 'RET';
-        $date = now()->format('Ymd');
-        
-        $lastReturn = ProductReturn::whereDate('created_at', now()->toDateString())
-            ->orderBy('id', 'desc')
-            ->first();
-
-        if ($lastReturn) {
-            $lastNumber = (int) substr($lastReturn->return_id, -3);
-            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        } else {
-            $newNumber = '001';
-        }
-
-        return "{$prefix}-{$date}-{$newNumber}";
+        return ProductReturn::generateReturnId();
     }
 }

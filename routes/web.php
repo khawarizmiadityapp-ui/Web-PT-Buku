@@ -153,8 +153,9 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show')->whereNumber('product');
 
-    // Financial Reports (Admin, Manager, Finance, Sales)
+    // Financial & Data Science Analytics Reports (Admin, Manager, Finance, Sales)
     Route::middleware('role:System Admin,Manager,Finance,Sales')->group(function () {
         Route::get('reports/financial', [ReportController::class, 'financial'])->name('reports.financial');
+        Route::get('reports/analytics', [ReportController::class, 'analytics'])->name('reports.analytics');
     });
 });

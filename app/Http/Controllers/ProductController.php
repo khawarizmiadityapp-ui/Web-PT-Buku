@@ -46,7 +46,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Product::distinct()->pluck('category')->filter();
-        return view('master-data.products.create', compact('categories'));
+        $productCode = Product::generateCode();
+        return view('master-data.products.create', compact('categories', 'productCode'));
     }
 
     public function show(Product $product)
@@ -63,6 +64,10 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->filled('product_code')) {
+            $request->merge(['product_code' => Product::generateCode()]);
+        }
+
         $validated = $request->validate([
             'product_code' => 'required|unique:products',
             'product_name' => 'required',

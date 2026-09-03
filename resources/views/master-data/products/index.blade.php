@@ -50,7 +50,7 @@
                     <table class="w-full">
                         <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Kode Barang</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase"><i class="fas fa-barcode mr-1.5 text-blue-600"></i>Barcode / Kode</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Nama Barang</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Kategori</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Satuan</th>
@@ -62,8 +62,19 @@
                         <tbody class="divide-y divide-gray-200">
                             @forelse($products as $product)
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4">
-                                        <span class="text-sm font-semibold text-blue-600">{{ $product->product_code }}</span>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col items-start gap-1">
+                                            <svg class="product-barcode-svg" data-code="{{ preg_replace('/^#/', '', $product->product_code) }}" style="height: 32px; max-width: 140px;"></svg>
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-xs font-mono font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded border border-gray-200">
+                                                    {{ $product->product_code }}
+                                                </span>
+                                                <button type="button" onclick="printSingleBarcode('{{ $product->product_code }}', '{{ addslashes($product->product_name) }}', '{{ $product->price }}')" 
+                                                        class="text-gray-400 hover:text-blue-600 text-xs p-1" title="Cetak Barcode">
+                                                    <i class="fas fa-print"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
@@ -98,6 +109,10 @@
                                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                      </svg>
                                                  </a>
+                                                 <button type="button" onclick="printSingleBarcode('{{ $product->product_code }}', '{{ addslashes($product->product_name) }}', '{{ $product->price }}')" 
+                                                         title="Cetak Barcode Label" class="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition">
+                                                     <i class="fas fa-barcode"></i>
+                                                 </button>
                                                  <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                                                      @csrf
                                                      @method('DELETE')
@@ -126,4 +141,114 @@
                     @include('partials.pagination', ['paginator' => $products])
                 </div>
 </div>
+
+<!-- Modal Cetak Barcode Label -->
+<div id="barcodePrintModal" class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl m-4">
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+            <h5 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-barcode text-blue-600"></i>
+                <span id="barcodeModalTitle">Cetak Label Barcode</span>
+            </h5>
+            <button type="button" onclick="closeBarcodeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+        </div>
+        
+        <div id="barcodePrintArea" class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center mb-4">
+            <h6 id="printProductName" class="font-bold text-gray-900 text-sm mb-1">Nama Produk</h6>
+            <div class="text-xs text-blue-600 font-semibold mb-2" id="printProductPrice">Rp 0</div>
+            <div class="bg-white p-3 rounded-lg border inline-block shadow-sm">
+                <svg id="modalBarcodeSvg" style="max-height: 65px;"></svg>
+            </div>
+            <div class="text-xs font-mono font-semibold text-gray-600 mt-2" id="printProductCode">CODE</div>
+        </div>
+
+        <div class="flex items-center justify-between gap-3">
+            <span class="text-xs text-gray-500"><i class="fas fa-info-circle me-1"></i>Siap dicetak pada kertas stiker</span>
+            <div class="flex gap-2">
+                <button type="button" onclick="closeBarcodeModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">Tutup</button>
+                <button type="button" onclick="executePrintBarcode()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 flex items-center gap-2">
+                    <i class="fas fa-print"></i> Cetak Label
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    renderAllTableBarcodes();
+});
+
+function renderAllTableBarcodes() {
+    document.querySelectorAll('.product-barcode-svg').forEach(svg => {
+        const code = svg.getAttribute('data-code');
+        if (!code) return;
+        try {
+            JsBarcode(svg, code, {
+                format: "CODE128",
+                lineColor: "#1e293b",
+                width: 1.3,
+                height: 28,
+                displayValue: false,
+                margin: 0
+            });
+        } catch (e) {
+            console.warn('Gagal render barcode untuk:', code, e);
+        }
+    });
+}
+
+function printSingleBarcode(code, name, price) {
+    const cleanCode = code.replace(/^#/, '');
+    document.getElementById('barcodeModalTitle').textContent = 'Label Barcode: ' + code;
+    document.getElementById('printProductName').textContent = name;
+    document.getElementById('printProductPrice').textContent = 'Rp ' + Number(price).toLocaleString('id-ID');
+    document.getElementById('printProductCode').textContent = code;
+    
+    try {
+        JsBarcode("#modalBarcodeSvg", cleanCode, {
+            format: "CODE128",
+            lineColor: "#000000",
+            width: 2,
+            height: 60,
+            displayValue: true,
+            fontSize: 14,
+            margin: 5
+        });
+    } catch(e) {
+        console.warn('JsBarcode modal error', e);
+    }
+    
+    document.getElementById('barcodePrintModal').classList.remove('hidden');
+}
+
+function closeBarcodeModal() {
+    document.getElementById('barcodePrintModal').classList.add('hidden');
+}
+
+function executePrintBarcode() {
+    const printContent = document.getElementById('barcodePrintArea').innerHTML;
+    const printWindow = window.open('', '_blank', 'width=450,height=400');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Cetak Label Barcode</title>
+                <style>
+                    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 20px; }
+                    .barcode-label { border: 1px dashed #999; padding: 15px; display: inline-block; border-radius: 8px; }
+                </style>
+            </head>
+            <body onload="window.print(); window.close();">
+                <div class="barcode-label">
+                    ${printContent}
+                </div>
+            </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+</script>
+@endpush
 @endsection

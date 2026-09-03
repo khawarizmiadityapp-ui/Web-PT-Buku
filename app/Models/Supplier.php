@@ -27,4 +27,24 @@ class Supplier extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * Generate automatic supplier code (e.g. SUP-2026-001)
+     */
+    public static function generateCode(): string
+    {
+        $year = date('Y');
+        $prefix = "SUP-{$year}-";
+
+        $last = self::where('supplier_code', 'like', "{$prefix}%")
+            ->orderBy('supplier_code', 'desc')
+            ->first();
+
+        $next = 1;
+        if ($last && preg_match('/-(\d+)$/', $last->supplier_code, $matches)) {
+            $next = ((int) $matches[1]) + 1;
+        }
+
+        return $prefix . str_pad($next, 3, '0', STR_PAD_LEFT);
+    }
 }

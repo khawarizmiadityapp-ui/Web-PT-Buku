@@ -35,4 +35,24 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchaseItem::class);
     }
+
+    /**
+     * Generate automatic PO number (e.g. PO-2026-0001)
+     */
+    public static function generatePoNumber(): string
+    {
+        $year = date('Y');
+        $prefix = "PO-{$year}-";
+
+        $last = self::where('po_number', 'like', "{$prefix}%")
+            ->orderBy('po_number', 'desc')
+            ->first();
+
+        $next = 1;
+        if ($last && preg_match('/-(\d+)$/', $last->po_number, $matches)) {
+            $next = ((int) $matches[1]) + 1;
+        }
+
+        return $prefix . str_pad($next, 4, '0', STR_PAD_LEFT);
+    }
 }

@@ -243,10 +243,7 @@ class SalesInvoiceController extends Controller
     {
         $customers = \App\Models\Customer::all();
         $products = \App\Models\Product::where('status', 'Active')->get();
-        
-        $lastInvoice = SalesInvoice::orderBy('id', 'desc')->first();
-        $nextNumber = $lastInvoice ? ((int) preg_replace('/[^0-9]/', '', $lastInvoice->invoice_number)) + 1 : 1;
-        $invoiceNumber = 'INV/' . date('Y') . '/' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        $invoiceNumber = SalesInvoice::generateInvoiceNumber();
 
         return view('sales.invoices.create', compact('customers', 'products', 'invoiceNumber'));
     }
@@ -265,6 +262,10 @@ class SalesInvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$request->filled('invoice_number')) {
+            $request->merge(['invoice_number' => SalesInvoice::generateInvoiceNumber()]);
+        }
+
         $validated = $request->validate([
             'invoice_number' => 'required|unique:sales_invoices',
             'date' => 'required|date',

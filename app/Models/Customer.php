@@ -31,4 +31,24 @@ class Customer extends Model
     {
         return $this->hasMany(SalesInvoice::class);
     }
+
+    /**
+     * Generate automatic customer code (e.g. CUST-2026-001)
+     */
+    public static function generateCode(): string
+    {
+        $year = date('Y');
+        $prefix = "CUST-{$year}-";
+
+        $last = self::where('customer_code', 'like', "{$prefix}%")
+            ->orderBy('customer_code', 'desc')
+            ->first();
+
+        $next = 1;
+        if ($last && preg_match('/-(\d+)$/', $last->customer_code, $matches)) {
+            $next = ((int) $matches[1]) + 1;
+        }
+
+        return $prefix . str_pad($next, 3, '0', STR_PAD_LEFT);
+    }
 }

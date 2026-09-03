@@ -70,7 +70,7 @@ class PurchaseController extends Controller
     {
         $suppliers = Supplier::where('status', 'Active')->get();
         $products = Product::where('status', 'Active')->get();
-        $autoPoNumber = 'PO-' . date('Ymd') . '-' . sprintf('%03d', Purchase::count() + 1);
+        $autoPoNumber = Purchase::generatePoNumber();
 
         return view('purchases.create', compact('suppliers', 'products', 'autoPoNumber'));
     }
@@ -80,6 +80,10 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$request->filled('po_number')) {
+            $request->merge(['po_number' => Purchase::generatePoNumber()]);
+        }
+
         $validator = Validator::make($request->all(), [
             'po_number' => 'required|string|unique:purchases,po_number',
             'po_date' => 'required|date',

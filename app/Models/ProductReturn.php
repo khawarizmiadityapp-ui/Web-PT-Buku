@@ -53,4 +53,24 @@ class ProductReturn extends Model
     {
         return $this->total_amount - $this->restocking_fee;
     }
+
+    /**
+     * Generate automatic return ID (e.g. RET-2026-001)
+     */
+    public static function generateReturnId(): string
+    {
+        $year = date('Y');
+        $prefix = "RET-{$year}-";
+
+        $last = self::where('return_id', 'like', "{$prefix}%")
+            ->orderBy('return_id', 'desc')
+            ->first();
+
+        $next = 1;
+        if ($last && preg_match('/-(\d+)$/', $last->return_id, $matches)) {
+            $next = ((int) $matches[1]) + 1;
+        }
+
+        return $prefix . str_pad($next, 3, '0', STR_PAD_LEFT);
+    }
 }

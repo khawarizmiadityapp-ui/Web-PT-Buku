@@ -24,9 +24,14 @@
                 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Customer Code *</label>
-                        <input type="text" name="customer_code" class="form-control @error('customer_code') is-invalid @enderror" 
-                               value="{{ old('customer_code', $customer->customer_code ?? '') }}" required>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label mb-0">Customer Code <span class="text-danger">*</span></label>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-normal text-xs px-2 py-0.5 rounded-pill">
+                                <i class="fas fa-magic me-1"></i>Otomatis
+                            </span>
+                        </div>
+                        <input type="text" name="customer_code" class="form-control font-semibold text-primary @error('customer_code') is-invalid @enderror" 
+                               value="{{ old('customer_code', $customer->customer_code ?? ($customerCode ?? \App\Models\Customer::generateCode())) }}" required>
                         @error('customer_code')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

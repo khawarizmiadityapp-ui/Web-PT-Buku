@@ -218,11 +218,26 @@
                     <span class="font-medium">Barang Keluar</span>
                 </a>
                 
-                <!-- Reports -->
-                <a href="{{ route('reports.financial') }}" class="{{ request()->routeIs('reports.*') ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
-                    <i class="fas fa-chart-bar w-5"></i>
-                    <span class="font-medium">Reports</span>
-                </a>
+                <!-- Reports Dropdown -->
+                <div>
+                    <button onclick="toggleDropdown('reports')" class="w-full flex items-center justify-between space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('reports.*') ? 'sidebar-active' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-chart-bar w-5"></i>
+                            <span class="font-medium">Reports</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="reports" class="ml-8 mt-1 space-y-1 {{ request()->routeIs('reports.*') ? '' : 'hidden' }}">
+                        <a href="{{ route('reports.financial') }}" class="{{ request()->routeIs('reports.financial') ? 'text-blue-600 font-semibold' : 'text-gray-600' }} flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm">
+                            <i class="fas fa-coins w-4"></i>
+                            <span>Financial Report</span>
+                        </a>
+                        <a href="{{ route('reports.analytics') }}" class="{{ request()->routeIs('reports.analytics') ? 'text-indigo-600 font-semibold' : 'text-gray-600' }} flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm">
+                            <i class="fas fa-brain w-4 text-indigo-500"></i>
+                            <span>Data Science & AI</span>
+                        </a>
+                    </div>
+                </div>
                 
                 <a href="{{ route('settings') }}" class="{{ request()->routeIs('settings*') ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-cog w-5"></i>

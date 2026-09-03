@@ -54,7 +54,8 @@ class StockOutController extends Controller
      */
     public function create()
     {
-        return view('stock-outs.create');
+        $transactionId = StockOut::generateTransactionId();
+        return view('stock-outs.create', compact('transactionId'));
     }
 
     /**
@@ -62,6 +63,10 @@ class StockOutController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$request->filled('transaction_id')) {
+            $request->merge(['transaction_id' => StockOut::generateTransactionId()]);
+        }
+
         $validator = Validator::make($request->all(), [
             'transaction_id' => 'required|unique:stock_outs,transaction_id',
             'date' => 'required|date',

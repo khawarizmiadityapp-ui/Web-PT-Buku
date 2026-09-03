@@ -48,7 +48,8 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        return view('suppliers.create');
+        $supplierCode = Supplier::generateCode();
+        return view('suppliers.create', compact('supplierCode'));
     }
 
     /**
@@ -58,6 +59,10 @@ class SupplierController extends Controller
     {
         if ($request->has('phone')) {
             $request->merge(['phone' => $this->normalizePhone($request->phone)]);
+        }
+
+        if (!$request->filled('supplier_code')) {
+            $request->merge(['supplier_code' => Supplier::generateCode()]);
         }
 
         $validator = Validator::make($request->all(), [
@@ -105,7 +110,7 @@ class SupplierController extends Controller
             ], 422);
         }
 
-        $supplierCode = 'SUP-' . strtoupper(substr(uniqid(), -5));
+        $supplierCode = Supplier::generateCode();
         $supplier = Supplier::create([
             'supplier_code' => $supplierCode,
             'name' => $request->name,

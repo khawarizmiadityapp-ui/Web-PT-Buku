@@ -12,11 +12,25 @@
                     <h5 class="card-title mb-3">Select Products</h5>
                     
                     <!-- Search Bar -->
-                    <div class="mb-3">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="text" class="form-control" id="productSearch" 
-                                   placeholder="Search product by name or code..." autocomplete="off">
+                    <!-- Barcode Scanner & Search Bar -->
+                    <div class="mb-3 position-relative">
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-white border-end-0 text-primary">
+                                <i class="fas fa-barcode fa-lg"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 ps-1 font-monospace" id="productSearch" 
+                                   placeholder="Arahkan Barcode Scanner atau ketik nama/kode... (Tekan Enter)" autocomplete="off" autofocus>
+                            <button class="btn btn-outline-primary d-flex align-items-center gap-1.5" type="button" onclick="openCameraScanner()" title="Scan Menggunakan Kamera HP / Webcam">
+                                <i class="fas fa-camera"></i> <span class="d-none d-sm-inline small font-semibold">Scan Kamera</span>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-1.5 px-1">
+                            <span class="text-muted" style="font-size: 11px;">
+                                <i class="fas fa-bolt text-warning me-1"></i> <strong>Scanner Otomatis:</strong> Tembak barcode gun, barang langsung masuk ke keranjang
+                            </span>
+                            <span id="scanStatusBadge" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill font-normal" style="font-size: 10px;">
+                                <i class="fas fa-check-circle me-1"></i>Scanner Siap
+                            </span>
                         </div>
                         <div id="searchResults" class="list-group position-absolute w-100 mt-1" style="z-index: 1000; display: none;"></div>
                     </div>
@@ -538,9 +552,155 @@ function formatNumber(num) {
     return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// Product search
+// Full Products Catalog for Instant Barcode Matching
+const allProductsCatalog = [
+    @foreach($products as $product)
+    {
+        id: {{ $product->id }},
+        product_name: {!! json_encode($product->product_name) !!},
+        product_code: {!! json_encode($product->product_code) !!},
+        clean_code: {!! json_encode(preg_replace('/[^a-zA-Z0-9]/', '', $product->product_code)) !!},
+        price: {{ (float) $product->price }},
+        stock: {{ (int) $product->system_stock }}
+    },
+    @endforeach
+];
+
+// Audio Barcode Scanner Beep using Web Audio API (zero external files, instant)
+function playBarcodeBeep(isSuccess = true) {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        if (isSuccess) {
+            // High positive scan beep (1600Hz for 80ms)
+            osc.frequency.setValueAtTime(1600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        } else {
+            // Low error buzz (320Hz for 200ms)
+            osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+    } catch(e) {
+        console.warn('Audio Context error', e);
+    }
+}
+
+// Toast notification for Barcode Scanner
+function showScanToast(type, message) {
+    let toast = document.getElementById('barcodeScanToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'barcodeScanToast';
+        toast.style.cssText = `
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            transform: translateY(-20px);
+            opacity: 0;
+            pointer-events: none;
+        `;
+        document.body.appendChild(toast);
+    }
+    
+    if (type === 'success') {
+        toast.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        toast.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${escapeHtml(message)}`;
+    } else {
+        toast.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+        toast.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${escapeHtml(message)}`;
+    }
+    
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+    
+    clearTimeout(toast.hideTimeout);
+    toast.hideTimeout = setTimeout(() => {
+        toast.style.transform = 'translateY(-20px)';
+        toast.style.opacity = '0';
+    }, 2500);
+}
+
+// Core Barcode Scanning Handler
+function handleBarcodeScan(scannedText) {
+    if (!scannedText) return;
+    scannedText = scannedText.trim();
+    const cleanScan = scannedText.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+    
+    // Find matching product by exact code, stripped code, or case-insensitive code
+    const matched = allProductsCatalog.find(p => {
+        const pCodeClean = (p.clean_code || '').toLowerCase();
+        const pCodeRaw = (p.product_code || '').toLowerCase();
+        const scanRaw = scannedText.toLowerCase();
+        return pCodeClean === cleanScan || pCodeRaw === scanRaw || pCodeRaw === ('#' + scanRaw);
+    });
+    
+    if (matched) {
+        // Automatically add product to cart
+        addToCart(matched.id, matched.product_name, matched.price, matched.stock);
+        
+        // Play crisp cashier beep
+        playBarcodeBeep(true);
+        
+        // Show success visual feedback
+        showScanToast('success', `${matched.product_name} (${matched.product_code}) dimasukkan!`);
+        
+        // Flash status badge
+        const badge = document.getElementById('scanStatusBadge');
+        if (badge) {
+            badge.className = 'badge bg-success text-white rounded-pill font-normal';
+            badge.innerHTML = `<i class="fas fa-bolt me-1"></i>${matched.product_code} OK`;
+            setTimeout(() => {
+                badge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill font-normal';
+                badge.innerHTML = `<i class="fas fa-check-circle me-1"></i>Scanner Siap`;
+            }, 1200);
+        }
+        
+        // Clear search input & refocus for next continuous scan
+        const searchInput = document.getElementById('productSearch');
+        if (searchInput) {
+            searchInput.value = '';
+            // Reset grid filter
+            document.querySelectorAll('.product-card').forEach(card => card.parentElement.style.display = '');
+            searchInput.focus();
+        }
+    } else {
+        // Error handling
+        playBarcodeBeep(false);
+        showScanToast('error', `Barcode "${scannedText}" tidak ditemukan di sistem!`);
+        
+        const badge = document.getElementById('scanStatusBadge');
+        if (badge) {
+            badge.className = 'badge bg-danger text-white rounded-pill font-normal';
+            badge.innerHTML = `<i class="fas fa-times-circle me-1"></i>Tidak Ditemukan`;
+            setTimeout(() => {
+                badge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill font-normal';
+                badge.innerHTML = `<i class="fas fa-check-circle me-1"></i>Scanner Siap`;
+            }, 1500);
+        }
+    }
+}
+
+// Product search input listener (filtering)
 document.getElementById('productSearch').addEventListener('input', function() {
-    const search = this.value.toLowerCase();
+    const search = this.value.toLowerCase().trim();
     const products = document.querySelectorAll('.product-card');
     
     products.forEach(product => {
@@ -551,6 +711,49 @@ document.getElementById('productSearch').addEventListener('input', function() {
             product.parentElement.style.display = 'none';
         }
     });
+});
+
+// Barcode scanner trigger on Enter in search box
+document.getElementById('productSearch').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = this.value.trim();
+        if (val) {
+            handleBarcodeScan(val);
+        }
+    }
+});
+
+// Global Hardware Barcode Scanner Auto-Detection (catches scanner gun even when cursor is anywhere)
+let barcodeGunBuffer = '';
+let lastBarcodeKeyTime = Date.now();
+
+window.addEventListener('keydown', function(e) {
+    const activeEl = document.activeElement;
+    const activeTag = activeEl ? activeEl.tagName.toLowerCase() : '';
+    const activeId = activeEl ? activeEl.id : '';
+    
+    // Do not intercept if user is intentionally typing inside customer modal or notes
+    if (activeTag === 'textarea' || (activeTag === 'input' && activeId !== 'productSearch')) {
+        return;
+    }
+    
+    const now = Date.now();
+    // Hardware scanners type each key with < 50ms interval
+    if (now - lastBarcodeKeyTime > 60) {
+        barcodeGunBuffer = '';
+    }
+    lastBarcodeKeyTime = now;
+    
+    if (e.key === 'Enter') {
+        if (barcodeGunBuffer.length >= 2) {
+            e.preventDefault();
+            handleBarcodeScan(barcodeGunBuffer);
+            barcodeGunBuffer = '';
+        }
+    } else if (e.key.length === 1) {
+        barcodeGunBuffer += e.key;
+    }
 });
 
 // Customer Autocomplete Search Logic
@@ -682,5 +885,83 @@ function saveNewCustomer() {
         alert('An error occurred while adding customer.');
     });
 }
+
+// Camera Barcode Scanner Logic
+let html5QrCodeScanner = null;
+
+function openCameraScanner() {
+    const modalEl = document.getElementById('cameraScannerModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+    
+    setTimeout(() => {
+        if (typeof Html5Qrcode === 'undefined') {
+            alert('Modul scanner kamera sedang dimuat, coba lagi dalam 2 detik.');
+            return;
+        }
+        
+        if (!html5QrCodeScanner) {
+            html5QrCodeScanner = new Html5Qrcode("cameraScannerReader");
+        }
+        
+        html5QrCodeScanner.start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: { width: 280, height: 160 }
+            },
+            (decodedText) => {
+                handleBarcodeScan(decodedText);
+                closeCameraScanner();
+            },
+            () => {}
+        ).catch(err => {
+            console.warn('Camera error', err);
+            alert('Tidak dapat mengakses kamera: Pastikan izin kamera aktif.');
+        });
+    }, 400);
+}
+
+function closeCameraScanner() {
+    if (html5QrCodeScanner && html5QrCodeScanner.isScanning) {
+        html5QrCodeScanner.stop().then(() => {
+            const modalEl = document.getElementById('cameraScannerModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        }).catch(() => {
+            const modalEl = document.getElementById('cameraScannerModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        });
+    } else {
+        const modalEl = document.getElementById('cameraScannerModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    }
+}
 </script>
+
+<!-- Modal Camera Barcode Scanner -->
+<div class="modal fade" id="cameraScannerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title font-semibold text-dark d-flex align-items-center gap-2">
+                    <i class="fas fa-camera text-primary me-2"></i> Scan Barcode Kamera
+                </h5>
+                <button type="button" class="btn-close" onclick="closeCameraScanner()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-3">
+                <div id="cameraScannerReader" style="width: 100%; min-height: 250px; background: #000; border-radius: 12px; overflow: hidden;"></div>
+                <p class="text-muted small mt-2 mb-0">Arahkan barcode barang tepat ke area kamera</p>
+            </div>
+            <div class="modal-footer border-top justify-content-between">
+                <span class="small text-muted"><i class="fas fa-barcode text-primary me-1"></i>Deteksi otomatis</span>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeCameraScanner()">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
 @endsection
