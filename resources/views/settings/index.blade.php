@@ -61,12 +61,49 @@
                             </div>
 
                             <div>
-                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Telepon</label>
-                                <input type="text" name="phone" id="phone" value="{{ old('phone', Auth::user()->phone ?? '') }}" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror">
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">No. Telepon / WhatsApp</label>
+                                @php
+                                    $phoneRaw = old('phone', Auth::user()->phone ?? '');
+                                    $phoneDigits = preg_replace('/\D/', '', $phoneRaw);
+                                    if (str_starts_with($phoneDigits, '62')) {
+                                        $phoneDigits = substr($phoneDigits, 2);
+                                    } elseif (str_starts_with($phoneDigits, '0')) {
+                                        $phoneDigits = substr($phoneDigits, 1);
+                                    }
+                                @endphp
+                                <div class="relative flex rounded-lg shadow-sm">
+                                    <select class="country-code-select inline-flex items-center px-2 py-2 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-700 font-semibold text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer" style="max-width: 115px;" title="Pilih Kode Negara">
+                                        <option value="+62" selected>🇮🇩 +62</option>
+                                        <option value="+60">🇲🇾 +60</option>
+                                        <option value="+65">🇸🇬 +65</option>
+                                        <option value="+63">🇵🇭 +63</option>
+                                        <option value="+66">🇹🇭 +66</option>
+                                        <option value="+84">🇻🇳 +84</option>
+                                        <option value="+1">🇺🇸 +1</option>
+                                        <option value="+44">🇬🇧 +44</option>
+                                        <option value="+61">🇦🇺 +61</option>
+                                        <option value="+81">🇯🇵 +81</option>
+                                        <option value="+82">🇰🇷 +82</option>
+                                        <option value="+86">🇨🇳 +86</option>
+                                        <option value="+966">🇸🇦 +966</option>
+                                        <option value="+971">🇦🇪 +971</option>
+                                        <option value="+49">🇩🇪 +49</option>
+                                        <option value="+31">🇳🇱 +31</option>
+                                    </select>
+                                    <input type="tel" 
+                                           id="settingsPhone"
+                                           class="phone-number-input flex-1 min-w-0 block w-full px-3 py-2 border rounded-none rounded-r-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror" 
+                                           value="{{ $phoneDigits }}" 
+                                           placeholder="81234567890" 
+                                           inputmode="numeric" 
+                                           pattern="[0-9]*" 
+                                           maxlength="15">
+                                    <input type="hidden" name="phone" value="{{ $phoneRaw }}">
+                                </div>
                                 @error('phone')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                                <span class="text-gray-400 text-xs mt-1 block">Pilih negara & ketik nomor tanpa awalan 0 (contoh: 81234567890)</span>
                             </div>
 
                             <div>

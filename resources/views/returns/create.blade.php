@@ -229,12 +229,16 @@ function updateProductInfo() {
 }
 
 function calculateRefund() {
-    const quantity = parseInt(document.getElementById('quantityInput').value) || 0;
-    const unitPrice = parseFloat(document.getElementById('unitPriceInput').value) || 0;
+    let quantity = parseInt(document.getElementById('quantityInput').value) || 0;
+    if (quantity < 1) {
+        quantity = 1;
+        document.getElementById('quantityInput').value = 1;
+    }
+    const unitPrice = Math.max(0, parseFloat(document.getElementById('unitPriceInput').value) || 0);
     
     const subtotal = quantity * unitPrice;
     const restockingFee = subtotal * restockingFeeRate;
-    const refundAmount = subtotal - restockingFee;
+    const refundAmount = Math.max(0, subtotal - restockingFee);
     
     document.getElementById('totalItemsDisplay').textContent = quantity + ' items';
     document.getElementById('subtotalDisplay').textContent = 'Rp ' + formatNumber(subtotal);

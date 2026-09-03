@@ -275,6 +275,9 @@ class SalesInvoiceController extends Controller
             'payment_status' => 'required|in:Paid,Unpaid,Overdue,Partial',
             'payment_method' => 'nullable|string',
             'notes' => 'nullable|string',
+            'items' => 'nullable|array',
+            'items.*.quantity' => 'nullable|integer|min:1',
+            'items.*.price' => 'nullable|numeric|min:0',
         ]);
 
         if ($validated['payment_status'] === 'Paid') {

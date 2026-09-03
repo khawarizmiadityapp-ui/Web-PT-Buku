@@ -49,6 +49,12 @@ class ProductController extends Controller
         return view('master-data.products.create', compact('categories'));
     }
 
+    public function show(Product $product)
+    {
+        $categories = Product::distinct()->pluck('category')->filter();
+        return view('master-data.products.edit', compact('product', 'categories'));
+    }
+
     public function edit(Product $product)
     {
         $categories = Product::distinct()->pluck('category')->filter();

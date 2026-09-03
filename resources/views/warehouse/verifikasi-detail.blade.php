@@ -318,8 +318,11 @@ function checkQtyMismatch(input) {
     const row = input.closest('tr');
     if (!row) return;
     const labelContainer = row.querySelector('.mismatch-label');
-    const origQty = parseInt(input.dataset.original) || 0;
-    const currentQty = parseInt(input.value) || 0;
+    let currentQty = parseInt(input.value) || 0;
+    if (currentQty < 0) {
+        currentQty = 0;
+        input.value = 0;
+    }
 
     if (!labelContainer) return;
 

@@ -476,8 +476,16 @@ function calculateSubtotal(elem) {
     const priceInput = row.querySelector('.price-input');
     const subtotalInput = row.querySelector('.subtotal-input');
     
-    const qty = parseFloat(qtyInput?.value) || 0;
-    const price = parseFloat(priceInput?.value) || 0;
+    let qty = parseFloat(qtyInput?.value) || 0;
+    if (qty < 1) {
+        qty = 1;
+        if (qtyInput) qtyInput.value = 1;
+    }
+    let price = parseFloat(priceInput?.value) || 0;
+    if (price < 0) {
+        price = 0;
+        if (priceInput) priceInput.value = 0;
+    }
     const subtotal = qty * price;
     
     if (subtotalInput) subtotalInput.value = formatNumber(subtotal);
@@ -994,10 +1002,17 @@ document.getElementById('quickSupplierForm')?.addEventListener('submit', functio
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...';
 
+    const countryCode = document.getElementById('quickSupplierCountryCode')?.value || '+62';
+    const dialDigits = countryCode.replace(/\D/g, '');
+    let supplierPhoneDigits = (document.getElementById('quickSupplierPhone').value || '').replace(/\D/g, '');
+    if (supplierPhoneDigits.startsWith(dialDigits)) supplierPhoneDigits = supplierPhoneDigits.substring(dialDigits.length);
+    if (supplierPhoneDigits.startsWith('0')) supplierPhoneDigits = supplierPhoneDigits.substring(1);
+    const supplierPhone = supplierPhoneDigits ? countryCode + supplierPhoneDigits : '';
+
     const data = {
         name: document.getElementById('quickSupplierName').value,
         company_name: document.getElementById('quickSupplierCompany').value,
-        phone: document.getElementById('quickSupplierPhone').value,
+        phone: supplierPhone,
         email: document.getElementById('quickSupplierEmail').value,
         address: document.getElementById('quickSupplierAddress').value,
     };
@@ -1085,7 +1100,35 @@ document.getElementById('quickSupplierForm')?.addEventListener('submit', functio
                     <div class="row g-2 mb-3">
                         <div class="col-md-6">
                             <label class="form-label font-semibold text-xs text-gray-700">No. HP / Telepon</label>
-                            <input type="text" class="form-control form-control-sm" name="phone" id="quickSupplierPhone" placeholder="081234567890">
+                            <div class="input-group input-group-sm">
+                                <select class="form-select form-select-sm country-code-select bg-light text-secondary fw-semibold border-end-0" id="quickSupplierCountryCode" style="max-width: 110px;" title="Pilih Kode Negara">
+                                    <option value="+62" selected>🇮🇩 +62</option>
+                                    <option value="+60">🇲🇾 +60</option>
+                                    <option value="+65">🇸🇬 +65</option>
+                                    <option value="+63">🇵🇭 +63</option>
+                                    <option value="+66">🇹🇭 +66</option>
+                                    <option value="+84">🇻🇳 +84</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+61">🇦🇺 +61</option>
+                                    <option value="+81">🇯🇵 +81</option>
+                                    <option value="+82">🇰🇷 +82</option>
+                                    <option value="+86">🇨🇳 +86</option>
+                                    <option value="+966">🇸🇦 +966</option>
+                                    <option value="+971">🇦🇪 +971</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+31">🇳🇱 +31</option>
+                                </select>
+                                <input type="tel" 
+                                       class="form-control form-control-sm phone-number-input" 
+                                       name="phone" 
+                                       id="quickSupplierPhone" 
+                                       placeholder="81234567890"
+                                       inputmode="numeric" 
+                                       pattern="[0-9]*" 
+                                       maxlength="15">
+                            </div>
+                            <small class="text-muted" style="font-size: 11px;">Hanya angka tanpa awalan 0</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label font-semibold text-xs text-gray-700">Email</label>

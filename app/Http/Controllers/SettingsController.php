@@ -128,6 +128,10 @@ class SettingsController extends Controller
     {
         $user = Auth::user();
 
+        if ($request->has('phone')) {
+            $request->merge(['phone' => $this->normalizePhone($request->phone)]);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
@@ -346,5 +350,26 @@ class SettingsController extends Controller
         AuditLogService::log('UPDATE', 'Updated company profile', 'company_settings', $company->id);
 
         return back()->with('success', 'Profil perusahaan berhasil disimpan!');
+    }
+
+    /**
+     * Helper to normalize phone numbers into international E.164 format
+     */
+    private function normalizePhone(?string $phone): ?string
+    {
+        if (!$phone) return null;
+        $trimmed = trim($phone);
+        if (str_starts_with($trimmed, '+')) {
+            $digits = preg_replace('/[^0-9]/', '', substr($trimmed, 1));
+            return $digits ? '+' . $digits : null;
+        }
+
+        $digits = preg_replace('/[^0-9]/', '', $trimmed);
+        if (str_starts_with($digits, '62')) {
+            $digits = substr($digits, 2);
+        } elseif (str_starts_with($digits, '0')) {
+            $digits = substr($digits, 1);
+        }
+        return $digits ? '+62' . $digits : null;
     }
 }

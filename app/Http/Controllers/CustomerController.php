@@ -45,6 +45,10 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->has('phone')) {
+            $request->merge(['phone' => $this->normalizePhone($request->phone)]);
+        }
+
         $validated = $request->validate([
             'customer_code' => 'required|unique:customers',
             'name' => 'required|string|max:255',
@@ -85,6 +89,10 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
+        if ($request->has('phone')) {
+            $request->merge(['phone' => $this->normalizePhone($request->phone)]);
+        }
+
         $validated = $request->validate([
             'customer_code' => 'required|unique:customers,customer_code,' . $customer->id,
             'name' => 'required|string|max:255',
@@ -116,6 +124,10 @@ class CustomerController extends Controller
      */
     public function quickStore(Request $request)
     {
+        if ($request->has('phone')) {
+            $request->merge(['phone' => $this->normalizePhone($request->phone)]);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -134,6 +146,27 @@ class CustomerController extends Controller
             'success' => true,
             'customer' => $customer,
         ]);
+    }
+
+    /**
+     * Helper to normalize phone numbers into international E.164 format
+     */
+    private function normalizePhone(?string $phone): ?string
+    {
+        if (!$phone) return null;
+        $trimmed = trim($phone);
+        if (str_starts_with($trimmed, '+')) {
+            $digits = preg_replace('/[^0-9]/', '', substr($trimmed, 1));
+            return $digits ? '+' . $digits : null;
+        }
+
+        $digits = preg_replace('/[^0-9]/', '', $trimmed);
+        if (str_starts_with($digits, '62')) {
+            $digits = substr($digits, 2);
+        } elseif (str_starts_with($digits, '0')) {
+            $digits = substr($digits, 1);
+        }
+        return $digits ? '+62' . $digits : null;
     }
 
     /**

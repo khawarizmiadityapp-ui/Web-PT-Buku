@@ -124,8 +124,19 @@ let rowIndex = 1;
 
 function calculateSubtotal(element) {
     const row = element.closest('.item-row');
-    const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-    const price = parseFloat(row.querySelector('.item-price').value) || 0;
+    const qtyInput = row.querySelector('.item-qty');
+    const priceInput = row.querySelector('.item-price');
+    
+    let qty = parseFloat(qtyInput.value) || 0;
+    if (qty < 1) {
+        qty = 1;
+        qtyInput.value = 1;
+    }
+    let price = parseFloat(priceInput.value) || 0;
+    if (price < 0) {
+        price = 0;
+        priceInput.value = 0;
+    }
     const subtotal = qty * price;
     row.querySelector('.item-subtotal').value = subtotal;
     

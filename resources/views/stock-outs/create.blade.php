@@ -87,7 +87,7 @@
                         id="total_items"
                         name="total_items" 
                         value="{{ old('total_items', 1) }}" 
-                        min="0"
+                        min="1"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm @error('total_items') border-red-500 @enderror"
                         required
                     >

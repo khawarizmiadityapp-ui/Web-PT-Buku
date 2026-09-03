@@ -144,7 +144,6 @@ Route::middleware('auth')->group(function () {
     // Master Data - Products (Index & Export available to internal staff, Modify restricted to Admin/Manager/Warehouse Manager)
     Route::get('products/export', [ProductController::class, 'export'])->name('products.export');
     Route::get('products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
     Route::middleware('role:System Admin,Manager,Warehouse Manager')->group(function () {
         Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
         Route::post('products', [ProductController::class, 'store'])->name('products.store');
@@ -152,6 +151,7 @@ Route::middleware('auth')->group(function () {
         Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     });
+    Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show')->whereNumber('product');
 
     // Financial Reports (Admin, Manager, Finance, Sales)
     Route::middleware('role:System Admin,Manager,Finance,Sales')->group(function () {

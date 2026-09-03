@@ -108,6 +108,245 @@
             pointer-events: none !important;
         }
 
+        /* Modern Country Code Picker */
+        .custom-country-select-hidden {
+            display: none !important;
+        }
+
+        .custom-country-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0.5rem 0.85rem;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-right: none;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            white-space: nowrap;
+            height: auto;
+            min-height: 42px;
+            z-index: 2;
+        }
+
+        .custom-country-btn:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .custom-country-btn:focus {
+            outline: none;
+            border-color: #3b82f6;
+            z-index: 3;
+        }
+
+        .custom-country-btn.open {
+            background-color: #e2e8f0;
+        }
+
+        .custom-country-btn .flag-img {
+            width: 21px;
+            height: 15px;
+            border-radius: 3px;
+            object-fit: cover;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .custom-country-btn .dial-code {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #334155;
+            letter-spacing: -0.01em;
+        }
+
+        .custom-country-btn .chevron-icon {
+            width: 12px;
+            height: 12px;
+            color: #94a3b8;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: 2px;
+        }
+
+        .custom-country-btn.open .chevron-icon {
+            transform: rotate(180deg);
+            color: #3b82f6;
+        }
+
+        /* Floating Country Dropdown Popover */
+        .custom-country-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            z-index: 1070;
+            width: 320px;
+            max-width: calc(100vw - 32px);
+            background: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.18), 0 10px 15px -3px rgba(15, 23, 42, 0.08);
+            padding: 10px;
+            display: none;
+            animation: countryDropdownFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes countryDropdownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .custom-country-dropdown.show {
+            display: block;
+        }
+
+        .country-search-box {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .country-search-box input {
+            width: 100%;
+            padding: 8px 12px 8px 34px !important;
+            font-size: 13px;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 0.625rem !important;
+            background-color: #f8fafc;
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .country-search-box input:focus {
+            border-color: #3b82f6 !important;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .country-search-box .search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .country-list-scroll {
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+            overscroll-behavior: contain;
+        }
+
+        .country-list-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .country-list-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .country-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            font-size: 13px;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .country-item:hover {
+            background-color: #f0f7ff;
+            color: #1d4ed8;
+        }
+
+        .country-item.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .country-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .country-item-left .flag-img {
+            width: 22px;
+            height: 15px;
+            border-radius: 3px;
+            object-fit: cover;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+            flex-shrink: 0;
+        }
+
+        .country-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .country-item-dial {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 2px 7px;
+            border-radius: 6px;
+            margin-left: 8px;
+            flex-shrink: 0;
+            font-family: monospace;
+        }
+
+        .country-item:hover .country-item-dial,
+        .country-item.active .country-item-dial {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .country-empty-hint {
+            padding: 16px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        /* Seamless join between country button and phone input */
+        .input-group > .custom-country-btn,
+        .relative.flex > .custom-country-btn {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            border-top-left-radius: 0.75rem !important;
+            border-bottom-left-radius: 0.75rem !important;
+        }
+        .input-group > .phone-number-input,
+        .relative.flex > .phone-number-input {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            border-top-right-radius: 0.75rem !important;
+            border-bottom-right-radius: 0.75rem !important;
+        }
+
         .dropdown-menu.show {
             display: block !important;
             opacity: 1 !important;
@@ -403,6 +642,401 @@
             
             requestAnimationFrame(update);
         }
+
+        // Comprehensive International Country List
+        const COUNTRY_LIST = [
+            { code: 'id', name: 'Indonesia', dial: '+62' },
+            { code: 'my', name: 'Malaysia', dial: '+60' },
+            { code: 'sg', name: 'Singapura', dial: '+65' },
+            { code: 'ph', name: 'Filipina', dial: '+63' },
+            { code: 'th', name: 'Thailand', dial: '+66' },
+            { code: 'vn', name: 'Vietnam', dial: '+84' },
+            { code: 'bn', name: 'Brunei', dial: '+673' },
+            { code: 'kh', name: 'Kamboja', dial: '+855' },
+            { code: 'mm', name: 'Myanmar', dial: '+95' },
+            { code: 'la', name: 'Laos', dial: '+856' },
+            { code: 'tl', name: 'Timor Leste', dial: '+670' },
+            { code: 'us', name: 'Amerika Serikat', dial: '+1' },
+            { code: 'ca', name: 'Kanada', dial: '+1' },
+            { code: 'gb', name: 'Inggris (UK)', dial: '+44' },
+            { code: 'au', name: 'Australia', dial: '+61' },
+            { code: 'jp', name: 'Jepang', dial: '+81' },
+            { code: 'kr', name: 'Korea Selatan', dial: '+82' },
+            { code: 'cn', name: 'China', dial: '+86' },
+            { code: 'hk', name: 'Hong Kong', dial: '+852' },
+            { code: 'tw', name: 'Taiwan', dial: '+886' },
+            { code: 'sa', name: 'Arab Saudi', dial: '+966' },
+            { code: 'ae', name: 'Uni Emirat Arab', dial: '+971' },
+            { code: 'qa', name: 'Qatar', dial: '+974' },
+            { code: 'kw', name: 'Kuwait', dial: '+965' },
+            { code: 'tr', name: 'Turki', dial: '+90' },
+            { code: 'de', name: 'Jerman', dial: '+49' },
+            { code: 'nl', name: 'Belanda', dial: '+31' },
+            { code: 'fr', name: 'Prancis', dial: '+33' },
+            { code: 'it', name: 'Italia', dial: '+39' },
+            { code: 'es', name: 'Spanyol', dial: '+34' },
+            { code: 'ch', name: 'Swiss', dial: '+41' },
+            { code: 'ru', name: 'Rusia', dial: '+7' },
+            { code: 'in', name: 'India', dial: '+91' },
+            { code: 'br', name: 'Brasil', dial: '+55' },
+            { code: 'za', name: 'Afrika Selatan', dial: '+27' },
+            { code: 'nz', name: 'Selandia Baru', dial: '+64' }
+        ];
+
+        // Global Phone Number Input Handler with Modern Country Selector
+        function initPhoneInputs() {
+            document.querySelectorAll('.phone-number-input, [data-phone-input]').forEach(function(input) {
+                if (input.dataset.phoneInitialized) return;
+                input.dataset.phoneInitialized = 'true';
+
+                const container = input.closest('.input-group, .relative') || input.parentElement;
+                let countrySelect = container ? container.querySelector('.country-code-select') : null;
+
+                // Hide native select if present
+                if (countrySelect) {
+                    countrySelect.classList.add('custom-country-select-hidden');
+                }
+
+                // Initial state
+                let currentCountry = COUNTRY_LIST[0]; // Default Indonesia (+62)
+
+                const form = input.closest('form');
+                const hidden = form ? form.querySelector('input[type="hidden"][name="phone"]') : null;
+                const initialVal = input.value || '';
+                const fullPhone = (hidden && hidden.value) ? hidden.value : initialVal;
+
+                // Auto-detect country from initial value if it starts with '+'
+                if (fullPhone && fullPhone.startsWith('+')) {
+                    const sortedCountries = [...COUNTRY_LIST].sort((a, b) => b.dial.length - a.dial.length);
+                    for (const c of sortedCountries) {
+                        if (fullPhone.startsWith(c.dial)) {
+                            currentCountry = c;
+                            input.value = fullPhone.substring(c.dial.length).replace(/\D/g, '');
+                            break;
+                        }
+                    }
+                }
+
+                if (countrySelect) {
+                    countrySelect.value = currentCountry.dial;
+                }
+
+                const getDialCode = () => currentCountry.dial;
+                const getDialDigits = () => getDialCode().replace(/\D/g, '');
+
+                const cleanDigits = (val) => {
+                    if (!val) return '';
+                    let d = val.toString().replace(/\D/g, '');
+                    const dial = getDialDigits();
+                    if (dial && d.startsWith(dial)) {
+                        d = d.substring(dial.length);
+                    }
+                    if (d.startsWith('0')) {
+                        d = d.substring(1);
+                    }
+                    return d;
+                };
+
+                if (input.value) {
+                    input.value = cleanDigits(input.value);
+                }
+
+                input.setAttribute('inputmode', 'numeric');
+                input.setAttribute('pattern', '[0-9]*');
+
+                // Build Custom Trigger Button if not already built
+                let customBtn = container.querySelector('.custom-country-btn');
+                if (!customBtn) {
+                    customBtn = document.createElement('button');
+                    customBtn.type = 'button';
+                    customBtn.className = 'custom-country-btn';
+                    customBtn.setAttribute('aria-haspopup', 'true');
+                    customBtn.innerHTML = `
+                        <img src="https://flagcdn.com/w40/${currentCountry.code}.png" class="flag-img" alt="${currentCountry.code.toUpperCase()}">
+                        <span class="dial-code">${currentCountry.dial}</span>
+                        <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+                        </svg>
+                    `;
+                    input.parentNode.insertBefore(customBtn, input);
+                }
+
+                // Build Custom Dropdown Popover if not already built
+                let customDropdown = container.querySelector('.custom-country-dropdown');
+                if (!customDropdown) {
+                    customDropdown = document.createElement('div');
+                    customDropdown.className = 'custom-country-dropdown';
+
+                    // Search box
+                    const searchBox = document.createElement('div');
+                    searchBox.className = 'country-search-box';
+                    searchBox.innerHTML = `
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Cari negara atau kode (+60, MY)..." class="country-search-input" autocomplete="off">
+                    `;
+                    customDropdown.appendChild(searchBox);
+
+                    // Scrollable country list
+                    const listScroll = document.createElement('div');
+                    listScroll.className = 'country-list-scroll';
+
+                    COUNTRY_LIST.forEach(country => {
+                        const item = document.createElement('div');
+                        item.className = 'country-item' + (country.code === currentCountry.code ? ' active' : '');
+                        item.dataset.code = country.code;
+                        item.dataset.dial = country.dial;
+                        item.dataset.name = country.name.toLowerCase();
+                        item.innerHTML = `
+                            <div class="country-item-left">
+                                <img src="https://flagcdn.com/w40/${country.code}.png" class="flag-img" alt="${country.code.toUpperCase()}">
+                                <span class="country-item-name">${country.name}</span>
+                            </div>
+                            <span class="country-item-dial">${country.dial}</span>
+                        `;
+
+                        item.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            currentCountry = country;
+
+                            // Update button
+                            customBtn.querySelector('.flag-img').src = `https://flagcdn.com/w40/${country.code}.png`;
+                            customBtn.querySelector('.flag-img').alt = country.code.toUpperCase();
+                            customBtn.querySelector('.dial-code').textContent = country.dial;
+
+                            // Update active class in list
+                            listScroll.querySelectorAll('.country-item').forEach(el => el.classList.remove('active'));
+                            item.classList.add('active');
+
+                            // Update hidden select if present
+                            if (countrySelect) {
+                                countrySelect.value = country.dial;
+                                countrySelect.dispatchEvent(new Event('change'));
+                            }
+
+                            // Sync hidden input
+                            syncHidden();
+
+                            // Close dropdown
+                            customDropdown.classList.remove('show');
+                            customBtn.classList.remove('open');
+
+                            // Focus input field
+                            input.focus();
+                        });
+
+                        listScroll.appendChild(item);
+                    });
+
+                    customDropdown.appendChild(listScroll);
+
+                    // Empty search result hint
+                    const emptyHint = document.createElement('div');
+                    emptyHint.className = 'country-empty-hint';
+                    emptyHint.textContent = 'Negara tidak ditemukan';
+                    emptyHint.style.display = 'none';
+                    customDropdown.appendChild(emptyHint);
+
+                    // Search input live filtering
+                    const searchInput = searchBox.querySelector('.country-search-input');
+                    searchInput.addEventListener('input', function() {
+                        const q = this.value.trim().toLowerCase();
+                        let matches = 0;
+                        listScroll.querySelectorAll('.country-item').forEach(item => {
+                            const name = item.dataset.name;
+                            const dial = item.dataset.dial;
+                            const code = item.dataset.code;
+                            if (!q || name.includes(q) || dial.includes(q) || code.includes(q)) {
+                                item.style.display = 'flex';
+                                matches++;
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                        emptyHint.style.display = matches === 0 ? 'block' : 'none';
+                    });
+
+                    container.appendChild(customDropdown);
+
+                    // Toggle Dropdown Button Click
+                    customBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        // Close any other open dropdowns first
+                        document.querySelectorAll('.custom-country-dropdown.show').forEach(d => {
+                            if (d !== customDropdown) {
+                                d.classList.remove('show');
+                                const otherBtn = d.parentElement.querySelector('.custom-country-btn');
+                                if (otherBtn) otherBtn.classList.remove('open');
+                            }
+                        });
+
+                        const isOpen = customDropdown.classList.toggle('show');
+                        customBtn.classList.toggle('open', isOpen);
+
+                        if (isOpen) {
+                            searchInput.value = '';
+                            searchInput.dispatchEvent(new Event('input'));
+                            setTimeout(() => searchInput.focus(), 50);
+                        }
+                    });
+                }
+
+                // Block non-numeric keystrokes
+                input.addEventListener('keydown', function(e) {
+                    if (
+                        ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End', 'Enter'].includes(e.key) ||
+                        (e.ctrlKey || e.metaKey)
+                    ) {
+                        return;
+                    }
+                    if (!/^\d$/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Sync with hidden phone input
+                const syncHidden = () => {
+                    if (hidden) {
+                        hidden.value = input.value ? getDialCode() + input.value : '';
+                    }
+                };
+
+                input.addEventListener('input', function() {
+                    let val = cleanDigits(this.value);
+                    if (this.value !== val) {
+                        this.value = val;
+                    }
+                    syncHidden();
+                });
+
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text');
+                    const clean = cleanDigits(text);
+                    const start = this.selectionStart || 0;
+                    const end = this.selectionEnd || 0;
+                    const current = this.value || '';
+                    const next = current.substring(0, start) + clean + current.substring(end);
+                    this.value = cleanDigits(next);
+                    syncHidden();
+                });
+
+                syncHidden();
+            });
+        }
+
+        // Global Close on Click Outside or ESC
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.custom-country-btn') && !e.target.closest('.custom-country-dropdown')) {
+                document.querySelectorAll('.custom-country-dropdown.show').forEach(d => {
+                    d.classList.remove('show');
+                    const btn = d.parentElement?.querySelector('.custom-country-btn');
+                    if (btn) btn.classList.remove('open');
+                });
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.custom-country-dropdown.show').forEach(d => {
+                    d.classList.remove('show');
+                    const btn = d.parentElement?.querySelector('.custom-country-btn');
+                    if (btn) btn.classList.remove('open');
+                });
+            }
+        });
+
+        // Global Protection: Quantity & Numeric Inputs Cannot Be Minus / Negative
+        function isQuantityOrNonNegativeInput(el) {
+            if (!el || el.tagName !== 'INPUT') return false;
+            if (el.type !== 'number' && !el.classList.contains('qty-input') && !el.classList.contains('item-qty') && !el.classList.contains('physical-qty')) {
+                return false;
+            }
+            const name = (el.name || '').toLowerCase();
+            const id = (el.id || '').toLowerCase();
+            const cls = (el.className || '').toLowerCase();
+            const minAttr = el.getAttribute('min');
+
+            if (minAttr !== null && parseFloat(minAttr) >= 0) return true;
+            if (name.includes('qty') || name.includes('quantity') || name.includes('stock') || name.includes('item') || name.includes('count') || name.includes('price')) return true;
+            if (id.includes('qty') || id.includes('quantity') || id.includes('stock') || id.includes('item') || id.includes('count') || id.includes('price')) return true;
+            if (cls.includes('qty') || cls.includes('quantity') || cls.includes('physical-input')) return true;
+            return false;
+        }
+
+        // Block minus sign '-' and scientific 'e' / 'E'
+        document.addEventListener('keydown', function(e) {
+            if (isQuantityOrNonNegativeInput(e.target)) {
+                if (e.key === '-' || e.key === 'Subtract' || e.key === 'e' || e.key === 'E') {
+                    e.preventDefault();
+                }
+            }
+        }, true);
+
+        // Sanitize on input
+        document.addEventListener('input', function(e) {
+            if (isQuantityOrNonNegativeInput(e.target)) {
+                const input = e.target;
+                const minAttr = input.getAttribute('min');
+                const minVal = minAttr !== null ? parseFloat(minAttr) : 0;
+                
+                if (input.value.includes('-')) {
+                    input.value = input.value.replace(/-/g, '');
+                }
+                if (input.value !== '' && parseFloat(input.value) < 0) {
+                    input.value = Math.max(0, minVal);
+                }
+            }
+        }, true);
+
+        // Enforce min value on change / blur
+        document.addEventListener('change', function(e) {
+            if (isQuantityOrNonNegativeInput(e.target)) {
+                const input = e.target;
+                const minAttr = input.getAttribute('min');
+                const minVal = minAttr !== null ? parseFloat(minAttr) : 0;
+                
+                if (input.value === '' || isNaN(input.value)) {
+                    input.value = minVal;
+                } else if (parseFloat(input.value) < minVal) {
+                    input.value = minVal;
+                }
+            }
+        }, true);
+
+        // Strip minus on paste
+        document.addEventListener('paste', function(e) {
+            if (isQuantityOrNonNegativeInput(e.target)) {
+                const input = e.target;
+                setTimeout(() => {
+                    const minAttr = input.getAttribute('min');
+                    const minVal = minAttr !== null ? parseFloat(minAttr) : 0;
+                    let val = input.value.replace(/-/g, '');
+                    if (val !== '' && parseFloat(val) < minVal) val = minVal;
+                    input.value = val;
+                }, 0);
+            }
+        }, true);
+
+        document.addEventListener('DOMContentLoaded', initPhoneInputs);
+        document.addEventListener('shown.bs.modal', initPhoneInputs);
+        window.initPhoneInputs = initPhoneInputs;
+
+        // Auto-handle forms on submit to ensure prefix is attached if name="phone" directly on input
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const phoneInputs = form.querySelectorAll('.phone-number-input, [data-phone-input]');
+            phoneInputs.forEach(input => {
+                const container = input.closest('.input-group, .relative') || input.parentElement;
+                const customBtn = container ? container.querySelector('.custom-country-btn .dial-code') : null;
+                const dialCode = customBtn ? customBtn.textContent.trim() : '+62';
+                const hidden = form.querySelector('input[type="hidden"][name="phone"]');
+                if (hidden) {
+                    hidden.value = input.value ? dialCode + input.value : '';
+                } else if (input.name === 'phone' && input.value && !input.value.startsWith('+')) {
+                    input.value = dialCode + input.value;
+                }
+            });
+        });
     </script>
     
     <!-- Bootstrap JS -->

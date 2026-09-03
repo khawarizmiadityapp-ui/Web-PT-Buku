@@ -772,7 +772,11 @@
         if (!row || !input || !badge) return;
 
         const sysStock = parseInt(row.dataset.systemStock) || 0;
-        const physicalStock = parseInt(input.value) || 0;
+        let physicalStock = parseInt(input.value) || 0;
+        if (physicalStock < 0) {
+            physicalStock = 0;
+            input.value = 0;
+        }
         const diff = physicalStock - sysStock;
 
         badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ';

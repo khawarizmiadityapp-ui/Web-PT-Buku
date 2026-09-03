@@ -198,8 +198,36 @@
                     <input type="text" class="form-control" id="newCustomerName" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Phone *</label>
-                    <input type="text" class="form-control" id="newCustomerPhone" required>
+                    <label class="form-label font-semibold text-xs text-gray-700">No. Telepon / WhatsApp <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <select class="form-select country-code-select bg-light text-secondary fw-semibold border-end-0" id="newCustomerCountryCode" style="max-width: 115px;" title="Pilih Kode Negara">
+                            <option value="+62" selected>🇮🇩 +62</option>
+                            <option value="+60">🇲🇾 +60</option>
+                            <option value="+65">🇸🇬 +65</option>
+                            <option value="+63">🇵🇭 +63</option>
+                            <option value="+66">🇹🇭 +66</option>
+                            <option value="+84">🇻🇳 +84</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+61">🇦🇺 +61</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+82">🇰🇷 +82</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+31">🇳🇱 +31</option>
+                        </select>
+                        <input type="tel" 
+                               class="form-control phone-number-input" 
+                               id="newCustomerPhone" 
+                               placeholder="81234567890" 
+                               required
+                               inputmode="numeric" 
+                               pattern="[0-9]*" 
+                               maxlength="15">
+                    </div>
+                    <small class="text-muted" style="font-size: 11px;">Pilih negara & ketik nomor tanpa awalan 0</small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -258,7 +286,8 @@ function removeFromCart(index) {
 
 // Update quantity
 function updateQuantity(index, newQty) {
-    if (newQty <= 0) {
+    newQty = parseInt(newQty, 10);
+    if (isNaN(newQty) || newQty <= 0) {
         removeFromCart(index);
         return;
     }
@@ -268,7 +297,7 @@ function updateQuantity(index, newQty) {
         return;
     }
     
-    cart[index].quantity = parseInt(newQty);
+    cart[index].quantity = Math.max(1, newQty);
     cart[index].subtotal = cart[index].quantity * cart[index].price;
     renderCart();
     calculateTotal();
@@ -345,9 +374,9 @@ function renderCart() {
 // Calculate totals
 function calculateTotal() {
     subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
-    const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+    const discount = Math.max(0, parseFloat(document.getElementById('discountAmount').value) || 0);
     const tax = 0;
-    const total = subtotal - discount;
+    const total = Math.max(0, subtotal - discount);
     
     document.getElementById('subtotalDisplay').textContent = 'Rp ' + formatNumber(subtotal);
     document.getElementById('discountDisplay').textContent = 'Rp ' + formatNumber(discount);
@@ -606,13 +635,18 @@ document.addEventListener('click', function(e) {
 
 // Save new customer
 function saveNewCustomer() {
-    const name = document.getElementById('newCustomerName').value;
-    const phone = document.getElementById('newCustomerPhone').value;
-    
-    if (!name || !phone) {
-        alert('Please fill all required fields!');
+    const name = document.getElementById('newCustomerName').value.trim();
+    const countryCode = document.getElementById('newCustomerCountryCode')?.value || '+62';
+    const dialDigits = countryCode.replace(/\D/g, '');
+    let cleanDigits = phoneInput.replace(/\D/g, '');
+    if (cleanDigits.startsWith(dialDigits)) cleanDigits = cleanDigits.substring(dialDigits.length);
+    if (cleanDigits.startsWith('0')) cleanDigits = cleanDigits.substring(1);
+
+    if (!name || !cleanDigits) {
+        alert('Mohon isi nama dan nomor telepon dengan benar!');
         return;
     }
+    const phone = countryCode + cleanDigits;
     
     fetch('{{ route("customers.quickStore") }}', {
         method: 'POST',

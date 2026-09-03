@@ -236,8 +236,18 @@
     }
 
     function calculateRowSubtotal(row) {
-        const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
-        const price = parseFloat(row.querySelector('.price-input').value) || 0;
+        const qtyInput = row.querySelector('.qty-input');
+        const priceInput = row.querySelector('.price-input');
+        let qty = parseFloat(qtyInput.value) || 0;
+        if (qty < 1) {
+            qty = 1;
+            qtyInput.value = 1;
+        }
+        let price = parseFloat(priceInput.value) || 0;
+        if (price < 0) {
+            price = 0;
+            priceInput.value = 0;
+        }
         const subtotal = qty * price;
         row.querySelector('.subtotal-text').textContent = 'Rp ' + formatNumber(subtotal);
         calculateGrandTotal();
@@ -246,8 +256,8 @@
     function calculateGrandTotal() {
         let grandTotal = 0;
         document.querySelectorAll('.item-row').forEach(row => {
-            const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
-            const price = parseFloat(row.querySelector('.price-input').value) || 0;
+            const qty = Math.max(1, parseFloat(row.querySelector('.qty-input').value) || 0);
+            const price = Math.max(0, parseFloat(row.querySelector('.price-input').value) || 0);
             grandTotal += (qty * price);
         });
         document.getElementById('grandTotalText').textContent = 'Rp ' + formatNumber(grandTotal);
