@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\SalesInvoice;
+use App\Models\SalesInvoiceItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -131,9 +133,52 @@ class SalesInvoiceController extends Controller
      */
     public function report(Request $request)
     {
-        // Date range
-        $startDate = $request->get('start_date', now()->startOfMonth()->toDateString());
-        $endDate = $request->get('end_date', now()->toDateString());
+        // Date range & period handling
+        $period = $request->get('period');
+        $customStart = $request->get('start_date');
+        $customEnd = $request->get('end_date');
+
+        if ($period === 'last_7_days') {
+            $startDate = now()->subDays(6)->toDateString();
+            $endDate = now()->toDateString();
+            $currentPeriodLabel = 'Last 7 Days';
+        } elseif ($period === 'today') {
+            $startDate = now()->toDateString();
+            $endDate = now()->toDateString();
+            $currentPeriodLabel = 'Today';
+        } elseif ($period === 'this_month') {
+            $startDate = now()->startOfMonth()->toDateString();
+            $endDate = now()->endOfMonth()->toDateString();
+            $currentPeriodLabel = 'This Month';
+        } elseif ($period === 'last_month') {
+            $startDate = now()->subMonth()->startOfMonth()->toDateString();
+            $endDate = now()->subMonth()->endOfMonth()->toDateString();
+            $currentPeriodLabel = 'Last Month';
+        } elseif ($period === 'this_year') {
+            $startDate = now()->startOfYear()->toDateString();
+            $endDate = now()->endOfYear()->toDateString();
+            $currentPeriodLabel = 'This Year';
+        } elseif ($period === 'all') {
+            $startDate = '2025-01-01';
+            $endDate = now()->addYear()->endOfYear()->toDateString();
+            $currentPeriodLabel = 'All Time';
+        } elseif ($period === 'custom' || ($customStart && $customEnd)) {
+            $period = 'custom';
+            $startDate = $customStart ?: now()->subDays(29)->toDateString();
+            $endDate = $customEnd ?: now()->toDateString();
+            $currentPeriodLabel = 'Custom Range';
+        } else {
+            // Default: Last 30 Days
+            $period = 'last_30_days';
+            $startDate = now()->subDays(29)->toDateString();
+            $endDate = now()->toDateString();
+            $currentPeriodLabel = 'Last 30 Days';
+        }
+
+        // Sanitize: ensure startDate <= endDate
+        if ($startDate > $endDate) {
+            [$startDate, $endDate] = [$endDate, $startDate];
+        }
 
         // Handle CSV export for report
         if ($request->has('export') && $request->export == 'csv') {
@@ -181,32 +226,69 @@ class SalesInvoiceController extends Controller
             return response()->stream($callback, 200, $headers);
         }
 
-        // Total sales
-        $totalSales = SalesInvoice::whereBetween('date', [$startDate, $endDate])
+        // Total sales in this period
+        $totalSales = (float) SalesInvoice::whereBetween('date', [$startDate, $endDate])
             ->sum('total_amount');
 
-        // Sales growth
-        $previousPeriodStart = Carbon::parse($startDate)->subDays(30);
-        $previousPeriodEnd = Carbon::parse($endDate)->subDays(30);
-        $previousSales = SalesInvoice::whereBetween('date', [$previousPeriodStart, $previousPeriodEnd])
+        // Sales growth period-over-period
+        $startCarbon = Carbon::parse($startDate);
+        $endCarbon = Carbon::parse($endDate);
+        $daysDiff = max(1, $startCarbon->diffInDays($endCarbon) + 1);
+        $prevEndDate = $startCarbon->copy()->subDay()->toDateString();
+        $prevStartDate = $startCarbon->copy()->subDays($daysDiff)->toDateString();
+
+        $previousSales = (float) SalesInvoice::whereBetween('date', [$prevStartDate, $prevEndDate])
             ->sum('total_amount');
-        $growthPercentage = $previousSales > 0 
-            ? (($totalSales - $previousSales) / $previousSales) * 100 
-            : 0;
 
-        // Top performing category (dummy for now)
-        $topCategory = [
-            'name' => 'Educational Books',
-            'percentage' => 45.8,
-        ];
+        if ($previousSales > 0) {
+            $growthPercentage = (($totalSales - $previousSales) / $previousSales) * 100;
+        } elseif ($totalSales > 0) {
+            $growthPercentage = 100.0;
+        } else {
+            $growthPercentage = 0.0;
+        }
 
-        // Monthly sales distribution
+        // Top performing category from sales invoice items
+        $topCategoryData = SalesInvoiceItem::whereHas('salesInvoice', function($q) use ($startDate, $endDate) {
+                $q->whereBetween('date', [$startDate, $endDate]);
+            })
+            ->join('products', 'sales_invoice_items.product_id', '=', 'products.id')
+            ->selectRaw('products.category, SUM(sales_invoice_items.quantity) as total_qty, SUM(sales_invoice_items.subtotal) as total_revenue')
+            ->groupBy('products.category')
+            ->orderByDesc('total_revenue')
+            ->first();
+
+        $totalItemsQty = (int) SalesInvoiceItem::whereHas('salesInvoice', function($q) use ($startDate, $endDate) {
+                $q->whereBetween('date', [$startDate, $endDate]);
+            })->sum('quantity');
+
+        if ($topCategoryData && $totalItemsQty > 0) {
+            $topCategory = [
+                'name' => $topCategoryData->category ?: 'General',
+                'percentage' => round(($topCategoryData->total_qty / $totalItemsQty) * 100, 1),
+                'revenue' => (float) $topCategoryData->total_revenue,
+            ];
+        } else {
+            $topCategory = [
+                'name' => 'General / Buku',
+                'percentage' => 0.0,
+                'revenue' => 0,
+            ];
+        }
+
+        // Monthly sales distribution for current fiscal year
+        $fiscalYear = Carbon::parse($endDate)->year;
         $monthlySales = SalesInvoice::selectRaw('MONTH(date) as month, SUM(total_amount) as total')
-            ->whereYear('date', now()->year)
+            ->whereYear('date', $fiscalYear)
             ->groupBy('month')
             ->orderBy('month')
             ->get()
             ->pluck('total', 'month');
+
+        $monthlyChartData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyChartData[] = (float) ($monthlySales->get($m) ?? 0);
+        }
 
         // Daily sales log
         $dailySales = SalesInvoice::selectRaw('DATE(date) as sale_date, 
@@ -226,13 +308,18 @@ class SalesInvoiceController extends Controller
         }
 
         return view('sales.report', compact(
+            'period',
+            'startDate',
+            'endDate',
+            'currentPeriodLabel',
+            'fiscalYear',
             'totalSales',
             'growthPercentage',
+            'previousSales',
             'topCategory',
             'monthlySales',
-            'dailySales',
-            'startDate',
-            'endDate'
+            'monthlyChartData',
+            'dailySales'
         ));
     }
 

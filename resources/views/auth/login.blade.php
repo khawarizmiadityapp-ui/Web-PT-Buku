@@ -213,8 +213,8 @@
                             </div>
                         </div>
 
-                        <!-- Remember Me & Forgot Password -->
-                        <div class="flex items-center justify-between text-sm">
+                        <!-- Remember Me -->
+                        <div class="flex items-center text-sm">
                             <label class="flex items-center cursor-pointer">
                                 <input 
                                     type="checkbox" 
@@ -224,9 +224,6 @@
                                 >
                                 <span class="ml-2 text-gray-600">Remember me</span>
                             </label>
-                            <a href="#" class="font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                                Forgot password?
-                            </a>
                         </div>
 
                         <!-- Submit Button -->
