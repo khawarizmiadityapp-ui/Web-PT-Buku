@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - ERP System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -133,7 +132,7 @@
                     <!-- Icon & Title -->
                     <div class="text-center mb-8">
                         <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-4">
-                            <i class="fas fa-book-reader text-blue-600 text-2xl"></i>
+                            <x-icon name="book-reader" class="text-blue-600 w-8 h-8" />
                         </div>
                         <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
                         <p class="text-gray-500 text-sm">Sign in to PT Distribusi Buku dan Alat Tulis Nusantara</p>
@@ -142,7 +141,7 @@
                     <!-- Alert Messages -->
                     @if(session('success'))
                         <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl flex items-center">
-                            <i class="fas fa-check-circle mr-3"></i>
+                            <x-icon name="check-circle" class="w-4 h-4 mr-3" />
                             {{ session('success') }}
                         </div>
                     @endif
@@ -150,7 +149,7 @@
                     @if($errors->any())
                         <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl">
                             <div class="flex items-start">
-                                <i class="fas fa-exclamation-circle mr-3 mt-0.5"></i>
+                                <x-icon name="exclamation-circle" class="w-4 h-4 mr-3 mt-0.5" />
                                 <div class="flex-1">
                                     @foreach($errors->all() as $error)
                                         <p class="text-sm">{{ $error }}</p>
@@ -171,7 +170,7 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="fas fa-envelope text-gray-400 text-sm"></i>
+                                    <x-icon name="envelope" class="text-gray-400 w-4 h-4" />
                                 </div>
                                 <input 
                                     type="email" 
@@ -193,7 +192,7 @@
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="fas fa-lock text-gray-400 text-sm"></i>
+                                    <x-icon name="lock" class="text-gray-400 w-4 h-4" />
                                 </div>
                                 <input 
                                     type="password" 
@@ -208,7 +207,8 @@
                                     onclick="togglePassword()"
                                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                                 >
-                                    <i id="toggleIcon" class="fas fa-eye text-sm"></i>
+                                    <span id="eyeOpen"><x-icon name="eye" class="w-4 h-4" /></span>
+                                    <span id="eyeClosed" class="hidden"><x-icon name="eye-slash" class="w-4 h-4" /></span>
                                 </button>
                             </div>
                         </div>
@@ -255,16 +255,17 @@
     <script>
         function togglePassword() {
             const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
+            const eyeOpen = document.getElementById('eyeOpen');
+            const eyeClosed = document.getElementById('eyeClosed');
             
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
+                eyeOpen.classList.add('hidden');
+                eyeClosed.classList.remove('hidden');
             } else {
                 passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+                eyeOpen.classList.remove('hidden');
+                eyeClosed.classList.add('hidden');
             }
         }
     </script>

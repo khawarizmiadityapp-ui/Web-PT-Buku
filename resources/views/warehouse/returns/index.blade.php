@@ -9,7 +9,7 @@
                         <p class="text-sm text-gray-500">Manage and track inventory returns from customers and to suppliers.</p>
                     </div>
                     <button class="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
-                        <i class="fas fa-plus"></i>
+                        <x-icon name="plus" class="w-4 h-4" />
                         <span>New Return</span>
                     </button>
                 </div>
@@ -19,20 +19,20 @@
                     <div class="bg-white rounded-xl p-5 border border-gray-200">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="bg-blue-50 p-2 rounded-lg">
-                                <i class="fas fa-undo text-blue-600"></i>
+                                <x-icon name="undo" class="w-4 h-4 text-blue-600" />
                             </div>
                             <span class="text-xs font-semibold text-gray-500 uppercase">Total Returns</span>
                         </div>
                         <h3 class="text-2xl font-bold text-gray-900">{{ number_format($stats['total_returns']) }}</h3>
                         <p class="text-xs text-green-600 mt-1">
-                            <i class="fas fa-arrow-up"></i> +7% vs last week
+                            <x-icon name="arrow-up" class="w-4 h-4" /> +7% vs last week
                         </p>
                     </div>
 
                     <div class="bg-white rounded-xl p-5 border border-gray-200">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="bg-yellow-50 p-2 rounded-lg">
-                                <i class="fas fa-clock text-yellow-600"></i>
+                                <x-icon name="clock" class="w-4 h-4 text-yellow-600" />
                             </div>
                             <span class="text-xs font-semibold text-gray-500 uppercase">Pending Approvals</span>
                         </div>
@@ -43,7 +43,7 @@
                     <div class="bg-white rounded-xl p-5 border border-gray-200">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="bg-green-50 p-2 rounded-lg">
-                                <i class="fas fa-check-circle text-green-600"></i>
+                                <x-icon name="check-circle" class="w-4 h-4 text-green-600" />
                             </div>
                             <span class="text-xs font-semibold text-gray-500 uppercase">Approved Today</span>
                         </div>
@@ -54,7 +54,7 @@
                     <div class="bg-white rounded-xl p-5 border border-gray-200">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="bg-red-50 p-2 rounded-lg">
-                                <i class="fas fa-times-circle text-red-600"></i>
+                                <x-icon name="times-circle" class="w-4 h-4 text-red-600" />
                             </div>
                             <span class="text-xs font-semibold text-gray-500 uppercase">Rejected (1wk)</span>
                         </div>
@@ -90,7 +90,7 @@
                                 <option>This Month</option>
                             </select>
                             <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">
-                                <i class="fas fa-filter mr-2"></i>More Filters
+                                <x-icon name="filter" class="w-4 h-4 mr-2" />More Filters
                             </button>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                 <!-- Search -->
                 <div class="mb-6">
                     <form method="GET" class="relative max-w-md">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <x-icon name="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                         <input 
                             type="text" 
                             name="search" 
@@ -138,7 +138,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                                                <i class="fas fa-building text-blue-600 text-xs"></i>
+                                                <x-icon name="building" class="text-blue-600 w-3.5 h-3.5" />
                                             </div>
                                             <span class="text-sm font-medium text-gray-900">{{ $return->entity }}</span>
                                         </div>
@@ -182,7 +182,7 @@
                             @empty
                                 <tr>
                                     <td colspan="8" class="px-6 py-12 text-center text-gray-500">
-                                        <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                                        <x-icon name="inbox" class="w-4 h-4 text-4xl mb-3 text-gray-300" />
                                         <p>No returns found</p>
                                     </td>
                                 </tr>

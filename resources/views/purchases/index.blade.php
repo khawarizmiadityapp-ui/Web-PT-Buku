@@ -12,11 +12,11 @@
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('purchases.export', request()->query()) }}" class="px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-lg shadow-sm transition flex items-center gap-2 text-sm">
-                <i class="fas fa-download text-gray-600"></i>
+                <x-icon name="download" class="w-4 h-4 text-gray-600" />
                 <span>Export CSV</span>
             </a>
             <a href="{{ route('purchases.create') }}" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2 text-sm">
-                <i class="fas fa-plus"></i>
+                <x-icon name="plus" class="w-4 h-4" />
                 <span>Buat Purchase Order</span>
             </a>
         </div>
@@ -32,7 +32,7 @@
                     <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($stats['total_po']) }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-file-invoice"></i>
+                    <x-icon name="file-invoice" class="w-4 h-4" />
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     <h3 class="text-2xl font-bold text-amber-600 mt-1">{{ number_format($stats['pending_approval']) }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-clock"></i>
+                    <x-icon name="clock" class="w-4 h-4" />
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                     <h3 class="text-2xl font-bold text-emerald-600 mt-1">{{ number_format($stats['approved']) }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-check-circle"></i>
+                    <x-icon name="check-circle" class="w-4 h-4" />
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                     <h3 class="text-xl font-bold text-gray-900 mt-1">Rp {{ number_format($stats['total_amount'], 0, ',', '.') }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-wallet"></i>
+                    <x-icon name="wallet" class="w-4 h-4" />
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto flex-1">
                 <!-- Search -->
                 <div class="relative flex-1 min-w-[220px]">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <x-icon name="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input 
                         type="text" 
                         name="search" 
@@ -125,7 +125,7 @@
 
                 @if(request()->hasAny(['search', 'date_from', 'date_to', 'status']))
                     <a href="{{ route('purchases.index') }}" class="px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 transition flex items-center gap-1">
-                        <i class="fas fa-times-circle"></i> Reset Filter
+                        <x-icon name="times-circle" class="w-4 h-4" /> Reset Filter
                     </a>
                 @endif
             </div>
@@ -215,7 +215,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                <i class="fas fa-file-invoice text-4xl text-gray-300 mb-3"></i>
+                                <x-icon name="file-invoice" class="w-4 h-4 text-4xl text-gray-300 mb-3" />
                                 <p class="text-sm font-medium">Belum ada data Purchase Order</p>
                                 <a href="{{ route('purchases.create') }}" class="inline-block mt-3 text-xs text-blue-600 font-semibold hover:underline">
                                     + Buat Purchase Order Pertama

@@ -11,7 +11,7 @@
             <p class="text-sm text-gray-500 mt-1">Perbarui data barang keluar #{{ $stockOut->transaction_id }}</p>
         </div>
         <a href="{{ route('stock-outs.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium flex items-center gap-2">
-            <i class="fas fa-arrow-left"></i>
+            <x-icon name="arrow-left" class="w-4 h-4" />
             Kembali
         </a>
     </div>
@@ -156,7 +156,7 @@
                     Batal
                 </a>
                 <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center gap-2">
-                    <i class="fas fa-save"></i>
+                    <x-icon name="save" class="w-4 h-4" />
                     Update Transaksi
                 </button>
             </div>

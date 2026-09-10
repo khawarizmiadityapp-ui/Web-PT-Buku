@@ -6,7 +6,7 @@
     <div class="mb-6">
         <div class="flex items-center text-sm text-gray-500 mb-2">
             <a href="{{ route('warehouse.index') }}" class="hover:text-blue-600">Processes</a>
-            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <x-icon name="chevron-right" class="mx-2 w-3.5 h-3.5" />
             <span class="text-blue-600 font-medium">Packing Process</span>
         </div>
         
@@ -21,11 +21,11 @@
             
             <div class="flex items-center space-x-3">
                 <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-2">
-                    <i class="fas fa-book-open"></i>
+                    <x-icon name="book-open" class="w-4 h-4" />
                     <span>Manual Guide</span>
                 </button>
                 <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 flex items-center space-x-2">
-                    <i class="fas fa-flag"></i>
+                    <x-icon name="flag" class="w-4 h-4" />
                     <span>Report Issue</span>
                 </button>
             </div>
@@ -52,7 +52,7 @@
                         @endphp
                         <div class="p-6 hover:bg-gray-50 flex items-start space-x-4">
                             <div class="bg-blue-50 p-3 rounded-lg">
-                                <i class="fas fa-box text-blue-600 text-xl"></i>
+                                <x-icon name="box" class="text-blue-600 w-6 h-6" />
                             </div>
                             <div class="flex-1">
                                 <div class="font-semibold text-gray-800 mb-1">{{ $prod->product_name }}</div>
@@ -115,7 +115,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-semibold text-gray-700 uppercase">Preview Shipping Label</h3>
                     <button class="text-sm text-blue-600 hover:text-blue-700">
-                        <i class="fas fa-eye"></i>
+                        <x-icon name="eye" class="w-4 h-4" />
                     </button>
                 </div>
 
@@ -192,17 +192,17 @@
             <!-- Action Buttons -->
             <div class="space-y-3">
                 <button class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2 font-semibold">
-                    <i class="fas fa-print"></i>
+                    <x-icon name="print" class="w-4 h-4" />
                     <span>Print Label Pengiriman</span>
                 </button>
                 
                 <button class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 font-semibold">
-                    <i class="fas fa-check-circle"></i>
+                    <x-icon name="check-circle" class="w-4 h-4" />
                     <span>Packing Selesai</span>
                 </button>
                 
                 <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center justify-center space-x-2 text-sm">
-                    <i class="fas fa-save"></i>
+                    <x-icon name="save" class="w-4 h-4" />
                     <span>Simpan Perubahan</span>
                 </button>
             </div>

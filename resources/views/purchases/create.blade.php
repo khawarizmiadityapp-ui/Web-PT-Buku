@@ -11,7 +11,7 @@
             <p class="text-sm text-gray-500 mt-1">Formulir pengadaan barang dari supplier</p>
         </div>
         <a href="{{ route('purchases.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium flex items-center gap-2">
-            <i class="fas fa-arrow-left"></i>
+            <x-icon name="arrow-left" class="w-4 h-4" />
             Kembali
         </a>
     </div>
@@ -30,7 +30,7 @@
                             No. Purchase Order <span class="text-red-500">*</span>
                         </label>
                         <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
-                            <i class="fas fa-magic text-[9px]"></i> Otomatis
+                            <x-icon name="magic" class="w-4 h-4 text-[9px]" /> Otomatis
                         </span>
                     </div>
                     <input 
@@ -121,7 +121,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-bold text-gray-900">Daftar Barang Pesanan</h3>
                     <button type="button" id="addRowBtn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                        <i class="fas fa-plus"></i>
+                        <x-icon name="plus" class="w-4 h-4" />
                         <span>Tambah Baris Produk</span>
                     </button>
                 </div>
@@ -157,7 +157,7 @@
                     Batal
                 </a>
                 <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center gap-2">
-                    <i class="fas fa-save"></i>
+                    <x-icon name="save" class="w-4 h-4" />
                     Simpan Purchase Order
                 </button>
             </div>
@@ -198,7 +198,7 @@
             </td>
             <td class="px-4 py-3 text-center">
                 <button type="button" class="remove-row-btn text-rose-500 hover:text-rose-700 text-sm">
-                    <i class="fas fa-trash"></i>
+                    <x-icon name="trash" class="w-4 h-4" />
                 </button>
             </td>
         `;

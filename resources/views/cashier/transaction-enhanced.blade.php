@@ -13,26 +13,26 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title mb-0">Select Products</h5>
                         <button class="btn btn-sm btn-outline-secondary" onclick="window.location.href='{{ route('cashier.index') }}'">
-                            <i class="fas fa-times"></i> Close
+                            <x-icon name="times" class="w-4 h-4" /> Close
                         </button>
                     </div>
                     
                     <!-- Search Bar & Barcode Scanner -->
                     <div class="mb-3 position-relative">
                         <div class="input-group shadow-sm">
-                            <span class="input-group-text bg-white border-end-0 text-primary"><i class="fas fa-barcode fa-lg"></i></span>
+                            <span class="input-group-text bg-white border-end-0 text-primary"><x-icon name="barcode" class="w-4 h-4 fa-lg" /></span>
                             <input type="text" class="form-control border-start-0 ps-1 font-monospace" id="productSearch" 
                                    placeholder="Scan barcode barang atau ketik SKU / nama... (Tekan Enter)" autocomplete="off" autofocus>
                             <button class="btn btn-outline-primary d-flex align-items-center gap-1.5" type="button" onclick="openCameraScanner()" title="Scan Menggunakan Kamera HP / Webcam">
-                                <i class="fas fa-camera"></i> <span class="d-none d-sm-inline small font-semibold">Scan Kamera</span>
+                                <x-icon name="camera" class="w-4 h-4" /> <span class="d-none d-sm-inline small font-semibold">Scan Kamera</span>
                             </button>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mt-1.5 px-1">
                             <span class="text-muted" style="font-size: 11px;">
-                                <i class="fas fa-bolt text-warning me-1"></i> <strong>Scanner Otomatis:</strong> Tembak barcode, barang langsung masuk ke keranjang
+                                <x-icon name="bolt" class="w-4 h-4 text-warning me-1" /> <strong>Scanner Otomatis:</strong> Tembak barcode, barang langsung masuk ke keranjang
                             </span>
                             <span id="scanStatusBadge" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill font-normal" style="font-size: 10px;">
-                                <i class="fas fa-check-circle me-1"></i>Scanner Siap
+                                <x-icon name="check-circle" class="w-4 h-4 me-1" />Scanner Siap
                             </span>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                                  onclick="addToCart({{ $product->id }}, '{{ addslashes($product->product_name) }}', {{ $product->price }}, {{ $product->system_stock }}, '{{ $product->product_code }}', '{{ $product->unit ?? 'Pcs' }}')">
                                 <div class="card-body p-2 text-center">
                                     <div class="product-image mb-2" style="height: 60px; background: #f0f0f0; border-radius: 5px;">
-                                        <i class="fas fa-box fa-2x text-muted" style="line-height: 60px;"></i>
+                                        <x-icon name="box" class="w-8 h-8 text-muted" style="line-height: 60px;" />
                                     </div>
                                     <h6 class="mb-1 small" style="font-size: 11px;">{{ Str::limit($product->product_name, 25) }}</h6>
                                     <small class="text-muted d-block" style="font-size: 9px;">{{ $product->product_code }}</small>
@@ -83,9 +83,9 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Cart</h5>
+                        <h5 class="mb-0"><x-icon name="shopping-cart" class="w-4 h-4 me-2" />Cart</h5>
                         <button class="btn btn-sm btn-outline-danger" onclick="clearCart()">
-                            <i class="fas fa-trash me-1"></i> Clear Cart
+                            <x-icon name="trash" class="w-4 h-4 me-1" /> Clear Cart
                         </button>
                     </div>
 
@@ -93,7 +93,7 @@
                     <div class="mb-3 position-relative" id="customerSearchContainer">
                         <label class="form-label small font-semibold mb-1">Customer</label>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-text bg-white text-muted"><i class="fas fa-search"></i></span>
+                            <span class="input-group-text bg-white text-muted"><x-icon name="search" class="w-4 h-4" /></span>
                             <input type="text" class="form-control form-control-sm" id="customerSearchInput" 
                                    placeholder="Cari atau ketik nama customer..." 
                                    value="Walk-in Customer" autocomplete="off" 
@@ -101,7 +101,7 @@
                             <input type="hidden" id="customerId" name="customer_id" value="">
                             <input type="hidden" id="customerName" name="customer_name" value="Walk-in Customer">
                             <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#addCustomerModal" title="Tambah Customer Baru">
-                                <i class="fas fa-plus"></i>
+                                <x-icon name="plus" class="w-4 h-4" />
                             </button>
                         </div>
                         <!-- Live Autocomplete Results -->
@@ -116,12 +116,12 @@
                             <div class="text-center py-4 px-2">
                                 <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2 shadow-sm" 
                                      style="width: 64px; height: 64px; background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); color: #4f46e5;">
-                                    <i class="fas fa-shopping-basket fa-2x"></i>
+                                    <x-icon name="shopping-basket" class="w-8 h-8" />
                                 </div>
                                 <h6 class="fw-bold text-dark mb-1" style="font-size: 14px;">Keranjang Masih Kosong</h6>
                                 <p class="text-muted small mb-2" style="font-size: 11px; max-width: 220px; margin: 0 auto;">Pilih produk di sebelah kiri untuk menambahkan ke daftar belanja</p>
                                 <div class="d-inline-flex align-items-center gap-1 px-3 py-1 rounded-pill bg-white border shadow-sm text-secondary" style="font-size: 10px;">
-                                    <i class="fas fa-hand-pointer text-primary me-1"></i>
+                                    <x-icon name="hand-pointer" class="w-4 h-4 text-primary me-1" />
                                     <span>Klik atau cari produk</span>
                                 </div>
                             </div>
@@ -159,14 +159,14 @@
                             <div class="col-6">
                                 <button type="button" class="btn btn-outline-primary w-100 payment-method-btn active" 
                                         onclick="selectPaymentMethod('Cash', event)" data-method="Cash">
-                                    <i class="fas fa-money-bill-wave fa-2x d-block mb-1"></i>
+                                    <x-icon name="money-bill-wave" class="w-8 h-8 d-block mb-1" />
                                     <small>Cash</small>
                                 </button>
                             </div>
                             <div class="col-6">
                                 <button type="button" class="btn btn-outline-primary w-100 payment-method-btn" 
                                         onclick="selectPaymentMethod('QRIS', event)" data-method="QRIS">
-                                    <i class="fas fa-qrcode fa-2x d-block mb-1"></i>
+                                    <x-icon name="qrcode" class="w-8 h-8 d-block mb-1" />
                                     <small>QRIS</small>
                                 </button>
                             </div>
@@ -184,7 +184,7 @@
                         <!-- Quick Nominal Buttons -->
                         <div class="d-flex gap-1 mb-2">
                             <button type="button" class="btn btn-xs btn-outline-secondary flex-fill py-1 fw-medium" style="font-size: 11px;" onclick="setQuickPaid('exact')">
-                                <i class="fas fa-coins text-primary me-1"></i>Uang Pas
+                                <x-icon name="coins" class="w-4 h-4 text-primary me-1" />Uang Pas
                             </button>
                             <button type="button" class="btn btn-xs btn-outline-secondary flex-fill py-1 fw-medium" style="font-size: 11px;" onclick="setQuickPaid(50000)">
                                 50rb
@@ -212,10 +212,10 @@
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2">
                         <button type="button" class="btn btn-primary btn-lg" onclick="processTransaction()">
-                            <i class="fas fa-check me-2"></i> Process Payment
+                            <x-icon name="check" class="w-4 h-4 me-2" /> Process Payment
                         </button>
                         <button type="button" class="btn btn-outline-secondary" onclick="holdTransaction()">
-                            <i class="fas fa-pause me-2"></i> Simpan Draft
+                            <x-icon name="pause" class="w-4 h-4 me-2" /> Simpan Draft
                         </button>
                     </div>
                 </div>
@@ -326,10 +326,10 @@
                 <!-- Action Buttons -->
                 <div class="d-grid gap-2">
                     <button type="button" class="btn btn-primary btn-lg" onclick="printReceiptFromModal()">
-                        <i class="fas fa-print me-2"></i> Cetak Struk
+                        <x-icon name="print" class="w-4 h-4 me-2" /> Cetak Struk
                     </button>
                     <button type="button" class="btn btn-outline-primary" onclick="newTransaction()">
-                        <i class="fas fa-shopping-cart me-2"></i> Transaksi Baru
+                        <x-icon name="shopping-cart" class="w-4 h-4 me-2" /> Transaksi Baru
                     </button>
                 </div>
 
@@ -508,12 +508,12 @@ function renderCart() {
             <div class="text-center py-4 px-2">
                 <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2 shadow-sm" 
                      style="width: 64px; height: 64px; background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); color: #4f46e5;">
-                    <i class="fas fa-shopping-basket fa-2x"></i>
+                    <x-icon name="shopping-basket" class="w-8 h-8" />
                 </div>
                 <h6 class="fw-bold text-dark mb-1" style="font-size: 14px;">Keranjang Masih Kosong</h6>
                 <p class="text-muted small mb-2" style="font-size: 11px; max-width: 220px; margin: 0 auto;">Pilih produk di sebelah kiri untuk menambahkan ke daftar belanja</p>
                 <div class="d-inline-flex align-items-center gap-1 px-3 py-1 rounded-pill bg-white border shadow-sm text-secondary" style="font-size: 10px;">
-                    <i class="fas fa-hand-pointer text-primary me-1"></i>
+                    <x-icon name="hand-pointer" class="w-4 h-4 text-primary me-1" />
                     <span>Klik atau cari produk</span>
                 </div>
             </div>
@@ -565,20 +565,20 @@ function renderCart() {
                                 <button type="button" class="btn btn-sm btn-white rounded-circle shadow-none p-0 d-flex align-items-center justify-content-center text-dark" 
                                         style="width: 22px; height: 22px; background: white; border: 1px solid #cbd5e1;" 
                                         onclick="updateQuantity(${index}, ${item.quantity - 1})">
-                                    <i class="fas fa-minus" style="font-size: 8px;"></i>
+                                    <x-icon name="minus" class="w-2.5 h-2.5" />
                                 </button>
                                 <span class="fw-bold px-2 text-dark" style="font-size: 12px; min-width: 20px; text-align: center;">${item.quantity}</span>
                                 <button type="button" class="btn btn-sm btn-white rounded-circle shadow-none p-0 d-flex align-items-center justify-content-center text-dark" 
                                         style="width: 22px; height: 22px; background: white; border: 1px solid #cbd5e1;" 
                                         onclick="updateQuantity(${index}, ${item.quantity + 1})">
-                                    <i class="fas fa-plus" style="font-size: 8px;"></i>
+                                    <x-icon name="plus" class="w-2.5 h-2.5" />
                                 </button>
                             </div>
                             <button type="button" class="btn btn-sm text-danger bg-danger bg-opacity-10 rounded-circle p-0 d-flex align-items-center justify-content-center border-0" 
                                     style="width: 26px; height: 26px;" 
                                     title="Hapus item" 
                                     onclick="removeFromCart(${index})">
-                                <i class="fas fa-trash-alt" style="font-size: 10px;"></i>
+                                <x-icon name="trash-alt" class="w-3 h-3" />
                             </button>
                         </div>
                     </div>
@@ -941,10 +941,10 @@ function showScanToast(type, message) {
     
     if (type === 'success') {
         toast.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        toast.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${escapeHtml(message)}`;
+        toast.innerHTML = `<x-icon name="check-circle" class="w-4 h-4 me-2" /> ${escapeHtml(message)}`;
     } else {
         toast.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        toast.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${escapeHtml(message)}`;
+        toast.innerHTML = `<x-icon name="exclamation-triangle" class="w-4 h-4 me-2" /> ${escapeHtml(message)}`;
     }
     
     toast.style.transform = 'translateY(0)';
@@ -985,10 +985,10 @@ function handleBarcodeScan(scannedText) {
         const badge = document.getElementById('scanStatusBadge');
         if (badge) {
             badge.className = 'badge bg-success text-white rounded-pill font-normal';
-            badge.innerHTML = `<i class="fas fa-bolt me-1"></i>${matched.product_code} OK`;
+            badge.innerHTML = `<x-icon name="bolt" class="w-4 h-4 me-1" />${matched.product_code} OK`;
             setTimeout(() => {
                 badge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill font-normal';
-                badge.innerHTML = `<i class="fas fa-check-circle me-1"></i>Scanner Siap`;
+                badge.innerHTML = `<x-icon name="check-circle" class="w-4 h-4 me-1" />Scanner Siap`;
             }, 1200);
         }
         
@@ -1007,10 +1007,10 @@ function handleBarcodeScan(scannedText) {
         const badge = document.getElementById('scanStatusBadge');
         if (badge) {
             badge.className = 'badge bg-danger text-white rounded-pill font-normal';
-            badge.innerHTML = `<i class="fas fa-times-circle me-1"></i>Tidak Ditemukan`;
+            badge.innerHTML = `<x-icon name="times-circle" class="w-4 h-4 me-1" />Tidak Ditemukan`;
             setTimeout(() => {
                 badge.className = 'badge bg-success-subtle text-success border border-success-subtle rounded-pill font-normal';
-                badge.innerHTML = `<i class="fas fa-check-circle me-1"></i>Scanner Siap`;
+                badge.innerHTML = `<x-icon name="check-circle" class="w-4 h-4 me-1" />Scanner Siap`;
             }, 1500);
         }
     }
@@ -1104,15 +1104,15 @@ function filterCustomerDropdown() {
     if (filtered.length === 0) {
         html = `
             <div class="list-group-item text-muted py-2 px-3 small">
-                <i class="fas fa-info-circle me-1 text-primary"></i> Customer "<strong>${escapeHtml(input.value)}</strong>" belum terdaftar. (Transaksi tetap bisa diproses dengan nama ini).
+                <x-icon name="info-circle" class="w-4 h-4 me-1 text-primary" /> Customer "<strong>${escapeHtml(input.value)}</strong>" belum terdaftar. (Transaksi tetap bisa diproses dengan nama ini).
             </div>
         `;
     } else {
         filtered.forEach(c => {
             const isWalkIn = c.id === '';
-            const icon = isWalkIn ? '<i class="fas fa-user-tag text-primary me-2"></i>' : '<i class="fas fa-user text-secondary me-2"></i>';
+            const icon = isWalkIn ? '<x-icon name="user-tag" class="w-4 h-4 text-primary me-2" />' : '<x-icon name="user" class="w-4 h-4 text-secondary me-2" />';
             const phoneText = c.phone && c.phone !== 'Pelanggan Umum' 
-                ? `<small class="text-muted d-block" style="font-size: 10px;"><i class="fas fa-phone me-1"></i>${escapeHtml(c.phone)}</small>` 
+                ? `<small class="text-muted d-block" style="font-size: 10px;"><x-icon name="phone" class="w-4 h-4 me-1" />${escapeHtml(c.phone)}</small>` 
                 : (isWalkIn ? '<small class="text-muted d-block" style="font-size: 10px;">Pelanggan Umum / Tanpa Akun</small>' : '');
             
             const nameEscaped = c.name.replace(/'/g, "\\'");
@@ -1291,7 +1291,7 @@ function closeCameraScanner() {
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title font-semibold text-dark d-flex align-items-center gap-2">
-                    <i class="fas fa-camera text-primary me-2"></i> Scan Barcode Kamera
+                    <x-icon name="camera" class="w-4 h-4 text-primary me-2" /> Scan Barcode Kamera
                 </h5>
                 <button type="button" class="btn-close" onclick="closeCameraScanner()" aria-label="Close"></button>
             </div>
@@ -1300,7 +1300,7 @@ function closeCameraScanner() {
                 <p class="text-muted small mt-2 mb-0">Arahkan barcode barang tepat ke area kamera</p>
             </div>
             <div class="modal-footer border-top justify-content-between">
-                <span class="small text-muted"><i class="fas fa-barcode text-primary me-1"></i>Deteksi otomatis</span>
+                <span class="small text-muted"><x-icon name="barcode" class="w-4 h-4 text-primary me-1" />Deteksi otomatis</span>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="closeCameraScanner()">Tutup</button>
             </div>
         </div>

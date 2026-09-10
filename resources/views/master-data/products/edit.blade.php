@@ -24,7 +24,7 @@
                     <!-- Visual Barcode Preview -->
                     <div class="mt-2.5 p-2 bg-gray-50 border border-dashed border-gray-300 rounded-lg flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
-                            <i class="fas fa-barcode text-gray-400 text-lg"></i>
+                            <x-icon name="barcode" class="text-gray-400 w-5 h-5" />
                             <div>
                                 <div class="text-[10px] text-gray-500 font-medium">Barcode Fisik Siap Scan:</div>
                                 <svg id="barcodeLivePreview" style="max-height: 38px;"></svg>
@@ -101,7 +101,7 @@
                     Batal
                 </a>
                 <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition">
-                    <i class="fas fa-save mr-2"></i> Perbarui Produk
+                    <x-icon name="save" class="w-4 h-4 mr-2" /> Perbarui Produk
                 </button>
             </div>
         </form>

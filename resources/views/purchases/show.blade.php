@@ -27,16 +27,16 @@
         <div class="flex flex-wrap items-center gap-2">
             @if(!in_array($purchase->status, ['Received', 'Canceled']))
                 <a href="{{ route('purchases.edit', $purchase) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fas fa-edit"></i> Edit PO
+                    <x-icon name="edit" class="w-4 h-4" /> Edit PO
                 </a>
             @endif
 
             <button onclick="window.print()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition flex items-center gap-1.5 shadow-sm">
-                <i class="fas fa-print"></i> Cetak PO
+                <x-icon name="print" class="w-4 h-4" /> Cetak PO
             </button>
 
             <a href="{{ route('purchases.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition flex items-center gap-1.5">
-                <i class="fas fa-arrow-left"></i> Kembali
+                <x-icon name="arrow-left" class="w-4 h-4" /> Kembali
             </a>
         </div>
     </div>
@@ -45,7 +45,7 @@
     <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 no-print">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-bold">
-                <i class="fas fa-tasks"></i>
+                <x-icon name="tasks" class="w-4 h-4" />
             </div>
             <div>
                 <p class="text-xs font-semibold text-gray-500 uppercase">Ubah Status Alur Kerja PO</p>
@@ -60,7 +60,7 @@
                     @method('PATCH')
                     <input type="hidden" name="status" value="Approved">
                     <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
-                        <i class="fas fa-check-circle"></i> Setujui (Approve)
+                        <x-icon name="check-circle" class="w-4 h-4" /> Setujui (Approve)
                     </button>
                 </form>
             @endif
@@ -71,7 +71,7 @@
                     @method('PATCH')
                     <input type="hidden" name="status" value="Received">
                     <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
-                        <i class="fas fa-box-check"></i> Tandai Sudah Diterima
+                        <x-icon name="box-check" class="w-4 h-4" /> Tandai Sudah Diterima
                     </button>
                 </form>
             @endif
@@ -82,7 +82,7 @@
                     @method('PATCH')
                     <input type="hidden" name="status" value="Canceled">
                     <button type="submit" class="px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                        <i class="fas fa-times-circle"></i> Batalkan PO
+                        <x-icon name="times-circle" class="w-4 h-4" /> Batalkan PO
                     </button>
                 </form>
             @endif
@@ -114,13 +114,13 @@
                 <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Vendor / Supplier:</h3>
                 <p class="text-base font-bold text-gray-900">{{ $purchase->supplier->name ?? ($purchase->supplier->company_name ?? '-') }}</p>
                 @if(isset($purchase->supplier->email))
-                    <p class="text-xs text-gray-600"><i class="fas fa-envelope mr-1 text-gray-400"></i>{{ $purchase->supplier->email }}</p>
+                    <p class="text-xs text-gray-600"><x-icon name="envelope" class="w-4 h-4 mr-1 text-gray-400" />{{ $purchase->supplier->email }}</p>
                 @endif
                 @if(isset($purchase->supplier->phone))
-                    <p class="text-xs text-gray-600"><i class="fas fa-phone mr-1 text-gray-400"></i>{{ $purchase->supplier->phone }}</p>
+                    <p class="text-xs text-gray-600"><x-icon name="phone" class="w-4 h-4 mr-1 text-gray-400" />{{ $purchase->supplier->phone }}</p>
                 @endif
                 @if(isset($purchase->supplier->address))
-                    <p class="text-xs text-gray-600"><i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>{{ $purchase->supplier->address }}</p>
+                    <p class="text-xs text-gray-600"><x-icon name="map-marker-alt" class="w-4 h-4 mr-1 text-gray-400" />{{ $purchase->supplier->address }}</p>
                 @endif
             </div>
 

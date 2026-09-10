@@ -23,10 +23,10 @@
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('sales.invoices.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium">
-                <i class="fas fa-arrow-left mr-2"></i>Kembali
+                <x-icon name="arrow-left" class="w-4 h-4 mr-2" />Kembali
             </a>
             <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
-                <i class="fas fa-print mr-2"></i> Cetak Invoice
+                <x-icon name="print" class="w-4 h-4 mr-2" /> Cetak Invoice
             </button>
         </div>
     </div>
@@ -109,7 +109,7 @@
 
         <!-- Payment Status Update Form (No Print) -->
         <div class="no-print mt-8 p-4 bg-gray-50 border border-gray-200 rounded-xl">
-            <h4 class="text-sm font-bold text-gray-800 mb-3"><i class="fas fa-edit mr-2 text-blue-600"></i>Update Status Pembayaran</h4>
+            <h4 class="text-sm font-bold text-gray-800 mb-3"><x-icon name="edit" class="w-4 h-4 mr-2 text-blue-600" />Update Status Pembayaran</h4>
             <form action="{{ route('sales.invoices.updatePayment', $invoice->id) }}" method="POST" class="flex items-center gap-4">
                 @csrf
                 @method('PATCH')

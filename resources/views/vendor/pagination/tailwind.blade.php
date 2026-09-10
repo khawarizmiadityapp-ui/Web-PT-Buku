@@ -5,11 +5,11 @@
             <!-- Previous Page Link -->
             @if ($paginator->onFirstPage())
                 <span class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed select-none">
-                    <i class="fas fa-chevron-left mr-1.5 text-[10px]"></i> Sebelumnya
+                    <x-icon name="chevron-left" class="mr-1.5 w-3.5 h-3.5" /> Sebelumnya
                 </span>
             @else
                 <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition shadow-xs">
-                    <i class="fas fa-chevron-left mr-1.5 text-[10px]"></i> Sebelumnya
+                    <x-icon name="chevron-left" class="mr-1.5 w-3.5 h-3.5" /> Sebelumnya
                 </a>
             @endif
 
@@ -50,11 +50,11 @@
             <!-- Next Page Link -->
             @if ($paginator->hasMorePages())
                 <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition shadow-xs">
-                    Berikutnya <i class="fas fa-chevron-right ml-1.5 text-[10px]"></i>
+                    Berikutnya <x-icon name="chevron-right" class="ml-1.5 w-3.5 h-3.5" />
                 </a>
             @else
                 <span class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed select-none">
-                    Berikutnya <i class="fas fa-chevron-right ml-1.5 text-[10px]"></i>
+                    Berikutnya <x-icon name="chevron-right" class="ml-1.5 w-3.5 h-3.5" />
                 </span>
             @endif
         </div>

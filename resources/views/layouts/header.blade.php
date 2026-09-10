@@ -4,7 +4,7 @@
         <div class="flex-1 max-w-2xl">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="fas fa-search text-gray-400"></i>
+                    <x-icon name="search" class="w-4 h-4 text-gray-400" />
                 </span>
                 <input type="text" 
                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
@@ -16,14 +16,14 @@
         <div class="flex items-center space-x-3">
             <!-- Real-time Clock Widget -->
             <div class="hidden sm:flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-100">
-                <i class="fas fa-clock text-gray-500 text-sm"></i>
+                <x-icon name="clock" class="text-gray-500 w-4 h-4" />
                 <span id="currentTime" class="text-sm font-medium text-gray-700"></span>
             </div>
 
             <!-- Notification Bell -->
             <div class="relative dropdown-container">
                 <button onclick="toggleGlobalDropdown('notificationDropdown')" class="p-2.5 hover:bg-gray-100 rounded-lg relative transition" title="Notifications">
-                    <i class="fas fa-bell text-gray-600"></i>
+                    <x-icon name="bell" class="w-4 h-4 text-gray-600" />
                     @if(isset($globalNotifications) && $globalNotifications->count() > 0)
                         <span id="notifBadge" class="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 bg-red-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full border border-white">
                             {{ $globalNotifications->count() }}
@@ -43,19 +43,19 @@
                                 <a href="{{ $notif->link ?? '#' }}" class="flex px-4 py-3 hover:bg-gray-50 border-b border-gray-100 transition">
                                     <div class="flex-shrink-0 mt-0.5">
                                         <div class="w-8 h-8 rounded-full {{ $notif->bg_color ?? 'bg-blue-100 text-blue-600' }} flex items-center justify-center">
-                                            <i class="{{ $notif->icon ?? 'fas fa-bell' }} text-xs"></i>
+                                            <x-icon :name="$notif->icon ?? 'bell'" class="w-3.5 h-3.5" />
                                         </div>
                                     </div>
                                     <div class="ml-3 flex-1">
                                         <p class="text-xs font-bold text-gray-900">{{ $notif->title }}</p>
                                         <p class="text-xs text-gray-600 mt-0.5">{{ $notif->message }}</p>
-                                        <p class="text-[10px] text-gray-400 mt-1"><i class="far fa-clock me-1"></i>{{ $notif->time }}</p>
+                                        <p class="text-[10px] text-gray-400 mt-1"><x-icon name="clock" class="w-4 h-4 me-1" />{{ $notif->time }}</p>
                                     </div>
                                 </a>
                             @endforeach
                         @else
                             <div class="px-4 py-8 text-center text-gray-500">
-                                <i class="fas fa-check-circle text-2xl text-green-400 mb-2"></i>
+                                <x-icon name="check-circle" class="w-8 h-8 text-green-400 mb-2" />
                                 <p class="text-xs font-medium">Tidak ada notifikasi baru</p>
                             </div>
                         @endif
@@ -69,26 +69,26 @@
             <!-- Quick Apps Dropdown -->
             <div class="relative dropdown-container">
                 <button onclick="toggleGlobalDropdown('appsDropdown')" class="p-2.5 hover:bg-gray-100 rounded-lg transition" title="Quick Apps">
-                    <i class="fas fa-th text-gray-600"></i>
+                    <x-icon name="th" class="w-4 h-4 text-gray-600" />
                 </button>
                 <div id="appsDropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-200 p-4 z-50">
                     <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Quick Apps</h4>
                     <div class="grid grid-cols-3 gap-3 text-center">
                         <a href="{{ route('cashier.index') }}" class="flex flex-col items-center group p-2 hover:bg-gray-50 rounded-lg transition">
                             <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition shadow-sm">
-                                <i class="fas fa-cash-register text-lg"></i>
+                                <x-icon name="cash-register" class="w-5 h-5" />
                             </div>
                             <span class="text-xs mt-2 font-medium text-gray-600 group-hover:text-gray-900">POS</span>
                         </a>
                         <a href="{{ route('dashboard') }}" class="flex flex-col items-center group p-2 hover:bg-gray-50 rounded-lg transition">
                             <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition shadow-sm">
-                                <i class="fas fa-warehouse text-lg"></i>
+                                <x-icon name="warehouse" class="w-5 h-5" />
                             </div>
                             <span class="text-xs mt-2 font-medium text-gray-600 group-hover:text-gray-900">WMS</span>
                         </a>
                         <a href="{{ route('reports.financial') }}" class="flex flex-col items-center group p-2 hover:bg-gray-50 rounded-lg transition">
                             <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition shadow-sm">
-                                <i class="fas fa-chart-line text-lg"></i>
+                                <x-icon name="chart-line" class="w-5 h-5" />
                             </div>
                             <span class="text-xs mt-2 font-medium text-gray-600 group-hover:text-gray-900">Reports</span>
                         </a>
@@ -105,7 +105,7 @@
                 <button onclick="toggleProfileDropdown()" class="flex items-center space-x-1 p-1 rounded-full hover:bg-gray-100 transition">
                     <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=4F46E5&color=fff" 
                          alt="Avatar" class="w-9 h-9 rounded-full border-2 border-indigo-500">
-                    <i class="fas fa-chevron-down text-xs text-gray-500 ml-1"></i>
+                    <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-500 ml-1" />
                 </button>
                 
                 <!-- Profile Dropdown Menu -->
@@ -120,7 +120,7 @@
                     
                     <div class="py-1">
                         <a href="{{ route('settings') }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">
-                            <i class="fas fa-user-circle w-5 mr-3 text-gray-400"></i>
+                            <x-icon name="user-circle" class="w-5 h-5 mr-3 text-gray-400" />
                             <span>Profile & Settings</span>
                         </a>
                     </div>
@@ -129,7 +129,7 @@
                         <form id="global-logout-form" action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="button" onclick="confirmLogout(event)" class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
-                                <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                                <x-icon name="sign-out-alt" class="w-5 h-5 mr-3" />
                                 <span>Logout</span>
                             </button>
                         </form>

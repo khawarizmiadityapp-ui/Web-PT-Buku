@@ -5,7 +5,7 @@
                 <!-- Breadcrumb -->
                 <div class="flex items-center text-sm text-gray-500 mb-4">
                     <a href="{{ route('dashboard') }}" class="hover:text-gray-700">Inventory</a>
-                    <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                    <x-icon name="chevron-right" class="mx-2 w-3.5 h-3.5" />
                     <span class="text-gray-900 font-medium">Stock Opname</span>
                 </div>
 
@@ -17,11 +17,11 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <a href="{{ route('warehouse.stock-audit.export', request()->query()) }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium">
-                            <i class="fas fa-download text-gray-600"></i>
+                            <x-icon name="download" class="w-4 h-4 text-gray-600" />
                             <span class="text-gray-700">Export CSV</span>
                         </a>
                         <a href="{{ route('warehouse.stock-audit.start') }}" class="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
-                            <i class="fas fa-play"></i>
+                            <x-icon name="play" class="w-4 h-4" />
                             <span>Start Stock Count</span>
                         </a>
                     </div>
@@ -33,7 +33,7 @@
                     <div class="bg-white rounded-xl p-6 border border-gray-200">
                         <div class="flex items-start justify-between mb-3">
                             <div class="bg-red-50 p-3 rounded-lg">
-                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                                <x-icon name="exclamation-triangle" class="text-red-600 w-6 h-6" />
                             </div>
                             <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">-12%</span>
                         </div>
@@ -49,7 +49,7 @@
                     <div class="bg-white rounded-xl p-6 border border-gray-200">
                         <div class="flex items-start justify-between mb-3">
                             <div class="bg-blue-50 p-3 rounded-lg">
-                                <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
+                                <x-icon name="calendar-check" class="text-blue-600 w-6 h-6" />
                             </div>
                         </div>
                         <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Last Audit Date</p>
@@ -65,7 +65,7 @@
                     <div class="bg-white rounded-xl p-6 border border-gray-200">
                         <div class="flex items-start justify-between mb-3">
                             <div class="bg-green-50 p-3 rounded-lg">
-                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                                <x-icon name="check-circle" class="text-green-600 w-6 h-6" />
                             </div>
                         </div>
                         <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Accuracy Rate</p>
@@ -108,7 +108,7 @@
                                 <option value="Stationery">Stationery</option>
                             </select>
                             <button type="submit" class="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 text-sm font-medium">
-                                <i class="fas fa-filter mr-2"></i>More Filters
+                                <x-icon name="filter" class="w-4 h-4 mr-2" />More Filters
                             </button>
                         </div>
                     </form>
@@ -117,7 +117,7 @@
                 <!-- Selected Items Info -->
                 <div id="selected-info" class="hidden bg-gray-900 text-white rounded-lg p-4 mb-6 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                        <x-icon name="check-circle" class="text-green-400 w-6 h-6" />
                         <div>
                             <p class="text-sm font-semibold"><span id="selected-count">0</span> items selected</p>
                             <p class="text-xs text-gray-400">142 SKUs completed</p>
@@ -125,11 +125,11 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <button onclick="processSelected()" class="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
-                            <i class="fas fa-sync"></i>
+                            <x-icon name="sync" class="w-4 h-4" />
                             <span>Process All Selected Items</span>
                         </button>
                         <button onclick="closeSelection()" class="p-2 hover:bg-gray-800 rounded">
-                            <i class="fas fa-times"></i>
+                            <x-icon name="times" class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -167,7 +167,7 @@
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-3">
                                                 <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
-                                                    <i class="fas fa-box text-gray-400"></i>
+                                                    <x-icon name="box" class="w-4 h-4 text-gray-400" />
                                                 </div>
                                                 <span class="text-sm font-medium text-gray-900">{{ $product->product_name }}</span>
                                             </div>
@@ -215,7 +215,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="8" class="px-6 py-12 text-center text-gray-500">
-                                            <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                                            <x-icon name="inbox" class="w-4 h-4 text-4xl mb-3 text-gray-300" />
                                             <p>No products found</p>
                                         </td>
                                     </tr>

@@ -68,10 +68,10 @@
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2">
                         <a href="{{ route('settings.profile.view') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-edit me-2"></i> Edit Profile
+                            <x-icon name="edit" class="w-4 h-4 me-2" /> Edit Profile
                         </a>
                         <button class="btn btn-danger" onclick="confirmSignOut()">
-                            <i class="fas fa-sign-out-alt me-2"></i> Sign Out & End Shift
+                            <x-icon name="sign-out-alt" class="w-4 h-4 me-2" /> Sign Out & End Shift
                         </button>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
             <div class="card border-0 shadow-sm mb-3">
                 <div class="card-body">
                     <h5 class="card-title mb-4">
-                        <i class="fas fa-desktop text-primary me-2"></i> Terminal Hardware Settings
+                        <x-icon name="desktop" class="w-4 h-4 text-primary me-2" /> Terminal Hardware Settings
                     </h5>
 
                     <div class="row g-3">
@@ -101,10 +101,10 @@
                                 </div>
                                 <div class="d-flex gap-2 mt-2">
                                     <button class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-sync me-1"></i> Test Connection
+                                        <x-icon name="sync" class="w-4 h-4 me-1" /> Test Connection
                                     </button>
                                     <span class="badge bg-success align-self-center">
-                                        <i class="fas fa-check-circle me-1"></i> Ready
+                                        <x-icon name="check-circle" class="w-4 h-4 me-1" /> Ready
                                     </span>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="d-flex gap-2 mt-2">
                                     <button class="btn btn-sm btn-success">
-                                        <i class="fas fa-check-circle me-1"></i> Connected
+                                        <x-icon name="check-circle" class="w-4 h-4 me-1" /> Connected
                                     </button>
                                 </div>
                             </div>
@@ -133,12 +133,12 @@
                         <!-- Emergency Action -->
                         <div class="col-12">
                             <div class="alert alert-warning d-flex align-items-center">
-                                <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                                <x-icon name="exclamation-triangle" class="w-8 h-8 me-3" />
                                 <div class="flex-grow-1">
                                     <strong>Emergency Open (Requires Manager ID)</strong>
                                 </div>
                                 <button class="btn btn-warning">
-                                    <i class="fas fa-unlock me-1"></i> Emergency Open
+                                    <x-icon name="unlock" class="w-4 h-4 me-1" /> Emergency Open
                                 </button>
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-clock text-primary me-2"></i> Today's Session Activity
+                            <x-icon name="clock" class="w-4 h-4 text-primary me-2" /> Today's Session Activity
                         </h5>
                         <a href="#" class="text-primary small">View Full Log</a>
                     </div>
@@ -219,12 +219,12 @@
             <div class="row g-2 mt-3">
                 <div class="col-md-6">
                     <button class="btn btn-outline-primary w-100" onclick="changeTerminalPin()">
-                        <i class="fas fa-key me-2"></i> Change Terminal Pin
+                        <x-icon name="key" class="w-4 h-4 me-2" /> Change Terminal Pin
                     </button>
                 </div>
                 <div class="col-md-6">
                     <button class="btn btn-primary w-100" onclick="saveChanges()">
-                        <i class="fas fa-save me-2"></i> Save Changes
+                        <x-icon name="save" class="w-4 h-4 me-2" /> Save Changes
                     </button>
                 </div>
             </div>
@@ -241,7 +241,7 @@ function confirmSignOut() {
         showCancelButton: true,
         confirmButtonColor: '#EF4444',
         cancelButtonColor: '#6B7280',
-        confirmButtonText: '<i class="fas fa-sign-out-alt me-1.5"></i> Ya, Sign Out',
+        confirmButtonText: '<x-icon name="sign-out-alt" class="w-4 h-4 me-1.5" /> Ya, Sign Out',
         cancelButtonText: 'Batal',
         reverseButtons: true,
         focusCancel: true,

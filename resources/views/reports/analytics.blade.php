@@ -9,7 +9,7 @@
         <div>
             <div class="flex items-center gap-2 mb-1">
                 <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-sm">
-                    <i class="fas fa-brain"></i>
+                    <x-icon name="brain" class="w-4 h-4" />
                 </span>
                 <h1 class="text-2xl font-bold text-gray-900">Data Science & Predictive Analytics</h1>
                 <span class="px-2.5 py-0.5 text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full">
@@ -21,7 +21,7 @@
 
         <div class="flex items-center gap-2">
             <button onclick="window.print()" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 flex items-center gap-2 shadow-sm">
-                <i class="fas fa-print text-gray-500"></i>
+                <x-icon name="print" class="w-4 h-4 text-gray-500" />
                 <span>Cetak Laporan</span>
             </button>
         </div>
@@ -30,11 +30,11 @@
     <!-- Navigation Tab Switcher -->
     <div class="flex items-center border-b border-gray-200 gap-6">
         <a href="{{ route('reports.financial') }}" class="pb-3 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition flex items-center gap-2">
-            <i class="fas fa-coins"></i>
+            <x-icon name="coins" class="w-4 h-4" />
             <span>Ringkasan Finansial</span>
         </a>
         <a href="{{ route('reports.analytics') }}" class="pb-3 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition flex items-center gap-2">
-            <i class="fas fa-chart-network"></i>
+            <x-icon name="chart-network" class="w-4 h-4" />
             <span>Data Science & Prediktif</span>
             <span class="bg-indigo-100 text-indigo-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
         </a>
@@ -47,7 +47,7 @@
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Prediksi Omset Depan</span>
                 <span class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm">
-                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <x-icon name="wand-magic-sparkles" class="w-4 h-4" />
                 </span>
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900">
@@ -56,11 +56,11 @@
             <div class="flex items-center gap-1.5 mt-2">
                 @if($forecastGrowthPct >= 0)
                     <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-up text-[10px]"></i> +{{ $forecastGrowthPct }}%
+                        <x-icon name="arrow-trend-up" class="w-3.5 h-3.5" /> +{{ $forecastGrowthPct }}%
                     </span>
                 @else
                     <span class="text-xs font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-down text-[10px]"></i> {{ $forecastGrowthPct }}%
+                        <x-icon name="arrow-trend-down" class="w-3.5 h-3.5" /> {{ $forecastGrowthPct }}%
                     </span>
                 @endif
                 <span class="text-[11px] text-gray-500">Estimasi linear regression OLS</span>
@@ -72,7 +72,7 @@
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Rata-Rata Order (AOV)</span>
                 <span class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
-                    <i class="fas fa-receipt"></i>
+                    <x-icon name="receipt" class="w-4 h-4" />
                 </span>
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900">
@@ -88,7 +88,7 @@
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Stabilitas Permintaan</span>
                 <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
-                    <i class="fas fa-gauge-high"></i>
+                    <x-icon name="gauge-high" class="w-4 h-4" />
                 </span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -107,7 +107,7 @@
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Produk Inti (Kelas A)</span>
                 <span class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
-                    <i class="fas fa-star"></i>
+                    <x-icon name="star" class="w-4 h-4" />
                 </span>
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900">
@@ -124,7 +124,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
                 <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                    <i class="fas fa-chart-line text-indigo-600"></i>
+                    <x-icon name="chart-line" class="w-4 h-4 text-indigo-600" />
                     Peramalan Penjualan & Proyeksi Tren (Predictive Sales Forecasting)
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">Model regresi linier OLS (*Ordinary Least Squares*) memproyeksikan penjualan 3 bulan ke depan beserta rentang estimasi 95% *Confidence Interval*.</p>
@@ -149,7 +149,7 @@
         <!-- AI Narrative Insight Banner -->
         <div class="mt-5 p-4 rounded-xl bg-gradient-to-r from-indigo-50 via-blue-50 to-white border border-indigo-100 flex items-start gap-3.5">
             <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex-shrink-0 flex items-center justify-center text-sm mt-0.5">
-                <i class="fas fa-robot"></i>
+                <x-icon name="robot" class="w-4 h-4" />
             </div>
             <div class="text-xs space-y-1">
                 <div class="font-bold text-gray-900">Insight Analitik Cerdas:</div>
@@ -168,7 +168,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
                     <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                        <i class="fas fa-filter-circle-dollar text-emerald-600"></i>
+                        <x-icon name="filter-circle-dollar" class="w-4 h-4 text-emerald-600" />
                         Klasifikasi Persediaan ABC (Prinsip Pareto 80/20)
                     </h3>
                     <p class="text-xs text-gray-500 mt-0.5">Memisahkan produk vital (80% omset) dari produk pelengkap untuk optimasi gudang.</p>
@@ -185,7 +185,7 @@
             <div>
                 <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center justify-between">
                     <span>Distribusi Kontribusi SKU</span>
-                    <i class="fas fa-chart-pie text-gray-400"></i>
+                    <x-icon name="chart-pie" class="w-4 h-4 text-gray-400" />
                 </h4>
 
                 <div class="space-y-3">
@@ -241,7 +241,7 @@
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                        <i class="fas fa-users-viewfinder text-blue-600"></i>
+                        <x-icon name="users-viewfinder" class="w-4 h-4 text-blue-600" />
                         Segmentasi Pelanggan RFM
                     </h3>
                     <p class="text-xs text-gray-500 mt-0.5">Recency, Frequency, & Monetary Clustering</p>
@@ -272,7 +272,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
                         <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                            <i class="fas fa-calendar-week text-amber-600"></i>
+                            <x-icon name="calendar-week" class="w-4 h-4 text-amber-600" />
                             Matriks Waktu Puncak (Purchasing Heatmap)
                         </h3>
                         <p class="text-xs text-gray-500 mt-0.5">Kepadatan volume transaksi berdasarkan hari & rentang jam operasional.</p>
@@ -323,7 +323,7 @@
             </div>
 
             <div class="mt-3 text-[11px] text-gray-500 flex items-center justify-between">
-                <span><i class="fas fa-circle text-indigo-600 text-[9px] me-1"></i>Warna pekat menandakan jam pesanan paling sibuk.</span>
+                <span><x-icon name="circle" class="w-4 h-4 text-indigo-600 text-[9px] me-1" />Warna pekat menandakan jam pesanan paling sibuk.</span>
                 <span>Optimasi shift kasir & staf gudang</span>
             </div>
         </div>
@@ -334,7 +334,7 @@
         <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                    <i class="fas fa-bullseye-pointer text-indigo-600"></i>
+                    <x-icon name="bullseye-pointer" class="w-4 h-4 text-indigo-600" />
                     Rekomendasi Tindakan Bisnis Nyata (Prescriptive Targeted Actions)
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">Saran aksi terarah untuk pelanggan prioritas (*Champions*) dan pelanggan berisiko lepas (*At-Risk*).</p>
@@ -391,7 +391,7 @@
                         </td>
                         <td class="px-6 py-3.5">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium">
-                                <i class="fas fa-lightbulb text-amber-500 text-[10px]"></i>
+                                <x-icon name="lightbulb" class="text-amber-500 w-3.5 h-3.5" />
                                 {{ $cust['action'] }}
                             </span>
                         </td>

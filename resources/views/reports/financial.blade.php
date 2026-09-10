@@ -18,7 +18,7 @@
 
         <div class="flex items-center gap-2 flex-wrap">
             <a href="{{ route('reports.financial', array_merge(request()->query(), ['export' => 'csv'])) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-file-csv"></i>
+                <x-icon name="file-csv" class="w-4 h-4" />
                 <span>Export Report (CSV)</span>
             </a>
         </div>
@@ -27,11 +27,11 @@
     <!-- Navigation Tab Switcher -->
     <div class="flex items-center border-b border-gray-200 gap-6">
         <a href="{{ route('reports.financial') }}" class="pb-3 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition flex items-center gap-2">
-            <i class="fas fa-coins"></i>
+            <x-icon name="coins" class="w-4 h-4" />
             <span>Ringkasan Finansial</span>
         </a>
         <a href="{{ route('reports.analytics') }}" class="pb-3 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition flex items-center gap-2">
-            <i class="fas fa-brain"></i>
+            <x-icon name="brain" class="w-4 h-4" />
             <span>Data Science & Prediktif</span>
             <span class="bg-indigo-100 text-indigo-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
         </a>
@@ -69,7 +69,7 @@
                     <input type="date" name="end_date" value="{{ $endDate }}" class="bg-transparent border-none text-xs focus:ring-0 p-0 text-gray-800">
                 </div>
                 <button type="submit" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-xs font-medium transition shadow-sm">
-                    <i class="fas fa-filter mr-1"></i> Terapkan
+                    <x-icon name="filter" class="w-4 h-4 mr-1" /> Terapkan
                 </button>
             </div>
         </form>
@@ -81,15 +81,15 @@
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-chart-line"></i>
+                    <x-icon name="chart-line" class="w-4 h-4" />
                 </div>
                 @if($profitGrowth >= 0)
                     <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-up text-[10px]"></i> +{{ number_format($profitGrowth, 1) }}% MoM
+                        <x-icon name="arrow-trend-up" class="w-3.5 h-3.5" /> +{{ number_format($profitGrowth, 1) }}% MoM
                     </span>
                 @else
                     <span class="text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-down text-[10px]"></i> {{ number_format($profitGrowth, 1) }}% MoM
+                        <x-icon name="arrow-trend-down" class="w-3.5 h-3.5" /> {{ number_format($profitGrowth, 1) }}% MoM
                     </span>
                 @endif
             </div>
@@ -106,15 +106,15 @@
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-wallet"></i>
+                    <x-icon name="wallet" class="w-4 h-4" />
                 </div>
                 @if($expenseGrowth <= 0)
                     <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-down text-[10px]"></i> {{ number_format($expenseGrowth, 1) }}% MoM
+                        <x-icon name="arrow-trend-down" class="w-3.5 h-3.5" /> {{ number_format($expenseGrowth, 1) }}% MoM
                     </span>
                 @else
                     <span class="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-up text-[10px]"></i> +{{ number_format($expenseGrowth, 1) }}% MoM
+                        <x-icon name="arrow-trend-up" class="w-3.5 h-3.5" /> +{{ number_format($expenseGrowth, 1) }}% MoM
                     </span>
                 @endif
             </div>
@@ -131,7 +131,7 @@
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
-                    <i class="fas fa-hand-holding-dollar"></i>
+                    <x-icon name="hand-holding-dollar" class="w-4 h-4" />
                 </div>
                 <span class="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-1 rounded-full">
                     {{ number_format($arGrowth, 1) }}% dari Omzet
@@ -202,7 +202,7 @@
             <div class="pt-6 border-t border-gray-100 mt-6 text-center">
                 <a href="{{ route('sales.invoices.index') }}" class="inline-flex items-center gap-1.5 text-sm text-blue-600 font-semibold hover:text-blue-800 transition">
                     <span>Lihat Rincian Faktur & Jurnal</span>
-                    <i class="fas fa-arrow-right text-xs"></i>
+                    <x-icon name="arrow-right" class="w-3.5 h-3.5" />
                 </a>
             </div>
         </div>
@@ -219,7 +219,7 @@
             <div class="flex items-center gap-3">
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                        <i class="fas fa-search text-xs"></i>
+                        <x-icon name="search" class="w-3.5 h-3.5" />
                     </span>
                     <input type="text" id="tableSearchInput" onkeyup="filterSummaryTable()" placeholder="Cari bulan..." class="pl-8 pr-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
@@ -250,7 +250,7 @@
                         <tr class="hover:bg-gray-50 transition summary-row" data-month="{{ strtolower($summary->month) }}" data-status="{{ $summary->status }}">
                             <td class="px-6 py-4 font-bold text-gray-900">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-calendar-alt text-gray-400 text-xs"></i>
+                                    <x-icon name="calendar-alt" class="text-gray-400 w-3.5 h-3.5" />
                                     <span>{{ $summary->month }}</span>
                                 </div>
                             </td>
@@ -275,7 +275,7 @@
                     @empty
                         <tr id="emptyTableRow">
                             <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-                                <i class="fas fa-chart-pie text-gray-300 text-3xl mb-2"></i>
+                                <x-icon name="chart-pie" class="w-4 h-4 text-gray-300 text-3xl mb-2" />
                                 <p class="text-sm font-medium">Belum ada riwayat transaksi keuangan pada periode ini.</p>
                             </td>
                         </tr>

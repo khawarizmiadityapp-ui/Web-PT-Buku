@@ -12,16 +12,16 @@
         </div>
         <div>
             <a href="{{ route('cashier.history') }}" class="btn btn-outline-secondary me-2">
-                <i class="fas fa-arrow-left me-1"></i> Back
+                <x-icon name="arrow-left" class="w-4 h-4 me-1" /> Back
             </a>
             <button class="btn btn-outline-primary me-2" onclick="showPrintSettings()">
-                <i class="fas fa-cog me-1"></i> Print Settings
+                <x-icon name="cog" class="w-4 h-4 me-1" /> Print Settings
             </button>
             <button class="btn btn-outline-primary me-2" onclick="downloadPDF()">
-                <i class="fas fa-download me-1"></i> Download PDF
+                <x-icon name="download" class="w-4 h-4 me-1" /> Download PDF
             </button>
             <a href="{{ route('cashier.print', $transaction->id) }}" class="btn btn-primary" target="_blank">
-                <i class="fas fa-print me-1"></i> Print Struk
+                <x-icon name="print" class="w-4 h-4 me-1" /> Print Struk
             </a>
         </div>
     </div>
@@ -49,11 +49,11 @@
                             <label class="text-muted small">Payment Method</label>
                             <div>
                                 @if($transaction->payment_method == 'Cash')
-                                    <i class="fas fa-money-bill-wave text-success"></i> {{ $transaction->payment_method }}
+                                    <x-icon name="money-bill-wave" class="w-4 h-4 text-success" /> {{ $transaction->payment_method }}
                                 @elseif($transaction->payment_method == 'QRIS')
-                                    <i class="fas fa-qrcode text-primary"></i> {{ $transaction->payment_method }}
+                                    <x-icon name="qrcode" class="w-4 h-4 text-primary" /> {{ $transaction->payment_method }}
                                 @elseif($transaction->payment_method == 'Card')
-                                    <i class="fas fa-credit-card text-info"></i> {{ $transaction->payment_method }}
+                                    <x-icon name="credit-card" class="w-4 h-4 text-info" /> {{ $transaction->payment_method }}
                                 @else
                                     {{ $transaction->payment_method ?? '-' }}
                                 @endif
@@ -175,19 +175,19 @@
                     <div class="text-center py-3">
                         @if($transaction->payment_status == 'Paid')
                             <div class="display-1 text-success mb-2">
-                                <i class="fas fa-check-circle"></i>
+                                <x-icon name="check-circle" class="w-4 h-4" />
                             </div>
                             <h4 class="text-success">PAID</h4>
                             <p class="text-muted mb-0">Transaction completed successfully</p>
                         @elseif($transaction->payment_status == 'Partial')
                             <div class="display-1 text-warning mb-2">
-                                <i class="fas fa-exclamation-circle"></i>
+                                <x-icon name="exclamation-circle" class="w-4 h-4" />
                             </div>
                             <h4 class="text-warning">PARTIAL PAYMENT</h4>
                             <p class="text-muted mb-0">Remaining payment required</p>
                         @else
                             <div class="display-1 text-danger mb-2">
-                                <i class="fas fa-times-circle"></i>
+                                <x-icon name="times-circle" class="w-4 h-4" />
                             </div>
                             <h4 class="text-danger">UNPAID</h4>
                             <p class="text-muted mb-0">Payment pending</p>
@@ -290,7 +290,7 @@ function printWithSettings() {
                     <div class="form-check mt-2">
                         <input class="form-check-input" type="checkbox" id="printerOnlineReady" checked disabled>
                         <label class="form-check-label text-success" for="printerOnlineReady">
-                            <i class="fas fa-circle me-1"></i> Printer Online & Ready
+                            <x-icon name="circle" class="w-4 h-4 me-1" /> Printer Online & Ready
                         </label>
                     </div>
                 </div>
@@ -300,11 +300,11 @@ function printWithSettings() {
                     <label class="form-label">Number of Copies</label>
                     <div class="input-group">
                         <button class="btn btn-outline-secondary" type="button" onclick="changeCopies(-1)">
-                            <i class="fas fa-minus"></i>
+                            <x-icon name="minus" class="w-4 h-4" />
                         </button>
                         <input type="number" class="form-control text-center" id="copiesInput" value="1" min="1" max="10">
                         <button class="btn btn-outline-secondary" type="button" onclick="changeCopies(1)">
-                            <i class="fas fa-plus"></i>
+                            <x-icon name="plus" class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -346,7 +346,7 @@ function printWithSettings() {
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="printWithSettings()">
-                    <i class="fas fa-print me-2"></i> Print Now
+                    <x-icon name="print" class="w-4 h-4 me-2" /> Print Now
                 </button>
             </div>
         </div>

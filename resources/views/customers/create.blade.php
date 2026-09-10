@@ -10,7 +10,7 @@
             <p class="text-muted mb-0">{{ isset($customer) ? 'Perbarui data pelanggan' : 'Create a new customer record' }}</p>
         </div>
         <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i> Back
+            <x-icon name="arrow-left" class="w-4 h-4 me-2" /> Back
         </a>
     </div>
 
@@ -27,7 +27,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label class="form-label mb-0">Customer Code <span class="text-danger">*</span></label>
                             <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-normal text-xs px-2 py-0.5 rounded-pill">
-                                <i class="fas fa-magic me-1"></i>Otomatis
+                                <x-icon name="magic" class="w-4 h-4 me-1" />Otomatis
                             </span>
                         </div>
                         <input type="text" name="customer_code" class="form-control font-semibold text-primary @error('customer_code') is-invalid @enderror" 
@@ -123,7 +123,7 @@
                 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> {{ isset($customer) ? 'Update Customer' : 'Save Customer' }}
+                        <x-icon name="save" class="w-4 h-4 me-2" /> {{ isset($customer) ? 'Update Customer' : 'Save Customer' }}
                     </button>
                     <a href="{{ route('customers.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>

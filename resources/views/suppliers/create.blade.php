@@ -19,7 +19,7 @@
                     <div class="flex items-center justify-between mb-2">
                         <label class="block text-sm font-medium text-gray-700">Kode Supplier <span class="text-red-500">*</span></label>
                         <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
-                            <i class="fas fa-magic text-[9px]"></i> Otomatis
+                            <x-icon name="magic" class="w-4 h-4 text-[9px]" /> Otomatis
                         </span>
                     </div>
                     <input type="text" name="supplier_code" value="{{ old('supplier_code', $supplierCode ?? \App\Models\Supplier::generateCode()) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold text-blue-600" required placeholder="Contoh: SUP-2026-001">
@@ -123,7 +123,7 @@
                     Batal
                 </a>
                 <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition">
-                    <i class="fas fa-save mr-2"></i> Simpan Supplier
+                    <x-icon name="save" class="w-4 h-4 mr-2" /> Simpan Supplier
                 </button>
             </div>
         </form>

@@ -12,10 +12,10 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" onclick="exportCSV()">
-                <i class="fas fa-download me-2"></i> Export CSV
+                <x-icon name="download" class="w-4 h-4 me-2" /> Export CSV
             </button>
             <a href="{{ route('warehouse.incoming-goods') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i> Stock Levels
+                <x-icon name="plus" class="w-4 h-4 me-2" /> Stock Levels
             </a>
         </div>
     </div>
@@ -27,12 +27,12 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 p-3 bg-blue-50 rounded-lg me-3">
-                            <i class="fas fa-box text-primary fa-2x"></i>
+                            <x-icon name="box" class="text-primary w-8 h-8" />
                         </div>
                         <div>
                             <div class="text-muted small">Total SKUs</div>
                             <h3 class="mb-0">{{ number_format($stats['total_sku']) }}</h3>
-                            <small class="text-success"><i class="fas fa-arrow-up"></i> +98 this week</small>
+                            <small class="text-success"><x-icon name="arrow-up" class="w-4 h-4" /> +98 this week</small>
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 p-3 bg-success bg-opacity-10 rounded-lg me-3">
-                            <i class="fas fa-cubes text-success fa-2x"></i>
+                            <x-icon name="cubes" class="text-success w-8 h-8" />
                         </div>
                         <div>
                             <div class="text-muted small">Total Units</div>
@@ -61,7 +61,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 p-3 bg-warning bg-opacity-10 rounded-lg me-3">
-                            <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                            <x-icon name="exclamation-triangle" class="text-warning w-8 h-8" />
                         </div>
                         <div>
                             <div class="text-muted small">Dibawah 68% • <span class="text-warning">Waspada Sivaraga</span></div>
@@ -78,7 +78,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 p-3 bg-danger bg-opacity-10 rounded-lg me-3">
-                            <i class="fas fa-box-open text-danger fa-2x"></i>
+                            <x-icon name="box-open" class="text-danger w-8 h-8" />
                         </div>
                         <div>
                             <div class="text-muted small">Dibawah 20% • <span class="text-danger">Urgent</span></div>
@@ -124,7 +124,7 @@
                 <div class="col-md-3">
                     <label class="form-label small">&nbsp;</label>
                     <button class="btn btn-primary w-100">
-                        <i class="fas fa-filter me-2"></i> Apply Filters
+                        <x-icon name="filter" class="w-4 h-4 me-2" /> Apply Filters
                     </button>
                 </div>
             </div>
@@ -164,7 +164,7 @@
                             </td>
                             <td>
                                 <div class="small">
-                                    <i class="fas fa-warehouse text-primary me-1"></i>
+                                    <x-icon name="warehouse" class="w-4 h-4 text-primary me-1" />
                                     Central Hub
                                 </div>
                             </td>
@@ -228,7 +228,7 @@
                         @empty
                         <tr>
                             <td colspan="9" class="text-center py-5">
-                                <i class="fas fa-box-open fa-3x text-muted mb-3 d-block"></i>
+                                <x-icon name="box-open" class="w-12 h-12 text-muted mb-3 d-block" />
                                 <p class="text-muted">No stock data available</p>
                             </td>
                         </tr>
@@ -250,7 +250,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="p-3 bg-primary bg-opacity-10 rounded-lg me-3">
-                            <i class="fas fa-chart-bar text-primary fa-2x"></i>
+                            <x-icon name="chart-bar" class="text-primary w-8 h-8" />
                         </div>
                         <div>
                             <h5 class="mb-0">Restock Analysis</h5>
@@ -258,7 +258,7 @@
                         </div>
                     </div>
                     <div class="alert alert-info mb-0">
-                        <i class="fas fa-info-circle me-2"></i>
+                        <x-icon name="info-circle" class="w-4 h-4 me-2" />
                         23 items need reordering. View detailed analysis →
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="p-3 bg-warning bg-opacity-10 rounded-lg me-3">
-                            <i class="fas fa-map-marked-alt text-warning fa-2x"></i>
+                            <x-icon name="map-marked-alt" class="text-warning w-8 h-8" />
                         </div>
                         <div>
                             <h5 class="mb-0">Zone Optimization</h5>
@@ -278,7 +278,7 @@
                         </div>
                     </div>
                     <div class="alert alert-warning mb-0">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <x-icon name="exclamation-triangle" class="w-4 h-4 me-2" />
                         Zone B-6 is running at 93% capacity. Consider moving 5 low-turnover items
                     </div>
                 </div>

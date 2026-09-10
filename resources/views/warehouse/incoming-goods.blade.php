@@ -9,7 +9,7 @@
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
                 <span class="badge bg-primary-subtle text-primary fw-semibold px-2.5 py-1 rounded-pill small">
-                    <i class="fas fa-boxes-packing me-1"></i> Warehouse Inbound
+                    <x-icon name="boxes-packing" class="w-4 h-4 me-1" /> Warehouse Inbound
                 </span>
                 <span class="text-muted small">• LogiBook WMS</span>
             </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('warehouse.verifikasi.index') }}" class="btn btn-outline-secondary btn-sm rounded-3">
-                <i class="fas fa-list-check me-1.5"></i> Riwayat & Verifikasi
+                <x-icon name="list-check" class="w-4 h-4 me-1.5" /> Riwayat & Verifikasi
             </a>
         </div>
     </div>
@@ -27,7 +27,7 @@
     <div class="card border-0 shadow-sm mb-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-white rounded-squircle">
         <div class="card-body p-3.5 d-flex align-items-start gap-3">
             <div class="p-3 bg-primary text-white rounded-3 shadow-sm d-none d-sm-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                <i class="fas fa-truck-ramp-box fa-lg"></i>
+                <x-icon name="truck-ramp-box" class="w-4 h-4 fa-lg" />
             </div>
             <div class="flex-grow-1">
                 <h6 class="fw-bold text-gray-900 mb-1 d-flex align-items-center gap-2">
@@ -88,7 +88,7 @@
                         <div class="h3 font-bold text-gray-900 mb-0 mt-1" id="kpiItemTypes">1 Item</div>
                     </div>
                     <div class="p-3 bg-blue-50 text-blue-600 rounded-3">
-                        <i class="fas fa-boxes-stacked fa-xl"></i>
+                        <x-icon name="boxes-stacked" class="w-4 h-4 fa-xl" />
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                         <div class="h3 font-bold text-indigo-600 mb-0 mt-1" id="kpiTotalQty">1 Pcs</div>
                     </div>
                     <div class="p-3 bg-indigo-50 text-indigo-600 rounded-3">
-                        <i class="fas fa-layer-group fa-xl"></i>
+                        <x-icon name="layer-group" class="w-4 h-4 fa-xl" />
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                         <div class="h3 font-bold text-emerald-600 mb-0 mt-1" id="kpiGrandTotal">Rp 0</div>
                     </div>
                     <div class="p-3 bg-emerald-50 text-emerald-600 rounded-3">
-                        <i class="fas fa-wallet fa-xl"></i>
+                        <x-icon name="wallet" class="w-4 h-4 fa-xl" />
                     </div>
                 </div>
             </div>
@@ -125,10 +125,10 @@
     <div class="card border-0 shadow-sm rounded-squircle mb-4">
         <div class="card-header bg-white py-3.5 px-4 border-bottom d-flex align-items-center justify-content-between">
             <h5 class="fw-bold text-gray-900 mb-0 d-flex align-items-center gap-2">
-                <i class="fas fa-file-invoice-dollar text-primary"></i> Form Penerimaan Barang Fisik
+                <x-icon name="file-invoice-dollar" class="w-4 h-4 text-primary" /> Form Penerimaan Barang Fisik
             </h5>
             <span class="badge bg-light text-muted border px-2.5 py-1 rounded-pill text-xs">
-                Status Data: <strong class="text-warning"><i class="fas fa-clock me-1"></i>Draft Pending</strong>
+                Status Data: <strong class="text-warning"><x-icon name="clock" class="w-4 h-4 me-1" />Draft Pending</strong>
             </span>
         </div>
         <div class="card-body p-4">
@@ -141,27 +141,27 @@
                         <!-- PO Reference Search Combobox -->
                         <div class="col-md-4">
                             <label class="form-label font-bold text-xs text-uppercase text-gray-700">
-                                <i class="fas fa-file-contract text-primary me-1"></i> Referensi PO / Surat Jalan (Opsional)
+                                <x-icon name="file-contract" class="w-4 h-4 text-primary me-1" /> Referensi PO / Surat Jalan (Opsional)
                             </label>
                             <div class="position-relative" id="poComboboxWrapper">
                                 <div class="input-group input-group-sm shadow-xs">
-                                    <span class="input-group-text bg-white text-muted border-end-0"><i class="fas fa-search"></i></span>
+                                    <span class="input-group-text bg-white text-muted border-end-0"><x-icon name="search" class="w-4 h-4" /></span>
                                     <input type="text" class="form-control border-start-0 ps-0 text-xs font-semibold" id="poSearchInput" placeholder="Cari No. PO atau ketik Surat Jalan..." autocomplete="off" onfocus="renderPODropdown(this.value)" oninput="renderPODropdown(this.value)">
-                                    <button class="btn btn-outline-secondary border-start-0 d-none" type="button" id="btnClearPO" onclick="clearPOSelection()" title="Reset PO"><i class="fas fa-xmark"></i></button>
+                                    <button class="btn btn-outline-secondary border-start-0 d-none" type="button" id="btnClearPO" onclick="clearPOSelection()" title="Reset PO"><x-icon name="xmark" class="w-4 h-4" /></button>
                                 </div>
                                 <input type="hidden" id="poSelect" name="purchase_order_id" value="">
                                 <input type="hidden" id="manualReference" name="manual_reference" value="">
                                 <div id="poSearchResults" class="dropdown-menu shadow-lg w-100 p-1 mt-1 border-0 rounded-3 overflow-auto" style="max-height: 250px; display: none; position: absolute; z-index: 1050;"></div>
                             </div>
                             <div class="mt-1.5" id="poSelectedBadge">
-                                <span class="text-xs text-muted"><i class="fas fa-info-circle me-1"></i>Ketik untuk cari PO atau nomor Surat Jalan manual.</span>
+                                <span class="text-xs text-muted"><x-icon name="info-circle" class="w-4 h-4 me-1" />Ketik untuk cari PO atau nomor Surat Jalan manual.</span>
                             </div>
                         </div>
 
                         <!-- Goods Receipt Number -->
                         <div class="col-md-3">
                             <label class="form-label font-bold text-xs text-uppercase text-gray-700">
-                                <i class="fas fa-hashtag text-muted me-1"></i> Nomor Penerimaan (GR)
+                                <x-icon name="hashtag" class="w-4 h-4 text-muted me-1" /> Nomor Penerimaan (GR)
                             </label>
                             <input type="text" class="form-control bg-light font-mono" name="receipt_number" value="GR-{{ date('Ymd-His') }}" required readonly title="Nomor penerimaan di-generate otomatis oleh sistem">
                         </div>
@@ -169,7 +169,7 @@
                         <!-- Date -->
                         <div class="col-md-2">
                             <label class="form-label font-bold text-xs text-uppercase text-gray-700">
-                                <i class="fas fa-calendar-day text-muted me-1"></i> Tgl Penerimaan
+                                <x-icon name="calendar-day" class="w-4 h-4 text-muted me-1" /> Tgl Penerimaan
                             </label>
                             <input type="date" class="form-control" name="receive_date" value="{{ date('Y-m-d') }}" required>
                         </div>
@@ -178,24 +178,24 @@
                         <div class="col-md-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label font-bold text-xs text-uppercase text-gray-700 mb-0">
-                                    <i class="fas fa-building text-muted me-1"></i> Supplier <span class="text-danger">*</span>
+                                    <x-icon name="building" class="w-4 h-4 text-muted me-1" /> Supplier <span class="text-danger">*</span>
                                 </label>
                                 <button type="button" class="btn btn-link p-0 text-primary text-xs font-semibold text-decoration-none hover:underline" data-bs-toggle="modal" data-bs-target="#quickAddSupplierModal">
-                                    <i class="fas fa-plus-circle me-0.5"></i> + Detail Supplier
+                                    <x-icon name="plus-circle" class="w-4 h-4 me-0.5" /> + Detail Supplier
                                 </button>
                             </div>
                             <div class="position-relative" id="supplierComboboxWrapper">
                                 <div class="input-group input-group-sm shadow-xs">
-                                    <span class="input-group-text bg-white text-muted border-end-0"><i class="fas fa-search text-primary"></i></span>
+                                    <span class="input-group-text bg-white text-muted border-end-0"><x-icon name="search" class="w-4 h-4 text-primary" /></span>
                                     <input type="text" class="form-control border-start-0 ps-0 text-xs font-semibold" id="supplierSearchInput" placeholder="Cari / ketik nama supplier..." autocomplete="off" onfocus="renderSupplierDropdown(this.value)" oninput="renderSupplierDropdown(this.value)" onclick="renderSupplierDropdown(this.value)">
-                                    <button class="btn btn-outline-secondary border-start-0 d-none" type="button" id="btnClearSupplier" onclick="clearSupplierSelection()" title="Reset Supplier"><i class="fas fa-xmark"></i></button>
+                                    <button class="btn btn-outline-secondary border-start-0 d-none" type="button" id="btnClearSupplier" onclick="clearSupplierSelection()" title="Reset Supplier"><x-icon name="xmark" class="w-4 h-4" /></button>
                                 </div>
                                 <input type="hidden" name="supplier_id" id="supplierIdInput" value="">
                                 <input type="hidden" name="new_supplier_name" id="newSupplierNameInput" value="">
                                 <div id="supplierSearchResults" class="dropdown-menu shadow-lg w-100 p-1 mt-1 border-0 rounded-3 overflow-auto" style="max-height: 260px; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 99999 !important;"></div>
                             </div>
                             <div class="mt-1.5" id="supplierSelectedBadge">
-                                <span class="text-xs text-muted"><i class="fas fa-info-circle me-1"></i>Ketik nama supplier untuk mencari/membuat baru.</span>
+                                <span class="text-xs text-muted"><x-icon name="info-circle" class="w-4 h-4 me-1" />Ketik nama supplier untuk mencari/membuat baru.</span>
                             </div>
                         </div>
                     </div>
@@ -209,7 +209,7 @@
                             <p class="text-muted text-xs mb-0">Pastikan kuantitas fisik dan harga beli sudah sesuai dokumen pengiriman.</p>
                         </div>
                         <button type="button" class="btn btn-primary btn-sm px-3 rounded-3 shadow-sm hover:transform hover:-translate-y-0.5 transition-all" onclick="addItem()">
-                            <i class="fas fa-plus me-1.5"></i> Tambah Baris Barang
+                            <x-icon name="plus" class="w-4 h-4 me-1.5" /> Tambah Baris Barang
                         </button>
                     </div>
 
@@ -247,7 +247,7 @@
                                         <div class="d-flex flex-column gap-1">
                                             <input type="text" class="form-control form-control-sm code-input font-mono" placeholder="Kode Barang / SKU" oninput="findProductByCode(this)">
                                             <div class="d-flex align-items-center justify-content-between text-xs px-0.5">
-                                                <span class="text-muted text-xs stock-badge"><i class="fas fa-cubes text-info me-1"></i>Stok: 0</span>
+                                                <span class="text-muted text-xs stock-badge"><x-icon name="cubes" class="w-4 h-4 text-info me-1" />Stok: 0</span>
                                             </div>
                                         </div>
                                     </td>
@@ -265,7 +265,7 @@
                                     </td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="removeItem(this)" title="Hapus Baris">
-                                            <i class="fas fa-trash-can"></i>
+                                            <x-icon name="trash-can" class="w-4 h-4" />
                                         </button>
                                     </td>
                                 </tr>
@@ -282,7 +282,7 @@
 
                     <div class="d-flex align-items-center justify-content-between mt-3 text-muted text-xs">
                         <div class="d-flex align-items-center gap-1.5">
-                            <i class="fas fa-circle-info text-primary"></i>
+                            <x-icon name="circle-info" class="w-4 h-4 text-primary" />
                             <span>Anda dapat memilih produk dari dropdown atau mengetik/scan <strong>Kode Barang (SKU)</strong> secara langsung.</span>
                         </div>
                     </div>
@@ -291,10 +291,10 @@
                 <!-- Form Action Buttons -->
                 <div class="d-flex justify-content-end align-items-center gap-2 pt-3 border-top">
                     <button type="button" class="btn btn-light px-4 border" onclick="window.history.back()">
-                        <i class="fas fa-arrow-left me-1"></i> Batal
+                        <x-icon name="arrow-left" class="w-4 h-4 me-1" /> Batal
                     </button>
                     <button type="submit" class="btn btn-primary px-4 shadow-sm" id="btnSubmit">
-                        <i class="fas fa-floppy-disk me-1.5"></i> Simpan Penerimaan Barang
+                        <x-icon name="floppy-disk" class="w-4 h-4 me-1.5" /> Simpan Penerimaan Barang
                     </button>
                 </div>
             </form>
@@ -330,7 +330,7 @@ function addItem() {
             <div class="d-flex flex-column gap-1">
                 <input type="text" class="form-control form-control-sm code-input font-mono" placeholder="Kode Barang / SKU" oninput="findProductByCode(this)">
                 <div class="d-flex align-items-center justify-content-between text-xs px-0.5">
-                    <span class="text-muted text-xs stock-badge"><i class="fas fa-cubes text-info me-1"></i>Stok: 0</span>
+                    <span class="text-muted text-xs stock-badge"><x-icon name="cubes" class="w-4 h-4 text-info me-1" />Stok: 0</span>
                 </div>
             </div>
         </td>
@@ -348,7 +348,7 @@ function addItem() {
         </td>
         <td class="text-center">
             <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="removeItem(this)" title="Hapus Baris">
-                <i class="fas fa-trash-can"></i>
+                <x-icon name="trash-can" class="w-4 h-4" />
             </button>
         </td>
     `;
@@ -453,7 +453,7 @@ function updateProductInfo(elem, updateCodeInput = true) {
         const unit = option.dataset.unit || 'Pcs';
         const stock = option.dataset.stock || 0;
         
-        if (stockBadge) stockBadge.innerHTML = `<i class="fas fa-cubes text-info me-1"></i>Stok: ${stock}`;
+        if (stockBadge) stockBadge.innerHTML = `<x-icon name="cubes" class="w-4 h-4 text-info me-1" />Stok: ${stock}`;
         if (unitLabel) unitLabel.textContent = unit;
         if (codeInput && updateCodeInput) codeInput.value = code;
         if (priceInput && (parseFloat(priceInput.value) === 0 || !priceInput.dataset.manual)) {
@@ -461,7 +461,7 @@ function updateProductInfo(elem, updateCodeInput = true) {
         }
         calculateSubtotal(elem);
     } else {
-        if (stockBadge) stockBadge.innerHTML = `<i class="fas fa-cubes text-info me-1"></i>Stok: 0`;
+        if (stockBadge) stockBadge.innerHTML = `<x-icon name="cubes" class="w-4 h-4 text-info me-1" />Stok: 0`;
         if (unitLabel) unitLabel.textContent = 'Pcs';
         if (codeInput && updateCodeInput) codeInput.value = '';
         if (priceInput) priceInput.value = 0;
@@ -530,7 +530,7 @@ function loadPODataFromObj(po) {
                     <div class="d-flex flex-column gap-1">
                         <input type="text" class="form-control form-control-sm code-input font-mono" value="${itemCode}" placeholder="Kode Barang / SKU" oninput="findProductByCode(this)">
                         <div class="d-flex align-items-center justify-content-between text-xs px-0.5">
-                            <span class="text-muted text-xs stock-badge"><i class="fas fa-cubes text-info me-1"></i>Stok: ${itemStock}</span>
+                            <span class="text-muted text-xs stock-badge"><x-icon name="cubes" class="w-4 h-4 text-info me-1" />Stok: ${itemStock}</span>
                         </div>
                     </div>
                 </td>
@@ -548,7 +548,7 @@ function loadPODataFromObj(po) {
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="removeItem(this)" title="Hapus Baris">
-                        <i class="fas fa-trash-can"></i>
+                        <x-icon name="trash-can" class="w-4 h-4" />
                     </button>
                 </td>
             `;
@@ -639,7 +639,7 @@ function renderSupplierDropdown(query = '') {
         if (!exactMatch) {
             html += `
                 <div class="dropdown-item py-2 px-3 text-primary font-semibold border-bottom cursor-pointer rounded-2 bg-blue-50/80 mb-1" onclick="selectNewSupplierFromSearch('${escapeHtml(query)}')">
-                    <i class="fas fa-plus-circle me-1.5 text-primary"></i> + Buat Supplier Baru: <strong class="text-indigo-700">"${escapeHtml(query)}"</strong>
+                    <x-icon name="plus-circle" class="w-4 h-4 me-1.5 text-primary" /> + Buat Supplier Baru: <strong class="text-indigo-700">"${escapeHtml(query)}"</strong>
                 </div>
             `;
         }
@@ -654,7 +654,7 @@ function renderSupplierDropdown(query = '') {
                 <div class="dropdown-item py-2.5 px-3 cursor-pointer rounded-2 mb-0.5 d-flex justify-content-between align-items-center hover:bg-slate-100" onclick="selectExistingSupplier(${s.id}, '${escapeHtml(displayName)}')">
                     <div>
                         <div class="fw-semibold text-gray-900 text-xs d-flex align-items-center gap-1.5">
-                            <i class="fas fa-building text-primary small"></i>
+                            <x-icon name="building" class="w-4 h-4 text-primary small" />
                             <span>${escapeHtml(displayName)}</span>
                         </div>
                         <div class="text-muted text-xs ms-3.5" style="font-size: 11px;">${escapeHtml(companySub)} ${s.phone ? '• ' + escapeHtml(s.phone) : ''}</div>
@@ -664,7 +664,7 @@ function renderSupplierDropdown(query = '') {
             `;
         });
     } else if (q.length === 0) {
-        html += `<div class="px-3 py-2 text-muted text-xs"><i class="fas fa-search me-1"></i>Pilih supplier dari daftar atau ketik nama supplier baru...</div>`;
+        html += `<div class="px-3 py-2 text-muted text-xs"><x-icon name="search" class="w-4 h-4 me-1" />Pilih supplier dari daftar atau ketik nama supplier baru...</div>`;
     } else {
         html += `<div class="px-3 py-2 text-muted text-xs">Tidak ada supplier terdaftar dengan nama <strong>"${escapeHtml(query)}"</strong>. Klik opsi di atas untuk membuatnya sebagai supplier baru.</div>`;
     }
@@ -689,7 +689,7 @@ function selectExistingSupplier(id, name) {
     
     document.getElementById('supplierSelectedBadge').innerHTML = `
         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill text-xs">
-            <i class="fas fa-building me-1"></i> ${escapeHtml(name)} (Supplier Terdaftar)
+            <x-icon name="building" class="w-4 h-4 me-1" /> ${escapeHtml(name)} (Supplier Terdaftar)
         </span>
     `;
 }
@@ -708,7 +708,7 @@ function selectNewSupplierFromSearch(name) {
     
     document.getElementById('supplierSelectedBadge').innerHTML = `
         <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill text-xs">
-            <i class="fas fa-plus me-1"></i> Baru: ${escapeHtml(name)} (Didaftarkan saat simpan)
+            <x-icon name="plus" class="w-4 h-4 me-1" /> Baru: ${escapeHtml(name)} (Didaftarkan saat simpan)
         </span>
     `;
 }
@@ -724,7 +724,7 @@ function clearSupplierSelection() {
         dropdown.style.display = 'none';
     }
     document.getElementById('btnClearSupplier').classList.add('d-none');
-    document.getElementById('supplierSelectedBadge').innerHTML = '<span class="text-xs text-muted"><i class="fas fa-info-circle me-1"></i>Ketik nama supplier untuk mencari/membuat baru.</span>';
+    document.getElementById('supplierSelectedBadge').innerHTML = '<span class="text-xs text-muted"><x-icon name="info-circle" class="w-4 h-4 me-1" />Ketik nama supplier untuk mencari/membuat baru.</span>';
 }
 
 // PO Combobox Logic
@@ -745,13 +745,13 @@ function renderPODropdown(query = '') {
     if (q.length > 0) {
         html += `
             <div class="dropdown-item py-2 px-3 text-indigo-700 font-semibold border-bottom cursor-pointer rounded-2 bg-indigo-50/80 mb-1" onclick="selectManualPORef('${escapeHtml(query)}')">
-                <i class="fas fa-file-signature me-1.5 text-indigo"></i> Gunakan Ref/Surat Jalan Manual: <strong class="text-indigo-900">"${escapeHtml(query)}"</strong>
+                <x-icon name="file-signature" class="w-4 h-4 me-1.5 text-indigo" /> Gunakan Ref/Surat Jalan Manual: <strong class="text-indigo-900">"${escapeHtml(query)}"</strong>
             </div>
         `;
     } else {
         html += `
             <div class="dropdown-item py-2 px-3 text-muted font-normal border-bottom cursor-pointer rounded-2 mb-1" onclick="clearPOSelection()">
-                <i class="fas fa-minus-circle me-1.5"></i> -- Tanpa PO (Input Manual) --
+                <x-icon name="minus-circle" class="w-4 h-4 me-1.5" /> -- Tanpa PO (Input Manual) --
             </div>
         `;
     }
@@ -763,7 +763,7 @@ function renderPODropdown(query = '') {
                 <div class="dropdown-item py-2.5 px-3 cursor-pointer rounded-2 mb-0.5 d-flex justify-content-between align-items-center hover:bg-slate-100" onclick="selectPOItem(${po.id})">
                     <div>
                         <div class="fw-semibold text-gray-900 text-xs d-flex align-items-center gap-1.5">
-                            <i class="fas fa-file-contract text-primary small"></i>
+                            <x-icon name="file-contract" class="w-4 h-4 text-primary small" />
                             <span>${escapeHtml(po.po_number)}</span>
                         </div>
                         <div class="text-muted text-xs ms-3.5" style="font-size: 11px;">Supplier: ${escapeHtml(suppName)}</div>
@@ -800,7 +800,7 @@ function selectPOItem(poId) {
     const suppName = po.supplier ? (po.supplier.name || po.supplier.company_name) : 'Supplier';
     document.getElementById('poSelectedBadge').innerHTML = `
         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill text-xs">
-            <i class="fas fa-file-contract me-1"></i> ${escapeHtml(po.po_number)} (${escapeHtml(suppName)})
+            <x-icon name="file-contract" class="w-4 h-4 me-1" /> ${escapeHtml(po.po_number)} (${escapeHtml(suppName)})
         </span>
     `;
 
@@ -827,7 +827,7 @@ function selectManualPORef(refText) {
 
     document.getElementById('poSelectedBadge').innerHTML = `
         <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-pill text-xs">
-            <i class="fas fa-file-invoice me-1"></i> Ref Manual: ${escapeHtml(refText)}
+            <x-icon name="file-invoice" class="w-4 h-4 me-1" /> Ref Manual: ${escapeHtml(refText)}
         </span>
     `;
 }
@@ -937,7 +937,7 @@ document.getElementById('incomingGoodsForm').addEventListener('submit', function
     const submitBtn = document.getElementById('btnSubmit');
     const origHtml = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1.5"></i> Menyimpan...';
+    submitBtn.innerHTML = '<x-icon name="spinner" class="w-4 h-4 animate-spin me-1.5" /> Menyimpan...';
     
     fetch('{{ route("warehouse.incoming-goods.store") }}', {
         method: 'POST',
@@ -1000,7 +1000,7 @@ document.getElementById('quickSupplierForm')?.addEventListener('submit', functio
     const btn = document.getElementById('btnSaveQuickSupplier');
     const origHtml = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...';
+    btn.innerHTML = '<x-icon name="spinner" class="w-4 h-4 animate-spin me-1" /> Menyimpan...';
 
     const countryCode = document.getElementById('quickSupplierCountryCode')?.value || '+62';
     const dialDigits = countryCode.replace(/\D/g, '');
@@ -1083,7 +1083,7 @@ document.getElementById('quickSupplierForm')?.addEventListener('submit', functio
         <div class="modal-content border-0 shadow-lg rounded-squircle overflow-hidden">
             <div class="modal-header bg-primary text-white py-3 px-4">
                 <h6 class="modal-title font-bold d-flex align-items-center gap-2" id="quickAddSupplierModalLabel">
-                    <i class="fas fa-truck-field"></i> Tambah Detail Supplier Baru
+                    <x-icon name="truck-field" class="w-4 h-4" /> Tambah Detail Supplier Baru
                 </h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -1143,7 +1143,7 @@ document.getElementById('quickSupplierForm')?.addEventListener('submit', functio
                 <div class="modal-footer bg-slate-50 py-2.5 px-4 border-top">
                     <button type="button" class="btn btn-light btn-sm px-3 border" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary btn-sm px-4" id="btnSaveQuickSupplier">
-                        <i class="fas fa-check me-1"></i> Simpan Supplier
+                        <x-icon name="check" class="w-4 h-4 me-1" /> Simpan Supplier
                     </button>
                 </div>
             </form>

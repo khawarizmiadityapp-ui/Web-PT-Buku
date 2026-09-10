@@ -13,40 +13,40 @@
         <a href="{{ route('warehouse.incoming-goods') }}" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 flex items-center justify-between transition shadow-lg">
             <div class="flex items-center space-x-3">
                 <div class="bg-white bg-opacity-20 p-2 rounded-lg">
-                    <i class="fas fa-plus text-xl"></i>
+                    <x-icon name="plus" class="w-6 h-6" />
                 </div>
                 <div>
                     <div class="text-sm font-medium">Barang</div>
                     <div class="text-lg font-bold">Masuk</div>
                 </div>
             </div>
-            <i class="fas fa-arrow-right text-xl"></i>
+            <x-icon name="arrow-right" class="w-6 h-6" />
         </a>
 
         <a href="{{ route('warehouse.picking') }}" class="bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl p-4 flex items-center justify-between transition">
             <div class="flex items-center space-x-3">
                 <div class="bg-purple-500 bg-opacity-20 p-2 rounded-lg">
-                    <i class="fas fa-hand-paper text-xl"></i>
+                    <x-icon name="hand-paper" class="w-6 h-6" />
                 </div>
                 <div>
                     <div class="text-sm font-medium">Picking</div>
                     <div class="text-lg font-bold">Baru</div>
                 </div>
             </div>
-            <i class="fas fa-arrow-right text-xl"></i>
+            <x-icon name="arrow-right" class="w-6 h-6" />
         </a>
 
         <a href="{{ route('warehouse.packing') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl p-4 flex items-center justify-between transition">
             <div class="flex items-center space-x-3">
                 <div class="bg-gray-500 bg-opacity-20 p-2 rounded-lg">
-                    <i class="fas fa-box text-xl"></i>
+                    <x-icon name="box" class="w-6 h-6" />
                 </div>
                 <div>
                     <div class="text-sm font-medium">Packing</div>
                     <div class="text-lg font-bold">Baru</div>
                 </div>
             </div>
-            <i class="fas fa-arrow-right text-xl"></i>
+            <x-icon name="arrow-right" class="w-6 h-6" />
         </a>
     </div>
 
@@ -57,13 +57,13 @@
             <div class="flex items-center justify-between mb-4">
                 <div class="text-gray-500 text-sm font-medium">BARANG MASUK<br>HARI INI</div>
                 <div class="bg-green-50 p-2 rounded-lg">
-                    <i class="fas fa-inbox text-green-600 text-xl"></i>
+                    <x-icon name="inbox" class="text-green-600 w-6 h-6" />
                 </div>
             </div>
             <div class="flex items-end justify-between">
                 <div class="text-4xl font-bold text-gray-800">{{ $stats['barang_masuk']['value'] }}</div>
                 <div class="text-sm font-semibold text-green-600 flex items-center">
-                    <i class="fas fa-arrow-up mr-1"></i>{{ $stats['barang_masuk']['trend'] }}
+                    <x-icon name="arrow-up" class="w-4 h-4 mr-1" />{{ $stats['barang_masuk']['trend'] }}
                 </div>
             </div>
             <div class="mt-3 bg-green-100 h-1.5 rounded-full overflow-hidden">
@@ -76,13 +76,13 @@
             <div class="flex items-center justify-between mb-4">
                 <div class="text-gray-500 text-sm font-medium">BARANG KELUAR<br>HARI INI</div>
                 <div class="bg-blue-50 p-2 rounded-lg">
-                    <i class="fas fa-sign-out-alt text-blue-600 text-xl"></i>
+                    <x-icon name="sign-out-alt" class="text-blue-600 w-6 h-6" />
                 </div>
             </div>
             <div class="flex items-end justify-between">
                 <div class="text-4xl font-bold text-gray-800">{{ $stats['barang_keluar']['value'] }}</div>
                 <div class="text-sm font-semibold text-blue-600 flex items-center">
-                    <i class="fas fa-arrow-up mr-1"></i>{{ $stats['barang_keluar']['trend'] }}
+                    <x-icon name="arrow-up" class="w-4 h-4 mr-1" />{{ $stats['barang_keluar']['trend'] }}
                 </div>
             </div>
             <div class="mt-3 bg-blue-100 h-1.5 rounded-full overflow-hidden">
@@ -95,7 +95,7 @@
             <div class="flex items-center justify-between mb-4">
                 <div class="text-gray-500 text-sm font-medium">PICKING HARI INI</div>
                 <div class="bg-orange-50 p-2 rounded-lg">
-                    <i class="fas fa-hand-paper text-orange-600 text-xl"></i>
+                    <x-icon name="hand-paper" class="text-orange-600 w-6 h-6" />
                 </div>
             </div>
             <div class="flex items-end justify-between">
@@ -114,7 +114,7 @@
             <div class="flex items-center justify-between mb-4">
                 <div class="text-gray-500 text-sm font-medium">PACKING HARI INI</div>
                 <div class="bg-purple-50 p-2 rounded-lg">
-                    <i class="fas fa-box-open text-purple-600 text-xl"></i>
+                    <x-icon name="box-open" class="text-purple-600 w-6 h-6" />
                 </div>
             </div>
             <div class="flex items-end justify-between">

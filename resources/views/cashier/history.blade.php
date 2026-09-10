@@ -12,10 +12,10 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" onclick="exportCSV()">
-                <i class="fas fa-download me-2"></i> Export CSV
+                <x-icon name="download" class="w-4 h-4 me-2" /> Export CSV
             </button>
             <a href="{{ route('cashier.transaction.enhanced') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i> New Sale
+                <x-icon name="plus" class="w-4 h-4 me-2" /> New Sale
             </a>
         </div>
     </div>
@@ -29,7 +29,7 @@
                     <div class="col-md-3">
                         <label class="form-label small text-muted">DATE RANGE</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
+                            <span class="input-group-text bg-white"><x-icon name="calendar" class="w-4 h-4" /></span>
                             <input type="date" name="start_date" class="form-control" 
                                    value="{{ request('start_date', now()->subDays(7)->format('Y-m-d')) }}" 
                                    placeholder="Start Date">
@@ -38,7 +38,7 @@
                                    value="{{ request('end_date', now()->format('Y-m-d')) }}" 
                                    placeholder="End Date">
                             <button type="button" class="btn btn-outline-secondary" onclick="clearDateRange()">
-                                <i class="fas fa-sliders-h"></i>
+                                <x-icon name="sliders-h" class="w-4 h-4" />
                             </button>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                     <!-- Filter Button -->
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search me-1"></i> Apply Filter
+                            <x-icon name="search" class="w-4 h-4 me-1" /> Apply Filter
                         </button>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                         @empty
                         <tr>
                             <td colspan="7" class="text-center py-5">
-                                <i class="fas fa-receipt fa-3x text-muted mb-3 d-block"></i>
+                                <x-icon name="receipt" class="w-12 h-12 text-muted mb-3 d-block" />
                                 <p class="text-muted mb-0">No transactions found</p>
                                 <small class="text-muted">Try adjusting your filters</small>
                             </td>
@@ -193,7 +193,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="stat-icon bg-primary bg-opacity-10 text-primary me-3">
-                            <i class="fas fa-dollar-sign"></i>
+                            <x-icon name="dollar-sign" class="w-4 h-4" />
                         </div>
                         <div class="flex-grow-1">
                             <div class="text-muted small mb-1">DAILY REVENUE</div>
@@ -209,7 +209,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="stat-icon bg-success bg-opacity-10 text-success me-3">
-                            <i class="fas fa-check-circle"></i>
+                            <x-icon name="check-circle" class="w-4 h-4" />
                         </div>
                         <div class="flex-grow-1">
                             <div class="text-muted small mb-1">SUCCESSFUL SALES</div>
@@ -225,7 +225,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="stat-icon bg-warning bg-opacity-10 text-warning me-3">
-                            <i class="fas fa-undo"></i>
+                            <x-icon name="undo" class="w-4 h-4" />
                         </div>
                         <div class="flex-grow-1">
                             <div class="text-muted small mb-1">PENDING RETURNS</div>

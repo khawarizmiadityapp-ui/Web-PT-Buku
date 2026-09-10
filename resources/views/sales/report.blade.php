@@ -13,40 +13,40 @@
             <!-- Preset Dropdown -->
             <div class="relative inline-block text-left" id="presetDropdownContainer">
                 <button type="button" id="presetDropdownBtn" onclick="togglePresetDropdown(event)" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 flex items-center gap-2 shadow-sm transition">
-                    <i class="far fa-calendar text-gray-400"></i>
+                    <x-icon name="calendar" class="w-4 h-4 text-gray-400" />
                     <span>{{ $currentPeriodLabel ?? 'Last 30 Days' }}</span>
-                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                    <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400" />
                 </button>
                 <div id="presetDropdownMenu" class="hidden absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2">
                     <div class="px-3 py-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Pilih Rentang Cepat</div>
                     <a href="{{ route('sales.report', ['period' => 'last_30_days']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'last_30_days' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>30 Hari Terakhir</span>
-                        @if($period === 'last_30_days') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'last_30_days') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                     <a href="{{ route('sales.report', ['period' => 'last_7_days']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'last_7_days' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>7 Hari Terakhir</span>
-                        @if($period === 'last_7_days') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'last_7_days') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                     <a href="{{ route('sales.report', ['period' => 'today']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'today' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>Hari Ini</span>
-                        @if($period === 'today') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'today') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                     <a href="{{ route('sales.report', ['period' => 'this_month']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'this_month' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>Bulan Ini</span>
-                        @if($period === 'this_month') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'this_month') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                     <a href="{{ route('sales.report', ['period' => 'last_month']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'last_month' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>Bulan Lalu</span>
-                        @if($period === 'last_month') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'last_month') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                     <a href="{{ route('sales.report', ['period' => 'this_year']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'this_year' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>Tahun Ini ({{ now()->year }})</span>
-                        @if($period === 'this_year') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'this_year') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                     <div class="border-t border-gray-100 my-1"></div>
                     <a href="{{ route('sales.report', ['period' => 'all']) }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition {{ $period === 'all' ? 'font-bold text-blue-600 bg-blue-50/60' : '' }}">
                         <span>Semua Waktu (All Time)</span>
-                        @if($period === 'all') <i class="fas fa-check text-xs text-blue-600"></i> @endif
+                        @if($period === 'all') <x-icon name="check" class="w-3.5 h-3.5 text-blue-600" /> @endif
                     </a>
                 </div>
             </div>
@@ -54,9 +54,9 @@
             <!-- Custom Range Button & Popover -->
             <div class="relative inline-block text-left" id="customRangeContainer">
                 <button type="button" id="customRangeBtn" onclick="toggleCustomRangePopover(event)" class="px-4 py-2 {{ $period === 'custom' ? 'bg-blue-50 border-blue-500 text-blue-700 font-semibold ring-2 ring-blue-500/20 shadow-sm' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400' }} border rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition duration-150">
-                    <i class="fas fa-sliders-h {{ $period === 'custom' ? 'text-blue-600' : 'text-gray-400' }}"></i>
+                    <x-icon name="sliders-h" class="w-4 h-4 {{ $period === 'custom' ? 'text-blue-600' : 'text-gray-400' }}" />
                     <span>{{ $period === 'custom' ? 'Custom: ' . \Carbon\Carbon::parse($startDate)->format('d M') . ' - ' . \Carbon\Carbon::parse($endDate)->format('d M') : 'Custom Range' }}</span>
-                    <i class="fas fa-chevron-down text-xs {{ $period === 'custom' ? 'text-blue-500' : 'text-gray-400' }}"></i>
+                    <x-icon name="chevron-down" class="w-3.5 h-3.5 {{ $period === 'custom' ? 'text-blue-500' : 'text-gray-400' }}" />
                 </button>
 
                 <!-- Custom Range Popover Card -->
@@ -65,7 +65,7 @@
                     <div class="flex items-center justify-between pb-3.5 border-b border-gray-100">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 text-sm">
-                                <i class="fas fa-calendar-alt"></i>
+                                <x-icon name="calendar-alt" class="w-4 h-4" />
                             </div>
                             <div>
                                 <h4 class="text-sm font-bold text-gray-900 tracking-tight">Rentang Tanggal Khusus</h4>
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <button type="button" onclick="closeCustomRangePopover()" class="w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 flex items-center justify-center transition" title="Tutup">
-                            <i class="fas fa-times text-xs"></i>
+                            <x-icon name="times" class="w-3.5 h-3.5" />
                         </button>
                     </div>
 
@@ -100,7 +100,7 @@
                         <!-- Live Duration Summary Banner -->
                         <div class="flex items-center justify-between px-3.5 py-2.5 bg-gradient-to-r from-blue-50/90 to-indigo-50/70 border border-blue-100/90 rounded-xl">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-clock-rotate-left text-blue-600 text-xs"></i>
+                                <x-icon name="clock-rotate-left" class="text-blue-600 w-3.5 h-3.5" />
                                 <span class="text-xs font-medium text-gray-600">Durasi Periode:</span>
                             </div>
                             <span id="rangeDaysCount" class="text-xs font-bold px-2.5 py-0.5 bg-blue-600 text-white rounded-full shadow-sm">30 Hari</span>
@@ -114,19 +114,19 @@
                             </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setQuickRange('this_month')" class="px-3 py-2 text-xs font-semibold rounded-xl border border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 text-gray-700 transition duration-150 flex items-center gap-2 shadow-sm">
-                                    <i class="far fa-calendar text-blue-500 text-xs"></i>
+                                    <x-icon name="calendar" class="text-blue-500 w-3.5 h-3.5" />
                                     <span>Bulan Ini</span>
                                 </button>
                                 <button type="button" onclick="setQuickRange('last_30')" class="px-3 py-2 text-xs font-semibold rounded-xl border border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 text-gray-700 transition duration-150 flex items-center gap-2 shadow-sm">
-                                    <i class="fas fa-history text-indigo-500 text-xs"></i>
+                                    <x-icon name="history" class="text-indigo-500 w-3.5 h-3.5" />
                                     <span>30 Hari Terakhir</span>
                                 </button>
                                 <button type="button" onclick="setQuickRange('oct_2026')" class="px-3 py-2 text-xs font-semibold rounded-xl border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-100 hover:border-indigo-300 text-indigo-700 transition duration-150 flex items-center gap-2 shadow-sm">
-                                    <i class="fas fa-database text-indigo-600 text-xs"></i>
+                                    <x-icon name="database" class="text-indigo-600 w-3.5 h-3.5" />
                                     <span>Oktober 2026</span>
                                 </button>
                                 <button type="button" onclick="setQuickRange('this_year')" class="px-3 py-2 text-xs font-semibold rounded-xl border border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 text-gray-700 transition duration-150 flex items-center gap-2 shadow-sm">
-                                    <i class="fas fa-calendar-check text-emerald-500 text-xs"></i>
+                                    <x-icon name="calendar-check" class="text-emerald-500 w-3.5 h-3.5" />
                                     <span>Tahun {{ now()->year }}</span>
                                 </button>
                             </div>
@@ -138,7 +138,7 @@
                                 Batal
                             </button>
                             <button type="submit" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 transition duration-150 flex items-center justify-center gap-2">
-                                <i class="fas fa-check"></i>
+                                <x-icon name="check" class="w-4 h-4" />
                                 <span>Terapkan Filter</span>
                             </button>
                         </div>
@@ -148,7 +148,7 @@
 
             <!-- Export Report Link -->
             <a href="{{ route('sales.report', array_merge(request()->query(), ['export' => 'csv'])) }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium inline-flex items-center shadow-sm transition">
-                <i class="fas fa-download mr-2"></i>Export Report
+                <x-icon name="download" class="w-4 h-4 mr-2" />Export Report
             </a>
         </div>
     </div>
@@ -159,15 +159,15 @@
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <div class="flex items-start justify-between mb-4">
                 <div class="bg-blue-50 p-3 rounded-lg">
-                    <i class="fas fa-chart-line text-blue-600 text-2xl"></i>
+                    <x-icon name="chart-line" class="text-blue-600 w-8 h-8" />
                 </div>
                 @if($growthPercentage > 0)
                     <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-up text-[10px]"></i> +{{ number_format($growthPercentage, 1) }}%
+                        <x-icon name="arrow-trend-up" class="w-3.5 h-3.5" /> +{{ number_format($growthPercentage, 1) }}%
                     </span>
                 @elseif($growthPercentage < 0)
                     <span class="text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <i class="fas fa-arrow-trend-down text-[10px]"></i> {{ number_format($growthPercentage, 1) }}%
+                        <x-icon name="arrow-trend-down" class="w-3.5 h-3.5" /> {{ number_format($growthPercentage, 1) }}%
                     </span>
                 @else
                     <span class="text-xs font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">
@@ -184,7 +184,7 @@
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <div class="flex items-start justify-between mb-4">
                 <div class="bg-indigo-50 p-3 rounded-lg">
-                    <i class="fas fa-book text-indigo-600 text-2xl"></i>
+                    <x-icon name="book" class="text-indigo-600 w-8 h-8" />
                 </div>
                 <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">Category Lead</span>
             </div>
@@ -197,7 +197,7 @@
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <div class="flex items-start justify-between mb-4">
                 <div class="bg-green-50 p-3 rounded-lg">
-                    <i class="fas fa-receipt text-green-600 text-2xl"></i>
+                    <x-icon name="receipt" class="text-green-600 w-8 h-8" />
                 </div>
                 <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
                     Avg Order
@@ -231,7 +231,7 @@
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h3 class="text-lg font-bold text-gray-900">DAILY SALES LOG</h3>
             <button class="text-gray-400 hover:text-gray-600">
-                <i class="fas fa-ellipsis-h"></i>
+                <x-icon name="ellipsis-h" class="w-4 h-4" />
             </button>
         </div>
         <table class="w-full">
@@ -292,7 +292,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-                            <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                            <x-icon name="inbox" class="w-4 h-4 text-4xl mb-3 text-gray-300" />
                             <p>No sales data available</p>
                         </td>
                     </tr>

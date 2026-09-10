@@ -6,7 +6,7 @@
     <div class="mb-6">
         <div class="flex items-center text-sm text-gray-500 mb-2">
             <a href="{{ route('warehouse.index') }}" class="hover:text-blue-600">Picking</a>
-            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <x-icon name="chevron-right" class="mx-2 w-3.5 h-3.5" />
             <span class="text-gray-700">Active Task</span>
         </div>
         
@@ -27,11 +27,11 @@
             
             <div class="flex items-center space-x-3">
                 <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-2">
-                    <i class="fas fa-print"></i>
+                    <x-icon name="print" class="w-4 h-4" />
                     <span>Print Label</span>
                 </button>
                 <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2">
-                    <i class="fas fa-check-circle"></i>
+                    <x-icon name="check-circle" class="w-4 h-4" />
                     <span>Konfirmasi Picking</span>
                 </button>
             </div>
@@ -58,7 +58,7 @@
                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
                                placeholder="Enter SKU manually...">
                         <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-arrow-right"></i>
+                            <x-icon name="arrow-right" class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
                 <!-- Warning Banner -->
                 <div class="p-4 bg-red-50 border-t border-red-100">
                     <div class="flex items-center text-sm text-red-700">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <x-icon name="exclamation-triangle" class="w-4 h-4 mr-2" />
                         <span class="font-medium">Flag Discrepancy:</span>
                         <span class="ml-2">1 item needs attention</span>
                     </div>
@@ -172,14 +172,14 @@
     <!-- Next Item Notification -->
     <div class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-lg shadow-lg p-4 flex items-center space-x-3 max-w-md">
         <div class="bg-blue-500 p-2 rounded-lg">
-            <i class="fas fa-info-circle text-xl"></i>
+            <x-icon name="info-circle" class="w-6 h-6" />
         </div>
         <div class="flex-1">
             <div class="font-semibold">Next Item is in Row C</div>
             <div class="text-sm text-blue-100">Distance: 45 meters from current station.</div>
         </div>
         <button class="hover:bg-blue-700 p-2 rounded">
-            <i class="fas fa-times"></i>
+            <x-icon name="times" class="w-4 h-4" />
         </button>
     </div>
 </div>

@@ -10,7 +10,7 @@
             <p class="text-sm text-gray-500">Buat tagihan/faktur penjualan baru untuk pelanggan</p>
         </div>
         <a href="{{ route('sales.invoices.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium">
-            <i class="fas fa-arrow-left mr-2"></i>Kembali
+            <x-icon name="arrow-left" class="w-4 h-4 mr-2" />Kembali
         </a>
     </div>
 
@@ -23,7 +23,7 @@
                 <div class="flex items-center justify-between mb-2">
                     <label class="block text-sm font-medium text-gray-700">No. Invoice <span class="text-red-500">*</span></label>
                     <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
-                        <i class="fas fa-magic text-[9px]"></i> Otomatis
+                        <x-icon name="magic" class="w-4 h-4 text-[9px]" /> Otomatis
                     </span>
                 </div>
                 <input type="text" name="invoice_number" value="{{ old('invoice_number', $invoiceNumber ?? \App\Models\SalesInvoice::generateInvoiceNumber()) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-blue-600" required>
@@ -104,21 +104,21 @@
                                 <input type="number" readonly class="w-full p-2 bg-gray-50 border border-gray-200 rounded item-subtotal font-semibold" value="0">
                             </td>
                             <td class="p-2 text-center">
-                                <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash"></i></button>
+                                <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 p-2"><x-icon name="trash" class="w-4 h-4" /></button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <button type="button" onclick="addRow()" class="mt-3 text-xs font-semibold text-blue-600 hover:text-blue-800 inline-flex items-center">
-                <i class="fas fa-plus mr-1"></i> Tambah Item Baris
+                <x-icon name="plus" class="w-4 h-4 mr-1" /> Tambah Item Baris
             </button>
         </div>
 
         <div class="flex justify-end gap-3 border-t border-gray-100 pt-6">
             <a href="{{ route('sales.invoices.index') }}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm">Batal</a>
             <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm">
-                <i class="fas fa-save mr-2"></i> Simpan Invoice
+                <x-icon name="save" class="w-4 h-4 mr-2" /> Simpan Invoice
             </button>
         </div>
     </form>
@@ -174,7 +174,7 @@ function addRow() {
             <input type="number" readonly class="w-full p-2 bg-gray-50 border border-gray-200 rounded item-subtotal font-semibold" value="0">
         </td>
         <td class="p-2 text-center">
-            <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash"></i></button>
+            <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 p-2"><x-icon name="trash" class="w-4 h-4" /></button>
         </td>
     `;
     tbody.appendChild(tr);

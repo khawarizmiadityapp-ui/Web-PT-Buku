@@ -12,15 +12,15 @@
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('sales.invoices.index', array_merge(request()->query(), ['export' => 'csv'])) }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium">
-                <i class="fas fa-download text-gray-600"></i>
+                <x-icon name="download" class="w-4 h-4 text-gray-600" />
                 <span class="text-gray-700">Export CSV</span>
             </a>
             <a href="{{ route('sales.report') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium">
-                <i class="fas fa-print text-gray-600"></i>
+                <x-icon name="print" class="w-4 h-4 text-gray-600" />
                 <span class="text-gray-700">Print Report</span>
             </a>
             <a href="{{ route('sales.invoices.create') }}" class="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium shadow-sm">
-                <i class="fas fa-plus"></i>
+                <x-icon name="plus" class="w-4 h-4" />
                 <span>Create Invoice</span>
             </a>
         </div>
@@ -32,7 +32,7 @@
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200 shadow-sm">
             <div class="flex items-start justify-between mb-3">
                 <div class="bg-blue-500 p-3 rounded-lg">
-                    <i class="fas fa-receipt text-white text-xl"></i>
+                    <x-icon name="receipt" class="text-white w-6 h-6" />
                 </div>
             </div>
             <p class="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Total Revenue Month</p>
@@ -44,7 +44,7 @@
         <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 border border-red-200 shadow-sm">
             <div class="flex items-start justify-between mb-3">
                 <div class="bg-red-500 p-3 rounded-lg">
-                    <i class="fas fa-exclamation-triangle text-white text-xl"></i>
+                    <x-icon name="exclamation-triangle" class="text-white w-6 h-6" />
                 </div>
             </div>
             <p class="text-xs font-semibold text-red-600 uppercase tracking-wide mb-1">Total Unpaid</p>
@@ -56,7 +56,7 @@
         <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 border border-indigo-200 shadow-sm">
             <div class="flex items-start justify-between mb-3">
                 <div class="bg-indigo-500 p-3 rounded-lg">
-                    <i class="fas fa-file-invoice text-white text-xl"></i>
+                    <x-icon name="file-invoice" class="text-white w-6 h-6" />
                 </div>
             </div>
             <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-1">Invoices Issued</p>
@@ -96,7 +96,7 @@
                 <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto flex-1">
                     <!-- Search -->
                     <div class="relative flex-1 min-w-[200px] max-w-xs">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <x-icon name="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input 
                             type="text" 
                             name="search" 
@@ -136,7 +136,7 @@
 
                     @if(request()->hasAny(['search', 'date_from', 'date_to', 'status']))
                         <a href="{{ route('sales.invoices.index', array_filter(['tab' => request('tab')])) }}" class="px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 transition flex items-center gap-1">
-                            <i class="fas fa-times-circle"></i> Reset Filter
+                            <x-icon name="times-circle" class="w-4 h-4" /> Reset Filter
                         </a>
                     @endif
                 </div>
@@ -210,7 +210,7 @@
                 @empty
                     <tr>
                         <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                            <i class="fas fa-file-invoice text-4xl text-gray-300 mb-3"></i>
+                            <x-icon name="file-invoice" class="w-4 h-4 text-4xl text-gray-300 mb-3" />
                             <p class="text-sm font-medium">Tidak ada data invoice</p>
                         </td>
                     </tr>

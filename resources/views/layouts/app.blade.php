@@ -12,9 +12,6 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -449,7 +446,7 @@
                 @if(session('success'))
                     <div class="mb-5 bg-emerald-50 border border-emerald-200/80 text-emerald-800 px-5 py-3.5 rounded-xl shadow-sm flex items-center justify-between">
                         <div class="flex items-center">
-                            <i class="fas fa-check-circle text-emerald-500 mr-3 text-lg"></i>
+                            <x-icon name="check-circle" class="w-5 h-5 text-emerald-500 mr-3" />
                             <span class="font-medium text-sm">{{ session('success') }}</span>
                         </div>
                     </div>
@@ -458,7 +455,7 @@
                 @if(session('error'))
                     <div class="mb-5 bg-rose-50 border border-rose-200/80 text-rose-800 px-5 py-3.5 rounded-xl shadow-sm flex items-center justify-between">
                         <div class="flex items-center">
-                            <i class="fas fa-exclamation-circle text-rose-500 mr-3 text-lg"></i>
+                            <x-icon name="exclamation-circle" class="w-5 h-5 text-rose-500 mr-3" />
                             <span class="font-medium text-sm">{{ session('error') }}</span>
                         </div>
                     </div>
@@ -560,7 +557,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#EF4444',
                 cancelButtonColor: '#6B7280',
-                confirmButtonText: '<i class="fas fa-sign-out-alt mr-1.5"></i> Ya, Logout',
+                confirmButtonText: '<svg class="w-4 h-4 inline-block mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg> Ya, Logout',
                 cancelButtonText: 'Batal',
                 reverseButtons: true,
                 focusCancel: true,
@@ -771,7 +768,7 @@
                     const searchBox = document.createElement('div');
                     searchBox.className = 'country-search-box';
                     searchBox.innerHTML = `
-                        <i class="fas fa-search search-icon"></i>
+                        <svg class="search-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         <input type="text" placeholder="Cari negara atau kode (+60, MY)..." class="country-search-input" autocomplete="off">
                     `;
                     customDropdown.appendChild(searchBox);

@@ -12,15 +12,15 @@
         </div>
         <div class="flex items-center space-x-3">
             <a href="{{ route('products.create') }}" class="flex items-center space-x-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition shadow-sm font-medium text-sm text-slate-700">
-                <i class="fas fa-plus text-slate-500"></i>
+                <x-icon name="plus" class="w-4 h-4 text-slate-500" />
                 <span>Tambah Barang</span>
             </a>
             <a href="{{ route('sales.invoices.index') }}" class="flex items-center space-x-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition shadow-sm font-medium text-sm text-slate-700">
-                <i class="fas fa-file-invoice text-slate-500"></i>
+                <x-icon name="file-invoice" class="w-4 h-4 text-slate-500" />
                 <span>Buat Invoice</span>
             </a>
             <a href="{{ route('warehouse.stock-audit.start') }}" class="flex items-center space-x-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-200 font-medium text-sm">
-                <i class="fas fa-box"></i>
+                <x-icon name="box" class="w-4 h-4" />
                 <span>Stock Opname</span>
             </a>
         </div>
@@ -36,11 +36,11 @@
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">TOTAL BARANG</p>
                 <h3 class="text-3xl font-bold text-gray-900 mb-1" id="totalBarang">{{ number_format($totalBarang) }}</h3>
                 <p class="text-xs text-green-600 font-medium">
-                    <i class="fas fa-arrow-up"></i> +2.4% vs last month
+                    <x-icon name="arrow-up" class="w-4 h-4" /> +2.4% vs last month
                 </p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg">
-                <i class="fas fa-boxes text-blue-600 text-xl"></i>
+                <x-icon name="boxes" class="text-blue-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -52,11 +52,11 @@
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">TOTAL SUPPLIER</p>
                 <h3 class="text-3xl font-bold text-gray-900 mb-1" id="totalSupplier">{{ number_format($totalSupplier) }}</h3>
                 <p class="text-xs text-gray-500 font-medium">
-                    <i class="fas fa-minus"></i> No change
+                    <x-icon name="minus" class="w-4 h-4" /> No change
                 </p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg">
-                <i class="fas fa-truck text-blue-600 text-xl"></i>
+                <x-icon name="truck" class="text-blue-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -68,11 +68,11 @@
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">TOTAL CUSTOMER</p>
                 <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($totalCustomer) }}</h3>
                 <p class="text-xs text-green-600 font-medium">
-                    <i class="fas fa-arrow-up"></i> +12 this week
+                    <x-icon name="arrow-up" class="w-4 h-4" /> +12 this week
                 </p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg">
-                <i class="fas fa-users text-blue-600 text-xl"></i>
+                <x-icon name="users" class="text-blue-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -86,11 +86,11 @@
                     Rp {{ number_format($totalPenjualan, 0, ',', '.') }}
                 </h3>
                 <p class="text-xs text-green-600 font-medium">
-                    <i class="fas fa-arrow-up"></i> +16.3% MTD
+                    <x-icon name="arrow-up" class="w-4 h-4" /> +16.3% MTD
                 </p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg">
-                <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                <x-icon name="chart-line" class="text-blue-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -107,7 +107,7 @@
                 <p class="text-xs text-gray-600">Units this month</p>
             </div>
             <div class="bg-green-50 p-3 rounded-lg">
-                <i class="fas fa-arrow-down text-green-600 text-xl"></i>
+                <x-icon name="arrow-down" class="text-green-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -119,11 +119,11 @@
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">BARANG KELUAR</p>
                 <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($barangKeluar) }}</h3>
                 <p class="text-xs text-red-600 font-medium">
-                    <i class="fas fa-arrow-down"></i> Stock reducing
+                    <x-icon name="arrow-down" class="w-4 h-4" /> Stock reducing
                 </p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg">
-                <i class="fas fa-arrow-up text-blue-600 text-xl"></i>
+                <x-icon name="arrow-up" class="text-blue-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -135,11 +135,11 @@
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">TOTAL RETUR</p>
                 <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ number_format($totalRetur) }}</h3>
                 <p class="text-xs text-red-600 font-medium">
-                    <i class="fas fa-arrow-up"></i> +2 from last week
+                    <x-icon name="arrow-up" class="w-4 h-4" /> +2 from last week
                 </p>
             </div>
             <div class="bg-red-50 p-3 rounded-lg">
-                <i class="fas fa-undo text-red-600 text-xl"></i>
+                <x-icon name="undo" class="text-red-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -153,7 +153,7 @@
                 <p class="text-xs text-gray-600">{{ number_format($pendingPOCount) }} pending approval</p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg">
-                <i class="fas fa-file-invoice text-blue-600 text-xl"></i>
+                <x-icon name="file-invoice" class="text-blue-600 w-6 h-6" />
             </div>
         </div>
     </div>
@@ -185,7 +185,7 @@
                 <p class="text-xs text-gray-500 mt-0.5">Proporsi stok fisik per kategori barang</p>
             </div>
             <a href="{{ route('products.index') }}" title="Kelola Master Produk" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition inline-block">
-                <i class="fas fa-layer-group text-sm"></i>
+                <x-icon name="layer-group" class="w-4 h-4" />
             </a>
         </div>
         
@@ -225,7 +225,7 @@
                 <p class="text-xs text-gray-500 mt-1">5 Barang dengan volume penjualan tertinggi di database</p>
             </div>
             <span class="px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full border border-emerald-200">
-                <i class="fas fa-fire me-1"></i>Top Selling
+                <x-icon name="fire" class="w-4 h-4 me-1" />Top Selling
             </span>
         </div>
         <canvas id="topSoldChart" height="140"></canvas>
@@ -242,7 +242,7 @@
                 <p class="text-xs text-gray-500 mt-1">5 Barang dengan penjualan terendah / lambat bergerak</p>
             </div>
             <span class="px-2.5 py-1 text-xs font-semibold text-amber-700 bg-amber-50 rounded-full border border-amber-200">
-                <i class="fas fa-exclamation-triangle me-1"></i>Slow Moving
+                <x-icon name="exclamation-triangle" class="w-4 h-4 me-1" />Slow Moving
             </span>
         </div>
         <canvas id="leastSoldChart" height="140"></canvas>

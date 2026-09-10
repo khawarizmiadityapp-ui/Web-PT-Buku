@@ -17,13 +17,13 @@
             <div class="lg:w-56 flex-shrink-0">
                 <nav class="space-y-1">
                     <button onclick="showSystemTab('company')" id="sys-btn-company" class="sys-tab-btn w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium bg-blue-50 text-blue-700">
-                        <i class="fas fa-building mr-2"></i>Company Profile
+                        <x-icon name="building" class="w-4 h-4 mr-2" />Company Profile
                     </button>
                     <button onclick="showSystemTab('general')" id="sys-btn-general" class="sys-tab-btn w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-sliders-h mr-2"></i>General Preferences
+                        <x-icon name="sliders-h" class="w-4 h-4 mr-2" />General Preferences
                     </button>
                     <button onclick="showSystemTab('notifications')" id="sys-btn-notifications" class="sys-tab-btn w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-bell mr-2"></i>Module Settings
+                        <x-icon name="bell" class="w-4 h-4 mr-2" />Module Settings
                     </button>
                 </nav>
             </div>
@@ -70,12 +70,12 @@
                                 @if($company->logo_path)
                                     <img src="{{ Storage::url($company->logo_path) }}" alt="Logo" class="mx-auto h-16 mb-4 object-contain">
                                 @else
-                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 mb-4"></i>
+                                    <x-icon name="cloud-upload-alt" class="w-4 h-4 text-4xl text-gray-300 mb-4" />
                                 @endif
                                 <p class="text-sm font-medium text-gray-700 mb-1">Brand Logo</p>
                                 <p class="text-xs text-gray-500 mb-4">Rekomendasi: 200x60px, PNG, JPG, atau WEBP (Maks 2MB)</p>
                                 <label class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer">
-                                    <i class="fas fa-upload mr-2"></i> Upload Logo
+                                    <x-icon name="upload" class="w-4 h-4 mr-2" /> Upload Logo
                                     <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden">
                                 </label>
                                 @error('logo')<p class="mt-2 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror

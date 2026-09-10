@@ -11,11 +11,11 @@
     </div>
     <div class="flex items-center gap-3">
         <a href="{{ route('stock-outs.export', request()->query()) }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium">
-            <i class="fas fa-download text-gray-600"></i>
+            <x-icon name="download" class="w-4 h-4 text-gray-600" />
             <span class="text-gray-700">Export CSV</span>
         </a>
         <a href="{{ route('stock-outs.create') }}" class="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium shadow-sm">
-            <i class="fas fa-plus"></i>
+            <x-icon name="plus" class="w-4 h-4" />
             <span>Input Barang Keluar</span>
         </a>
     </div>
@@ -26,7 +26,7 @@
     <form method="GET" action="{{ route('stock-outs.index') }}" class="flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex-1 flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div class="relative flex-1 min-w-[200px] max-w-xs">
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <x-icon name="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input 
                     type="text" 
                     name="search" 
@@ -66,7 +66,7 @@
 
             @if(request()->hasAny(['search', 'date_from', 'date_to', 'status']))
                 <a href="{{ route('stock-outs.index') }}" class="px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 transition flex items-center gap-1">
-                    <i class="fas fa-times-circle"></i> Reset Filter
+                    <x-icon name="times-circle" class="w-4 h-4" /> Reset Filter
                 </a>
             @endif
         </div>
@@ -149,7 +149,7 @@
             @empty
                 <tr>
                     <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                        <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                        <x-icon name="inbox" class="w-4 h-4 text-4xl mb-3 text-gray-300" />
                         <p class="text-sm font-medium">Tidak ada data barang keluar</p>
                     </td>
                 </tr>

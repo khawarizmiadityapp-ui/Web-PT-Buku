@@ -10,13 +10,13 @@
                     </div>
                     <div class="flex gap-3">
                         <a href="{{ route('products.export', request()->query()) }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 flex items-center">
-                            <i class="fas fa-file-excel text-emerald-600 mr-2"></i>Export CSV/Excel
+                            <x-icon name="file-excel" class="w-4 h-4 text-emerald-600 mr-2" />Export CSV/Excel
                         </a>
                         <button onclick="window.print()" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 flex items-center">
-                            <i class="fas fa-print text-gray-600 mr-2"></i>Print
+                            <x-icon name="print" class="w-4 h-4 text-gray-600 mr-2" />Print
                         </button>
                         <a href="{{ route('products.create') }}" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium inline-flex items-center">
-                            <i class="fas fa-plus mr-2"></i>Tambah Barang
+                            <x-icon name="plus" class="w-4 h-4 mr-2" />Tambah Barang
                         </a>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                     <form method="GET" class="flex items-center gap-4">
                         <div class="relative flex-1 max-w-md">
-                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <x-icon name="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kode atau nama barang..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
                         </div>
                         <select name="category" class="px-4 py-2.5 border border-gray-300 rounded-lg text-sm">
@@ -40,7 +40,7 @@
                             <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                         <button type="submit" class="px-6 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 text-sm font-medium">
-                            <i class="fas fa-filter mr-2"></i>Filter
+                            <x-icon name="filter" class="w-4 h-4 mr-2" />Filter
                         </button>
                     </form>
                 </div>
@@ -50,7 +50,7 @@
                     <table class="w-full">
                         <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase"><i class="fas fa-barcode mr-1.5 text-blue-600"></i>Barcode / Kode</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase"><x-icon name="barcode" class="w-4 h-4 mr-1.5 text-blue-600" />Barcode / Kode</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Nama Barang</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Kategori</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Satuan</th>
@@ -71,7 +71,7 @@
                                                 </span>
                                                 <button type="button" onclick="printSingleBarcode('{{ $product->product_code }}', '{{ addslashes($product->product_name) }}', '{{ $product->price }}')" 
                                                         class="text-gray-400 hover:text-blue-600 text-xs p-1" title="Cetak Barcode">
-                                                    <i class="fas fa-print"></i>
+                                                    <x-icon name="print" class="w-4 h-4" />
                                                 </button>
                                             </div>
                                         </div>
@@ -79,7 +79,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
-                                                <i class="fas fa-box text-gray-400"></i>
+                                                <x-icon name="box" class="w-4 h-4 text-gray-400" />
                                             </div>
                                             <span class="text-sm font-medium text-gray-900">{{ $product->product_name }}</span>
                                         </div>
@@ -111,7 +111,7 @@
                                                  </a>
                                                  <button type="button" onclick="printSingleBarcode('{{ $product->product_code }}', '{{ addslashes($product->product_name) }}', '{{ $product->price }}')" 
                                                          title="Cetak Barcode Label" class="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition">
-                                                     <i class="fas fa-barcode"></i>
+                                                     <x-icon name="barcode" class="w-4 h-4" />
                                                  </button>
                                                  <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                                                      @csrf
@@ -129,7 +129,7 @@
                             @empty
                                 <tr>
                                     <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                        <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                                        <x-icon name="inbox" class="w-4 h-4 text-4xl mb-3 text-gray-300" />
                                         <p>Tidak ada data barang</p>
                                     </td>
                                 </tr>
@@ -147,7 +147,7 @@
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl m-4">
         <div class="flex items-center justify-between border-b pb-3 mb-4">
             <h5 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-barcode text-blue-600"></i>
+                <x-icon name="barcode" class="w-4 h-4 text-blue-600" />
                 <span id="barcodeModalTitle">Cetak Label Barcode</span>
             </h5>
             <button type="button" onclick="closeBarcodeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
@@ -163,11 +163,11 @@
         </div>
 
         <div class="flex items-center justify-between gap-3">
-            <span class="text-xs text-gray-500"><i class="fas fa-info-circle me-1"></i>Siap dicetak pada kertas stiker</span>
+            <span class="text-xs text-gray-500"><x-icon name="info-circle" class="w-4 h-4 me-1" />Siap dicetak pada kertas stiker</span>
             <div class="flex gap-2">
                 <button type="button" onclick="closeBarcodeModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">Tutup</button>
                 <button type="button" onclick="executePrintBarcode()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 flex items-center gap-2">
-                    <i class="fas fa-print"></i> Cetak Label
+                    <x-icon name="print" class="w-4 h-4" /> Cetak Label
                 </button>
             </div>
         </div>

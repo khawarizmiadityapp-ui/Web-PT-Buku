@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Verifikasi Keamanan Ganda (2FA / MFA) - ERP PT Buku & ATK Nusantara</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
         
@@ -96,7 +95,7 @@
             <!-- Main Content Info -->
             <div class="relative z-10 space-y-6 max-w-md">
                 <div class="inline-flex items-center space-x-2 bg-blue-500/30 border border-blue-300/30 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-blue-100">
-                    <i class="fas fa-shield-alt text-blue-300"></i>
+                    <x-icon name="shield-alt" class="w-4 h-4 text-blue-300" />
                     <span>Verifikasi Berlapis (2 Pilihan)</span>
                 </div>
                 <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">
@@ -109,7 +108,7 @@
                 <div class="space-y-3 pt-2">
                     <div class="flex items-center space-x-3 bg-white/10 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-xs">
                         <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-base flex-shrink-0">
-                            <i class="fas fa-mobile-alt"></i>
+                            <x-icon name="mobile-alt" class="w-4 h-4" />
                         </div>
                         <div>
                             <strong class="text-white block text-sm">Opsi 1: Google Authenticator</strong>
@@ -118,7 +117,7 @@
                     </div>
                     <div class="flex items-center space-x-3 bg-white/10 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-xs">
                         <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-base flex-shrink-0">
-                            <i class="fas fa-envelope-open-text"></i>
+                            <x-icon name="envelope-open-text" class="w-4 h-4" />
                         </div>
                         <div>
                             <strong class="text-white block text-sm">Opsi 2: Kode OTP Email</strong>
@@ -162,7 +161,7 @@
                     <!-- Flash Alerts -->
                     @if(session('success'))
                         <div class="mb-5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl flex items-center text-xs sm:text-sm">
-                            <i class="fas fa-check-circle mr-2.5 text-emerald-500 text-base flex-shrink-0"></i>
+                            <x-icon name="check-circle" class="w-4 h-4 mr-2.5 text-emerald-500 text-base flex-shrink-0" />
                             <div>{{ session('success') }}</div>
                         </div>
                     @endif
@@ -170,7 +169,7 @@
                     @if(session('warning'))
                         <div class="mb-5 bg-amber-50 border border-amber-200 text-amber-900 px-4 py-3 rounded-xl text-xs sm:text-sm">
                             <div class="flex items-start">
-                                <i class="fas fa-exclamation-triangle mr-2.5 mt-0.5 text-amber-600 text-base flex-shrink-0"></i>
+                                <x-icon name="exclamation-triangle" class="w-4 h-4 mr-2.5 mt-0.5 text-amber-600 text-base flex-shrink-0" />
                                 <div class="flex-1">
                                     <div class="font-bold text-amber-800">Perhatian Pengiriman Email</div>
                                     <p class="text-amber-700 text-xs mt-0.5">{{ session('warning') }}</p>
@@ -182,7 +181,7 @@
                     @if($errors->any())
                         <div class="mb-5 bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs sm:text-sm">
                             <div class="flex items-start">
-                                <i class="fas fa-exclamation-circle mr-2.5 mt-0.5 text-rose-500 text-base flex-shrink-0"></i>
+                                <x-icon name="exclamation-circle" class="w-4 h-4 mr-2.5 mt-0.5 text-rose-500 text-base flex-shrink-0" />
                                 <div class="flex-1 font-medium">
                                     @foreach($errors->all() as $error)
                                         <p>{{ $error }}</p>
@@ -205,7 +204,7 @@
                                 id="btnTabAuth"
                                 class="tab-btn {{ ($activeTab ?? 'authenticator') === 'authenticator' ? 'active' : 'text-slate-600 hover:text-slate-900' }} py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 border border-transparent"
                             >
-                                <i class="fas fa-mobile-alt text-sm text-blue-600"></i>
+                                <x-icon name="mobile-alt" class="w-4 h-4 text-blue-600" />
                                 <span>1. Authenticator (QR)</span>
                             </button>
 
@@ -216,7 +215,7 @@
                                 id="btnTabEmail"
                                 class="tab-btn {{ ($activeTab ?? 'authenticator') === 'email' ? 'active' : 'text-slate-600 hover:text-slate-900' }} py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 border border-transparent"
                             >
-                                <i class="fas fa-envelope text-sm text-emerald-600"></i>
+                                <x-icon name="envelope" class="w-4 h-4 text-emerald-600" />
                                 <span>2. Kode Email OTP</span>
                             </button>
                         </div>
@@ -236,7 +235,7 @@
                                         >
                                     </div>
                                     <span class="text-[11px] text-slate-500 mt-1.5 font-medium flex items-center gap-1">
-                                        <i class="fas fa-camera text-blue-500"></i> Scan dari HP Anda
+                                        <x-icon name="camera" class="w-4 h-4 text-blue-500" /> Scan dari HP Anda
                                     </span>
                                 </div>
 
@@ -273,7 +272,7 @@
                         <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/70 space-y-4">
                             <div class="flex items-start space-x-3">
                                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 text-lg">
-                                    <i class="fas fa-paper-plane"></i>
+                                    <x-icon name="paper-plane" class="w-4 h-4" />
                                 </div>
                                 <div class="flex-1">
                                     <div class="text-xs text-slate-500 font-medium">Kirim kode verifikasi ke alamat email:</div>
@@ -290,7 +289,7 @@
                                     type="submit" 
                                     class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-2 transition-colors"
                                 >
-                                    <i class="fas fa-envelope-open-text"></i>
+                                    <x-icon name="envelope-open-text" class="w-4 h-4" />
                                     <span>Kirim Kode OTP ke Email Saya</span>
                                 </button>
                             </form>
@@ -330,7 +329,7 @@
                         <!-- Timer countdown -->
                         <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
                             <div class="flex items-center space-x-1.5 text-slate-600 font-medium">
-                                <i class="far fa-clock text-blue-600"></i>
+                                <x-icon name="clock" class="w-4 h-4 text-blue-600" />
                                 <span>Batas Sesi:</span>
                                 <span id="countdownTimer" class="font-bold font-mono text-blue-700">01:00</span>
                             </div>
@@ -343,7 +342,7 @@
                             id="submitBtn"
                             class="btn-primary w-full py-3.5 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 text-sm"
                         >
-                            <i class="fas fa-shield-check"></i>
+                            <x-icon name="shield-check" class="w-4 h-4" />
                             <span>Verifikasi & Masuk Dashboard</span>
                         </button>
                     </form>
@@ -353,7 +352,7 @@
                         <form action="{{ route('login.mfa.resend') }}" method="POST" onsubmit="return confirm('Buat QR Code Authenticator baru? Anda perlu scan ulang di HP.')">
                             @csrf
                             <button type="submit" class="font-semibold text-slate-500 hover:text-blue-700 hover:underline flex items-center space-x-1">
-                                <i class="fas fa-sync-alt text-xs"></i>
+                                <x-icon name="sync-alt" class="w-3.5 h-3.5" />
                                 <span>Reset QR Authenticator</span>
                             </button>
                         </form>
@@ -361,7 +360,7 @@
                         <form action="{{ route('login.mfa.cancel') }}" method="POST">
                             @csrf
                             <button type="submit" class="text-slate-500 hover:text-slate-800 hover:underline flex items-center space-x-1">
-                                <i class="fas fa-arrow-left text-xs"></i>
+                                <x-icon name="arrow-left" class="w-3.5 h-3.5" />
                                 <span>Batal & Login Ulang</span>
                             </button>
                         </form>

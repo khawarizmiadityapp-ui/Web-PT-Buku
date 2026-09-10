@@ -17,13 +17,13 @@
             <div class="lg:w-56 flex-shrink-0">
                 <nav class="space-y-1">
                     <button onclick="showProfileTab('personal')" id="sub-btn-personal" class="sub-tab-btn w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium bg-blue-50 text-blue-700">
-                        <i class="fas fa-id-card mr-2"></i>Personal Info
+                        <x-icon name="id-card" class="w-4 h-4 mr-2" />Personal Info
                     </button>
                     <button onclick="showProfileTab('security')" id="sub-btn-security" class="sub-tab-btn w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-shield-alt mr-2"></i>Account Security
+                        <x-icon name="shield-alt" class="w-4 h-4 mr-2" />Account Security
                     </button>
                     <button onclick="showProfileTab('notifications')" id="sub-btn-notifications" class="sub-tab-btn w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-bell mr-2"></i>Notifications
+                        <x-icon name="bell" class="w-4 h-4 mr-2" />Notifications
                     </button>
                 </nav>
 
@@ -60,7 +60,7 @@
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=4F46E5&color=fff&size=80" alt="Avatar" class="w-20 h-20 rounded-full border-2 border-gray-200">
                                 @endif
                                 <label for="avatar" class="absolute bottom-0 right-0 bg-blue-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-blue-700">
-                                    <i class="fas fa-camera text-xs"></i>
+                                    <x-icon name="camera" class="w-3.5 h-3.5" />
                                     <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden">
                                 </label>
                             </div>
@@ -190,7 +190,7 @@
                                 </div>
                             </div>
                             <p class="text-xs text-gray-500">
-                                <i class="fas fa-info-circle text-blue-500 mr-1"></i>Kombinasi minimal 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol.
+                                <x-icon name="info-circle" class="w-4 h-4 text-blue-500 mr-1" />Kombinasi minimal 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol.
                             </p>
                         </div>
 
@@ -199,7 +199,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2.5">
                                     <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-xs">
-                                        <i class="fas fa-shield-alt"></i>
+                                        <x-icon name="shield-alt" class="w-4 h-4" />
                                     </div>
                                     <div>
                                         <h4 class="text-sm font-bold text-gray-900">2. Verifikasi Keamanan 2FA (Wajib)</h4>
@@ -226,7 +226,7 @@
                                             required
                                         >
                                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-500">
-                                            <i class="fas fa-key text-xs"></i>
+                                            <x-icon name="key" class="w-3.5 h-3.5" />
                                         </div>
                                     </div>
 
@@ -236,7 +236,7 @@
                                         class="px-4 py-2.5 bg-white hover:bg-slate-50 border border-blue-300 text-blue-700 text-xs font-semibold rounded-xl shadow-xs flex items-center justify-center space-x-1.5 transition-colors whitespace-nowrap"
                                         title="Kirim kode verifikasi ke email"
                                     >
-                                        <i class="fas fa-paper-plane text-blue-600"></i>
+                                        <x-icon name="paper-plane" class="w-4 h-4 text-blue-600" />
                                         <span>Kirim OTP ke Email</span>
                                     </button>
                                 </div>
@@ -251,7 +251,7 @@
 
                         <div class="flex items-center justify-end pt-2">
                             <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-md transition flex items-center space-x-2 text-sm">
-                                <i class="fas fa-save"></i>
+                                <x-icon name="save" class="w-4 h-4" />
                                 <span>Verifikasi & Perbarui Password</span>
                             </button>
                         </div>
@@ -262,7 +262,7 @@
                         <div class="flex items-start justify-between">
                             <div class="flex items-start space-x-3">
                                 <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0">
-                                    <i class="fas fa-qrcode"></i>
+                                    <x-icon name="qrcode" class="w-4 h-4" />
                                 </div>
                                 <div>
                                     <div class="flex items-center space-x-2">
@@ -281,7 +281,7 @@
                                 onclick="document.getElementById('qrCodeDrawer').classList.toggle('hidden')" 
                                 class="px-3.5 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-100 transition shadow-xs whitespace-nowrap"
                             >
-                                <i class="fas fa-eye mr-1 text-gray-500"></i>Lihat QR Code
+                                <x-icon name="eye" class="w-4 h-4 mr-1 text-gray-500" />Lihat QR Code
                             </button>
                         </div>
 
@@ -315,7 +315,7 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                                 <div class="flex items-start space-x-3">
-                                    <div class="bg-blue-50 p-2 rounded-lg"><i class="fas fa-envelope text-blue-600"></i></div>
+                                    <div class="bg-blue-50 p-2 rounded-lg"><x-icon name="envelope" class="w-4 h-4 text-blue-600" /></div>
                                     <div>
                                         <h4 class="font-medium text-gray-900">Email Notifications</h4>
                                         <p class="text-sm text-gray-500">Receive important notifications via email</p>
@@ -329,7 +329,7 @@
                             </div>
                             <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                                 <div class="flex items-start space-x-3">
-                                    <div class="bg-yellow-50 p-2 rounded-lg"><i class="fas fa-boxes text-yellow-600"></i></div>
+                                    <div class="bg-yellow-50 p-2 rounded-lg"><x-icon name="boxes" class="w-4 h-4 text-yellow-600" /></div>
                                     <div>
                                         <h4 class="font-medium text-gray-900">Low Stock Alerts</h4>
                                         <p class="text-sm text-gray-500">Get notified when stock is running low</p>
@@ -343,7 +343,7 @@
                             </div>
                             <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                                 <div class="flex items-start space-x-3">
-                                    <div class="bg-green-50 p-2 rounded-lg"><i class="fas fa-chart-line text-green-600"></i></div>
+                                    <div class="bg-green-50 p-2 rounded-lg"><x-icon name="chart-line" class="w-4 h-4 text-green-600" /></div>
                                     <div>
                                         <h4 class="font-medium text-gray-900">Sales Reports</h4>
                                         <p class="text-sm text-gray-500">Receive weekly sales performance reports</p>

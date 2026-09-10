@@ -12,10 +12,10 @@
         </div>
         <div>
             <a href="{{ route('cashier.history', ['export' => 'csv']) }}" class="btn btn-outline-secondary me-2">
-                <i class="fas fa-download me-1"></i> Download Report
+                <x-icon name="download" class="w-4 h-4 me-1" /> Download Report
             </a>
             <a href="{{ route('cashier.transaction') }}" class="btn btn-primary">
-                <i class="fas fa-cart-plus me-1"></i> Penjualan Baru
+                <x-icon name="cart-plus" class="w-4 h-4 me-1" /> Penjualan Baru
             </a>
         </div>
     </div>
@@ -28,12 +28,12 @@
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
                             <div class="text-muted small mb-1">
-                                <i class="fas fa-money-bill-wave text-primary me-1"></i>
+                                <x-icon name="money-bill-wave" class="w-4 h-4 text-primary me-1" />
                                 Total Penjualan Hari Ini
                             </div>
                             <h3 class="mb-0">Rp {{ number_format($stats['today_revenue'], 0, ',', '.') }}</h3>
                             <small class="text-success">
-                                <i class="fas fa-arrow-up"></i> +12%
+                                <x-icon name="arrow-up" class="w-4 h-4" /> +12%
                             </small>
                         </div>
                     </div>
@@ -47,12 +47,12 @@
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
                             <div class="text-muted small mb-1">
-                                <i class="fas fa-receipt text-info me-1"></i>
+                                <x-icon name="receipt" class="w-4 h-4 text-info me-1" />
                                 Jumlah Transaksi
                             </div>
                             <h3 class="mb-0">{{ $stats['today_transactions'] }}</h3>
                             <small class="text-success">
-                                <i class="fas fa-arrow-up"></i> +5.2%
+                                <x-icon name="arrow-up" class="w-4 h-4" /> +5.2%
                             </small>
                         </div>
                     </div>
@@ -66,12 +66,12 @@
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
                             <div class="text-muted small mb-1">
-                                <i class="fas fa-wallet text-success me-1"></i>
+                                <x-icon name="wallet" class="w-4 h-4 text-success me-1" />
                                 Pendapatan Bersih
                             </div>
                             <h3 class="mb-0">Rp {{ number_format($stats['today_income'], 0, ',', '.') }}</h3>
                             <small class="text-danger">
-                                <i class="fas fa-arrow-down"></i> -2.4%
+                                <x-icon name="arrow-down" class="w-4 h-4" /> -2.4%
                             </small>
                         </div>
                     </div>
@@ -85,12 +85,12 @@
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
                             <div class="text-muted small mb-1">
-                                <i class="fas fa-box text-warning me-1"></i>
+                                <x-icon name="box" class="w-4 h-4 text-warning me-1" />
                                 Produk Terjual
                             </div>
                             <h3 class="mb-0">{{ $stats['products_sold'] }}</h3>
                             <small class="text-success">
-                                <i class="fas fa-arrow-up"></i> +18%
+                                <x-icon name="arrow-up" class="w-4 h-4" /> +18%
                             </small>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                                 @empty
                                 <tr>
                                     <td colspan="6" class="text-center py-4 text-muted">
-                                        <i class="fas fa-inbox fa-3x mb-2"></i>
+                                        <x-icon name="inbox" class="w-12 h-12 mb-2" />
                                         <p>No transactions yet today</p>
                                     </td>
                                 </tr>

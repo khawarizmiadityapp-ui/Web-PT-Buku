@@ -14,15 +14,15 @@
     <div class="bg-white rounded-t-xl border border-gray-200 border-b-0">
         <nav class="flex space-x-8 px-6" aria-label="Tabs">
             <button onclick="showTab('profile')" id="tab-btn-profile" class="tab-btn py-4 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm flex items-center space-x-2">
-                <i class="fas fa-user"></i>
+                <x-icon name="user" class="w-4 h-4" />
                 <span>Profil</span>
             </button>
             <button onclick="showTab('password')" id="tab-btn-password" class="tab-btn py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm flex items-center space-x-2">
-                <i class="fas fa-lock"></i>
+                <x-icon name="lock" class="w-4 h-4" />
                 <span>Password</span>
             </button>
             <button onclick="showTab('notifications')" id="tab-btn-notifications" class="tab-btn py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm flex items-center space-x-2">
-                <i class="fas fa-bell"></i>
+                <x-icon name="bell" class="w-4 h-4" />
                 <span>Notifikasi</span>
             </button>
         </nav>
@@ -116,7 +116,7 @@
 
                     <div class="flex items-center justify-end pt-6 mt-6 border-t border-gray-200">
                         <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
-                            <i class="fas fa-save mr-2"></i>Simpan Perubahan
+                            <x-icon name="save" class="w-4 h-4 mr-2" />Simpan Perubahan
                         </button>
                     </div>
                 </form>
@@ -161,7 +161,7 @@
 
                     <div class="flex items-center justify-end pt-6 mt-6 border-t border-gray-200">
                         <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
-                            <i class="fas fa-key mr-2"></i>Ubah Password
+                            <x-icon name="key" class="w-4 h-4 mr-2" />Ubah Password
                         </button>
                     </div>
                 </form>
@@ -182,7 +182,7 @@
                         <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                             <div class="flex items-start space-x-3">
                                 <div class="bg-blue-50 p-2 rounded-lg">
-                                    <i class="fas fa-envelope text-blue-600"></i>
+                                    <x-icon name="envelope" class="w-4 h-4 text-blue-600" />
                                 </div>
                                 <div>
                                     <h4 class="font-medium text-gray-900">Email Notifikasi</h4>
@@ -199,7 +199,7 @@
                         <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                             <div class="flex items-start space-x-3">
                                 <div class="bg-yellow-50 p-2 rounded-lg">
-                                    <i class="fas fa-boxes text-yellow-600"></i>
+                                    <x-icon name="boxes" class="w-4 h-4 text-yellow-600" />
                                 </div>
                                 <div>
                                     <h4 class="font-medium text-gray-900">Alert Stok Rendah</h4>
@@ -216,7 +216,7 @@
                         <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                             <div class="flex items-start space-x-3">
                                 <div class="bg-green-50 p-2 rounded-lg">
-                                    <i class="fas fa-chart-line text-green-600"></i>
+                                    <x-icon name="chart-line" class="w-4 h-4 text-green-600" />
                                 </div>
                                 <div>
                                     <h4 class="font-medium text-gray-900">Laporan Penjualan</h4>
@@ -232,7 +232,7 @@
 
                     <div class="flex items-center justify-end pt-6 mt-6 border-t border-gray-200">
                         <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
-                            <i class="fas fa-save mr-2"></i>Simpan Pengaturan
+                            <x-icon name="save" class="w-4 h-4 mr-2" />Simpan Pengaturan
                         </button>
                     </div>
                 </form>

@@ -9,7 +9,7 @@
         <div>
             <div class="flex items-center gap-2 mb-1.5">
                 <span class="bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full text-xs inline-flex items-center gap-1.5 border border-indigo-100">
-                    <i class="fas fa-clipboard-check text-indigo-500"></i> Inbound Quality Check
+                    <x-icon name="clipboard-check" class="w-4 h-4 text-indigo-500" /> Inbound Quality Check
                 </span>
                 <span class="text-slate-300">•</span>
                 <span class="text-slate-500 text-xs font-medium">LogiBook WMS</span>
@@ -19,7 +19,7 @@
         </div>
         <div>
             <a href="{{ route('warehouse.incoming-goods') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm shadow-indigo-500/20 active:scale-95">
-                <i class="fas fa-plus-circle"></i>
+                <x-icon name="plus-circle" class="w-4 h-4" />
                 <span>Input Barang Masuk Baru</span>
             </a>
         </div>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-boxes-packing text-xl"></i>
+                        <x-icon name="boxes-packing" class="w-6 h-6" />
                     </div>
                 </div>
             </div>
@@ -57,11 +57,11 @@
                         <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TELAH DIREVISI</p>
                         <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['revised'] ?? 0 }}</h3>
                         <div class="text-xs text-indigo-600 font-medium flex items-center gap-1 mt-1">
-                            <i class="fas fa-pen-to-square"></i> Penyesuaian Qty
+                            <x-icon name="pen-to-square" class="w-4 h-4" /> Penyesuaian Qty
                         </div>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-edit text-xl"></i>
+                        <x-icon name="edit" class="w-6 h-6" />
                     </div>
                 </div>
             </div>
@@ -75,11 +75,11 @@
                         <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TERVERIFIKASI (SELESAI)</p>
                         <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['verified'] ?? 0 }}</h3>
                         <div class="text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1">
-                            <i class="fas fa-circle-check"></i> Stok Berhasil Masuk
+                            <x-icon name="circle-check" class="w-4 h-4" /> Stok Berhasil Masuk
                         </div>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-check-double text-xl"></i>
+                        <x-icon name="check-double" class="w-6 h-6" />
                     </div>
                 </div>
             </div>
@@ -93,11 +93,11 @@
                         <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">DIBATALKAN / DITOLAK</p>
                         <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-0.5">{{ $stats['canceled'] ?? 0 }}</h3>
                         <div class="text-xs text-rose-600 font-medium flex items-center gap-1 mt-1">
-                            <i class="fas fa-ban"></i> Tidak Masuk Stok
+                            <x-icon name="ban" class="w-4 h-4" /> Tidak Masuk Stok
                         </div>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-ban text-xl"></i>
+                        <x-icon name="ban" class="w-6 h-6" />
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                 
                 <!-- Search Box -->
                 <div class="relative flex-1 max-w-md">
-                    <i class="fas fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <x-icon name="magnifying-glass" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5" />
                     <input type="text" name="search" 
                            class="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-xs transition" 
                            placeholder="Cari No. Penerimaan (GR) atau Supplier..." 
@@ -134,22 +134,22 @@
                     
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Revised'])) }}" 
                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status') === 'Revised' ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-                       <i class="fas fa-pen-to-square"></i> Direvisi ({{ $stats['revised'] ?? 0 }})
+                       <x-icon name="pen-to-square" class="w-4 h-4" /> Direvisi ({{ $stats['revised'] ?? 0 }})
                     </a>
 
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Verified'])) }}" 
                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status') === 'Verified' ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-                       <i class="fas fa-circle-check"></i> Selesai ({{ $stats['verified'] ?? 0 }})
+                       <x-icon name="circle-check" class="w-4 h-4" /> Selesai ({{ $stats['verified'] ?? 0 }})
                     </a>
 
                     <a href="{{ route('warehouse.verifikasi.index', array_merge(request()->except('status', 'page'), ['status' => 'Canceled'])) }}" 
                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-all {{ request('status') === 'Canceled' ? 'bg-rose-600 text-white shadow-sm shadow-rose-500/20' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-                       <i class="fas fa-ban"></i> Batal ({{ $stats['canceled'] ?? 0 }})
+                       <x-icon name="ban" class="w-4 h-4" /> Batal ({{ $stats['canceled'] ?? 0 }})
                     </a>
 
                     @if(request()->hasAny(['search', 'status']))
                     <a href="{{ route('warehouse.verifikasi.index') }}" class="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition" title="Reset Filter">
-                        <i class="fas fa-rotate-left text-xs"></i>
+                        <x-icon name="rotate-left" class="w-3.5 h-3.5" />
                     </a>
                     @endif
                 </div>
@@ -176,7 +176,7 @@
                         <td class="px-5 py-4 text-slate-700">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0">
-                                    <i class="far fa-calendar-alt text-xs"></i>
+                                    <x-icon name="calendar-alt" class="w-3.5 h-3.5" />
                                 </div>
                                 <div>
                                     <div class="font-bold text-slate-900 text-xs">{{ \Carbon\Carbon::parse($good->receive_date)->format('d M Y') }}</div>
@@ -201,7 +201,7 @@
                                 <div>
                                     <div class="font-bold text-slate-900 text-xs">{{ $good->supplier->company_name ?? $good->supplier->name ?? '-' }}</div>
                                     <div class="text-[11px] text-slate-400 flex items-center gap-1">
-                                        <i class="fas fa-location-dot text-[10px]"></i>
+                                        <x-icon name="location-dot" class="w-3.5 h-3.5" />
                                         {{ $good->supplier->city ?? 'Supplier Partner' }}
                                     </div>
                                 </div>
@@ -215,7 +215,7 @@
                                 $totalQtySum = $good->items ? $good->items->sum('quantity') : 0;
                             @endphp
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                                <i class="fas fa-boxes-stacked text-indigo-500 text-[10px]"></i>
+                                <x-icon name="boxes-stacked" class="text-indigo-500 w-3.5 h-3.5" />
                                 {{ $itemTypesCount }} Jenis • {{ number_format($totalQtySum) }} Unit
                             </span>
                         </td>
@@ -232,15 +232,15 @@
                                 </span>
                             @elseif($good->status == 'Revised')
                                 <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
-                                    <i class="fas fa-pen-to-square text-[10px]"></i> Telah Direvisi
+                                    <x-icon name="pen-to-square" class="w-3.5 h-3.5" /> Telah Direvisi
                                 </span>
                             @elseif($good->status == 'Verified')
                                 <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                    <i class="fas fa-circle-check text-[10px]"></i> Terverifikasi
+                                    <x-icon name="circle-check" class="w-3.5 h-3.5" /> Terverifikasi
                                 </span>
                             @elseif($good->status == 'Canceled')
                                 <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
-                                    <i class="fas fa-ban text-[10px]"></i> Dibatalkan
+                                    <x-icon name="ban" class="w-3.5 h-3.5" /> Dibatalkan
                                 </span>
                             @else
                                 <span class="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700">{{ $good->status }}</span>
@@ -252,13 +252,13 @@
                             @if($good->status == 'Pending' || $good->status == 'Revised')
                                 <a href="{{ route('warehouse.verifikasi.show', $good->id) }}" 
                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-xs">
-                                    <i class="fas fa-clipboard-check"></i>
+                                    <x-icon name="clipboard-check" class="w-4 h-4" />
                                     <span>Verifikasi</span>
                                 </a>
                             @else
                                 <a href="{{ route('warehouse.verifikasi.show', $good->id) }}" 
                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition shadow-xs">
-                                    <i class="fas fa-eye text-slate-400"></i>
+                                    <x-icon name="eye" class="w-4 h-4 text-slate-400" />
                                     <span>Detail</span>
                                 </a>
                             @endif
@@ -268,12 +268,12 @@
                     <tr>
                         <td colspan="6" class="text-center py-12">
                             <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
-                                <i class="fas fa-boxes-packing text-2xl"></i>
+                                <x-icon name="boxes-packing" class="w-8 h-8" />
                             </div>
                             <h3 class="font-bold text-slate-800 text-sm mb-1">Tidak Ada Data Verifikasi Barang Masuk</h3>
                             <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">Semua data penerimaan barang fisik telah diperiksa atau belum ada draf penerimaan baru.</p>
                             <a href="{{ route('warehouse.incoming-goods') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition">
-                                <i class="fas fa-plus"></i>
+                                <x-icon name="plus" class="w-4 h-4" />
                                 <span>Buat Penerimaan Barang Masuk</span>
                             </a>
                         </td>

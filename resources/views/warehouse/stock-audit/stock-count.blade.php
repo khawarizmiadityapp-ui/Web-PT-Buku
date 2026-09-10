@@ -68,9 +68,9 @@
     <!-- Breadcrumb -->
     <div class="flex items-center text-sm text-gray-500 mb-2">
         <a href="{{ route('dashboard') }}" class="hover:text-gray-700">Warehouse</a>
-        <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        <x-icon name="chevron-right" class="mx-2 w-3.5 h-3.5" />
         <a href="{{ route('warehouse.stock-audit.index') }}" class="hover:text-gray-700">Stock Opname & Audit</a>
-        <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        <x-icon name="chevron-right" class="mx-2 w-3.5 h-3.5" />
         <span class="text-gray-900 font-medium">Sesi Penghitungan</span>
     </div>
 
@@ -80,7 +80,7 @@
             <div class="flex items-center gap-3">
                 <h1 class="text-2xl font-bold text-gray-900">Penghitungan Stok Fisik (Stock Opname)</h1>
                 <span class="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold rounded-lg">
-                    <i class="fas fa-barcode mr-1"></i> {{ $sessionCode }}
+                    <x-icon name="barcode" class="w-4 h-4 mr-1" /> {{ $sessionCode }}
                 </span>
             </div>
             <p class="text-sm text-gray-500 mt-1">Lakukan verifikasi jumlah fisik barang di gudang dengan pencatatan digital terintegrasi.</p>
@@ -89,19 +89,19 @@
         <!-- Action Header Buttons -->
         <div class="flex items-center flex-wrap gap-2.5">
             <a href="{{ route('warehouse.stock-audit.index') }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-arrow-left text-xs"></i>
+                <x-icon name="arrow-left" class="w-3.5 h-3.5" />
                 <span>Kembali</span>
             </a>
             <button type="button" onclick="setAllToSystem()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-wand-magic-sparkles text-blue-600"></i>
+                <x-icon name="wand-magic-sparkles" class="w-4 h-4 text-blue-600" />
                 <span>Set Semua = Sistem</span>
             </button>
             <button type="button" onclick="resetAllInputs()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-rotate-left text-xs"></i>
+                <x-icon name="rotate-left" class="w-3.5 h-3.5" />
                 <span>Reset</span>
             </button>
             <button type="button" onclick="openReviewModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-check-double"></i>
+                <x-icon name="check-double" class="w-4 h-4" />
                 <span>Selesaikan & Simpan</span>
             </button>
         </div>
@@ -112,7 +112,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl flex-shrink-0">
-                    <i class="fas fa-clipboard-check"></i>
+                    <x-icon name="clipboard-check" class="w-4 h-4" />
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
@@ -148,7 +148,7 @@
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total SKU</span>
                 <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-600 text-xs">
-                    <i class="fas fa-boxes-stacked"></i>
+                    <x-icon name="boxes-stacked" class="w-4 h-4" />
                 </div>
             </div>
             <div class="text-2xl font-bold text-gray-900">{{ $totalProducts }}</div>
@@ -160,7 +160,7 @@
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Terhitung</span>
                 <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs">
-                    <i class="fas fa-list-check"></i>
+                    <x-icon name="list-check" class="w-4 h-4" />
                 </div>
             </div>
             <div class="text-2xl font-bold text-blue-600" id="kpiCounted">0</div>
@@ -172,7 +172,7 @@
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sesuai (Match)</span>
                 <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600 text-xs">
-                    <i class="fas fa-circle-check"></i>
+                    <x-icon name="circle-check" class="w-4 h-4" />
                 </div>
             </div>
             <div class="text-2xl font-bold text-green-600" id="kpiMatched">0</div>
@@ -184,7 +184,7 @@
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Lebih (Surplus)</span>
                 <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs">
-                    <i class="fas fa-arrow-trend-up"></i>
+                    <x-icon name="arrow-trend-up" class="w-4 h-4" />
                 </div>
             </div>
             <div class="text-2xl font-bold text-blue-600" id="kpiSurplus">0</div>
@@ -196,7 +196,7 @@
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kurang (Defisit)</span>
                 <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600 text-xs">
-                    <i class="fas fa-arrow-trend-down"></i>
+                    <x-icon name="arrow-trend-down" class="w-4 h-4" />
                 </div>
             </div>
             <div class="text-2xl font-bold text-red-600" id="kpiDeficit">0</div>
@@ -208,7 +208,7 @@
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Akurasi Audit</span>
                 <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 text-xs">
-                    <i class="fas fa-percent"></i>
+                    <x-icon name="percent" class="w-4 h-4" />
                 </div>
             </div>
             <div class="text-2xl font-bold text-amber-600" id="kpiAccuracy">100%</div>
@@ -223,7 +223,7 @@
             <div class="flex-1">
                 <div class="relative flex items-center">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
-                        <i class="fas fa-barcode text-base"></i>
+                        <x-icon name="barcode" class="w-4 h-4 text-base" />
                     </span>
                     <input type="text" 
                            id="barcodeQuickInput" 
@@ -233,10 +233,10 @@
                     
                     <div class="absolute right-1.5 flex items-center gap-1">
                         <button type="button" onclick="triggerBarcodeScan()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition shadow-sm">
-                            <i class="fas fa-plus mr-1"></i> Scan
+                            <x-icon name="plus" class="w-4 h-4 mr-1" /> Scan
                         </button>
                         <button type="button" onclick="openCameraModal()" class="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md text-xs transition" title="Gunakan Kamera Scanner">
-                            <i class="fas fa-camera"></i>
+                            <x-icon name="camera" class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
                 </select>
 
                 <div class="relative min-w-[200px]">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <x-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
                     <input type="text" 
                            id="tableSearchInput" 
                            oninput="applyFilters()" 
@@ -301,11 +301,11 @@
         <!-- Quick Fill & Review Discrepancy Shortcuts -->
         <div class="flex items-center gap-2">
             <button type="button" onclick="quickFillUncounted()" class="px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
-                <i class="fas fa-check-circle text-gray-500"></i>
+                <x-icon name="check-circle" class="w-4 h-4 text-gray-500" />
                 <span>Isi Sisa = Sistem</span>
             </button>
             <button type="button" onclick="quickFilterTab('discrepancy')" class="px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-red-600 rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
-                <i class="fas fa-triangle-exclamation text-red-500"></i>
+                <x-icon name="triangle-exclamation" class="w-4 h-4 text-red-500" />
                 <span>Tinjau Selisih</span>
             </button>
         </div>
@@ -359,7 +359,7 @@
                                             @if($product->image)
                                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover">
                                             @else
-                                                <i class="fas fa-box text-sm text-gray-400"></i>
+                                                <x-icon name="box" class="w-4 h-4 text-gray-400" />
                                             @endif
                                         </div>
                                         <div>
@@ -399,7 +399,7 @@
                                             <button type="button" 
                                                     onclick="stepCount({{ $product->id }}, -1)" 
                                                     class="stepper-btn w-7 h-7 rounded bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center font-bold text-xs shadow-sm">
-                                                <i class="fas fa-minus text-[10px]"></i>
+                                                <x-icon name="minus" class="w-3.5 h-3.5" />
                                             </button>
                                             
                                             <input type="number" 
@@ -414,7 +414,7 @@
                                             <button type="button" 
                                                     onclick="stepCount({{ $product->id }}, 1)" 
                                                     class="stepper-btn w-7 h-7 rounded bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center font-bold text-xs shadow-sm">
-                                                <i class="fas fa-plus text-[10px]"></i>
+                                                <x-icon name="plus" class="w-3.5 h-3.5" />
                                             </button>
                                         </div>
 
@@ -458,10 +458,10 @@
                                 <td class="py-3.5 px-4 text-center">
                                     <div class="flex items-center justify-center gap-1">
                                         <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, {{ $sysStock }})" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Samakan ke Stok Sistem">
-                                            <i class="fas fa-check text-xs"></i>
+                                            <x-icon name="check" class="w-3.5 h-3.5" />
                                         </button>
                                         <button type="button" onclick="setPhysicalDirectly({{ $product->id }}, 0)" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Reset ke 0">
-                                            <i class="fas fa-trash-can text-xs"></i>
+                                            <x-icon name="trash-can" class="w-3.5 h-3.5" />
                                         </button>
                                     </div>
                                 </td>
@@ -470,7 +470,7 @@
                             <tr id="emptyRow">
                                 <td colspan="7" class="py-16 text-center text-gray-500">
                                     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400 text-2xl">
-                                        <i class="fas fa-boxes-stacked"></i>
+                                        <x-icon name="boxes-stacked" class="w-4 h-4" />
                                     </div>
                                     <h4 class="text-base font-bold text-gray-700">Tidak ada produk ditemukan</h4>
                                     <p class="text-xs text-gray-400 mt-1">Pastikan katalog produk master data sudah memiliki item terdaftar.</p>
@@ -483,7 +483,7 @@
 
             <!-- No Results Filter Notification -->
             <div id="noFilterResults" class="hidden py-12 text-center text-gray-500 border-t border-gray-100">
-                <i class="fas fa-filter-circle-xmark text-3xl text-gray-300 mb-2"></i>
+                <x-icon name="filter-circle-xmark" class="w-4 h-4 text-3xl text-gray-300 mb-2" />
                 <p class="text-sm font-semibold text-gray-700">Tidak ada barang yang cocok dengan filter</p>
                 <button type="button" onclick="resetFilters()" class="mt-2 text-xs font-semibold text-blue-600 hover:underline">
                     Reset Filter & Pencarian
@@ -496,7 +496,7 @@
     <div class="floating-bar bg-white border border-gray-200 shadow-xl rounded-xl px-5 py-3 flex items-center justify-between gap-4 max-w-3xl w-[92%]">
         <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
-                <i class="fas fa-calculator"></i>
+                <x-icon name="calculator" class="w-4 h-4" />
             </div>
             <div class="text-xs">
                 <div>Status: <strong class="text-gray-900" id="barCounted">0</strong> / {{ $totalProducts }} SKU Dihitung</div>
@@ -506,10 +506,10 @@
 
         <div class="flex items-center gap-2">
             <button type="button" onclick="quickFillUncounted()" class="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition">
-                <i class="fas fa-wand-magic-sparkles mr-1"></i> Isi Sisa
+                <x-icon name="wand-magic-sparkles" class="w-4 h-4 mr-1" /> Isi Sisa
             </button>
             <button type="button" onclick="openReviewModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
-                <i class="fas fa-paper-plane"></i>
+                <x-icon name="paper-plane" class="w-4 h-4" />
                 <span>Simpan Hasil Opname</span>
             </button>
         </div>
@@ -522,7 +522,7 @@
         <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
-                    <i class="fas fa-camera"></i>
+                    <x-icon name="camera" class="w-4 h-4" />
                 </div>
                 <div>
                     <h4 class="font-bold text-sm text-gray-900">Scanner Kamera Barcode</h4>
@@ -530,7 +530,7 @@
                 </div>
             </div>
             <button type="button" onclick="closeCameraModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
-                <i class="fas fa-times"></i>
+                <x-icon name="times" class="w-4 h-4" />
             </button>
         </div>
 
@@ -539,12 +539,12 @@
             <div class="relative bg-gray-900 rounded-xl overflow-hidden aspect-video border border-gray-300 flex items-center justify-center">
                 <div class="absolute inset-8 border-2 border-dashed border-blue-400 rounded-lg pointer-events-none flex items-center justify-center">
                     <span class="text-xs text-white bg-black/60 px-3 py-1 rounded-full">
-                        <i class="fas fa-expand mr-1"></i> Area Barcode
+                        <x-icon name="expand" class="w-4 h-4 mr-1" /> Area Barcode
                     </span>
                 </div>
 
                 <div class="text-center text-gray-300 text-xs z-10 px-4">
-                    <i class="fas fa-video text-2xl mb-2 text-blue-400"></i>
+                    <x-icon name="video" class="w-8 h-8 mb-2 text-blue-400" />
                     <p>Kamera siap mendeteksi barcode secara otomatis</p>
                 </div>
             </div>
@@ -578,7 +578,7 @@
         <div class="p-5 border-b border-gray-200 flex items-center justify-between bg-gray-50">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-                    <i class="fas fa-clipboard-check"></i>
+                    <x-icon name="clipboard-check" class="w-4 h-4" />
                 </div>
                 <div>
                     <h3 class="font-bold text-base text-gray-900">Konfirmasi Hasil Stock Opname</h3>
@@ -586,7 +586,7 @@
                 </div>
             </div>
             <button type="button" onclick="closeReviewModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
-                <i class="fas fa-times"></i>
+                <x-icon name="times" class="w-4 h-4" />
             </button>
         </div>
 
@@ -616,7 +616,7 @@
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <h4 class="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        <i class="fas fa-triangle-exclamation text-amber-500 mr-1"></i> Rincian Barang dengan Selisih (<span id="modalDiscrepancyTotal">0</span>)
+                        <x-icon name="triangle-exclamation" class="w-4 h-4 text-amber-500 mr-1" /> Rincian Barang dengan Selisih (<span id="modalDiscrepancyTotal">0</span>)
                     </h4>
                 </div>
                 <div class="border border-gray-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
@@ -685,7 +685,7 @@
                 Batal & Lanjut Hitung
             </button>
             <button type="button" onclick="submitFinalCount()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-check-circle"></i>
+                <x-icon name="check-circle" class="w-4 h-4" />
                 <span>Konfirmasi & Simpan Permanen</span>
             </button>
         </div>
@@ -782,13 +782,13 @@
         badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ';
         if (diff === 0) {
             badge.classList.add('diff-badge-match');
-            badge.innerHTML = `<i class="fas fa-check text-[10px]"></i> <span>0 Cocok</span>`;
+            badge.innerHTML = `<x-icon name="check" class="w-3.5 h-3.5" /> <span>0 Cocok</span>`;
         } else if (diff > 0) {
             badge.classList.add('diff-badge-surplus');
-            badge.innerHTML = `<i class="fas fa-plus text-[10px]"></i> <span>+${diff} Lebih</span>`;
+            badge.innerHTML = `<x-icon name="plus" class="w-3.5 h-3.5" /> <span>+${diff} Lebih</span>`;
         } else {
             badge.classList.add('diff-badge-deficit');
-            badge.innerHTML = `<i class="fas fa-minus text-[10px]"></i> <span>${diff} Kurang</span>`;
+            badge.innerHTML = `<x-icon name="minus" class="w-3.5 h-3.5" /> <span>${diff} Kurang</span>`;
         }
 
         recalculateAllStats();
@@ -1137,7 +1137,7 @@
             listBody.innerHTML = `
                 <tr>
                     <td colspan="5" class="p-6 text-center text-green-600 font-medium">
-                        <i class="fas fa-check-circle text-lg mb-1"></i>
+                        <x-icon name="check-circle" class="w-5 h-5 mb-1" />
                         <div>Luar biasa! Seluruh ${rows.length} barang cocok 100% tanpa selisih.</div>
                     </td>
                 </tr>

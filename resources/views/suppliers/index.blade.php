@@ -12,11 +12,11 @@
                 @if(session('success'))
                     <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between">
                         <div class="flex items-center">
-                            <i class="fas fa-check-circle mr-3"></i>
+                            <x-icon name="check-circle" class="w-4 h-4 mr-3" />
                             <span>{{ session('success') }}</span>
                         </div>
                         <button onclick="this.parentElement.parentElement.remove()" class="text-green-600 hover:text-green-800">
-                            <i class="fas fa-times"></i>
+                            <x-icon name="times" class="w-4 h-4" />
                         </button>
                     </div>
                 @endif
@@ -27,7 +27,7 @@
                         <!-- Search -->
                         <div class="flex-1 flex items-center gap-3">
                             <div class="relative flex-1 max-w-md">
-                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <x-icon name="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 <input 
                                     type="text" 
                                     name="search" 
@@ -45,18 +45,18 @@
                             </select>
 
                             <button type="submit" class="px-6 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition text-sm font-medium">
-                                <i class="fas fa-filter mr-2"></i>Filter
+                                <x-icon name="filter" class="w-4 h-4 mr-2" />Filter
                             </button>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="flex items-center gap-3">
                             <a href="{{ route('suppliers.export', request()->query()) }}" class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium">
-                                <i class="fas fa-download text-gray-600"></i>
+                                <x-icon name="download" class="w-4 h-4 text-gray-600" />
                                 <span class="text-gray-700">Export CSV</span>
                             </a>
                             <a href="{{ route('suppliers.create') }}" class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium">
-                                <i class="fas fa-plus"></i>
+                                <x-icon name="plus" class="w-4 h-4" />
                                 <span>Tambah Supplier</span>
                             </a>
                         </div>
@@ -126,7 +126,7 @@
                             @empty
                                 <tr>
                                     <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                        <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                                        <x-icon name="inbox" class="w-4 h-4 text-4xl mb-3 text-gray-300" />
                                         <p class="text-sm">Tidak ada data supplier</p>
                                     </td>
                                 </tr>

@@ -11,7 +11,7 @@
             <p class="text-muted mb-0">Search for a transaction to initiate a product return</p>
         </div>
         <a href="{{ route('returns.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i> New Return
+            <x-icon name="plus" class="w-4 h-4 me-2" /> New Return
         </a>
     </div>
 
@@ -22,12 +22,12 @@
                 <div class="row g-3">
                     <div class="col-md-8">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <span class="input-group-text"><x-icon name="search" class="w-4 h-4" /></span>
                             <input type="text" name="search" class="form-control" 
                                    placeholder="Enter invoice number, barcode, or Customer Name..." 
                                    value="{{ request('search') }}">
                             <button type="submit" class="btn btn-primary px-4">
-                                <i class="fas fa-search me-1"></i> Find Transaction
+                                <x-icon name="search" class="w-4 h-4 me-1" /> Find Transaction
                             </button>
                         </div>
                     </div>
@@ -118,9 +118,9 @@
                             <td><strong>Rp {{ number_format($return->refund_amount, 0, ',', '.') }}</strong></td>
                             <td>
                                 @if($return->refund_method == 'Cash')
-                                    <i class="fas fa-money-bill-wave text-success"></i> {{ $return->refund_method }}
+                                    <x-icon name="money-bill-wave" class="w-4 h-4 text-success" /> {{ $return->refund_method }}
                                 @elseif($return->refund_method == 'Store Credit')
-                                    <i class="fas fa-ticket-alt text-primary"></i> {{ $return->refund_method }}
+                                    <x-icon name="ticket-alt" class="w-4 h-4 text-primary" /> {{ $return->refund_method }}
                                 @else
                                     {{ $return->refund_method }}
                                 @endif
@@ -162,11 +162,11 @@
             @else
             <!-- Empty State -->
             <div class="text-center py-5">
-                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <x-icon name="search" class="w-16 h-16 text-muted mb-3" />
                 <h5 class="text-muted">No returns found</h5>
                 <p class="text-muted mb-3">Try adjusting your search or filters</p>
                 <a href="{{ route('returns.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i> Create New Return
+                    <x-icon name="plus" class="w-4 h-4 me-2" /> Create New Return
                 </a>
             </div>
             @endif
@@ -184,7 +184,7 @@
                             <h4 class="mb-0">{{ $stats['total_returns'] }}</h4>
                         </div>
                         <div class="bg-primary bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-undo fa-2x text-primary"></i>
+                            <x-icon name="undo" class="w-8 h-8 text-primary" />
                         </div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@
                             <h4 class="mb-0">{{ $stats['pending_approvals'] }}</h4>
                         </div>
                         <div class="bg-warning bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-clock fa-2x text-warning"></i>
+                            <x-icon name="clock" class="w-8 h-8 text-warning" />
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                             <h4 class="mb-0">{{ $stats['approved_today'] }}</h4>
                         </div>
                         <div class="bg-success bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                            <x-icon name="check-circle" class="w-8 h-8 text-success" />
                         </div>
                     </div>
                 </div>
@@ -232,7 +232,7 @@
                             <h4 class="mb-0">Rp {{ number_format($stats['total_refund_amount'], 0, ',', '.') }}</h4>
                         </div>
                         <div class="bg-info bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-money-bill-wave fa-2x text-info"></i>
+                            <x-icon name="money-bill-wave" class="w-8 h-8 text-info" />
                         </div>
                     </div>
                 </div>

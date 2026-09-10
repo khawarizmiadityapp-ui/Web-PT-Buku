@@ -13,15 +13,15 @@
     <!-- Search & Add Button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="input-group" style="max-width: 400px;">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <span class="input-group-text"><x-icon name="search" class="w-4 h-4" /></span>
             <input type="text" class="form-control" placeholder="Search customer name or ID..." id="searchCustomer">
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('customers.export', request()->query()) }}" class="btn btn-outline-secondary">
-                <i class="fas fa-download me-1"></i> Export CSV
+                <x-icon name="download" class="w-4 h-4 me-1" /> Export CSV
             </a>
             <a href="{{ route('customers.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i> Tambah Customer
+                <x-icon name="plus" class="w-4 h-4 me-2" /> Tambah Customer
             </a>
         </div>
     </div>
@@ -36,11 +36,11 @@
                             <p class="text-muted mb-1 small">TOTAL CUSTOMERS</p>
                             <h2 class="mb-0">{{ $customers->total() }}</h2>
                             <small class="text-success">
-                                <i class="fas fa-arrow-up"></i> 12%
+                                <x-icon name="arrow-up" class="w-4 h-4" /> 12%
                             </small>
                         </div>
                         <div class="bg-primary bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-users fa-2x text-primary"></i>
+                            <x-icon name="users" class="w-8 h-8 text-primary" />
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                             <small class="text-muted">Siap Digunakan di Kasir</small>
                         </div>
                         <div class="bg-success bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-address-book fa-2x text-success"></i>
+                            <x-icon name="address-book" class="w-8 h-8 text-success" />
                         </div>
                     </div>
                 </div>
@@ -73,12 +73,12 @@
                             <div class="d-flex align-items-baseline gap-2">
                                 <h3 class="mb-0 fw-bold">+18.5%</h3>
                                 <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5 text-xs">
-                                    <i class="fas fa-arrow-up me-1"></i>Positif
+                                    <x-icon name="arrow-up" class="w-4 h-4 me-1" />Positif
                                 </span>
                             </div>
                         </div>
                         <div class="bg-primary bg-opacity-10 p-2.5 rounded-3">
-                            <i class="fas fa-chart-line text-primary fs-5"></i>
+                            <x-icon name="chart-line" class="w-4 h-4 text-primary fs-5" />
                         </div>
                     </div>
                     <div style="height: 48px;" class="w-100 mt-1">
@@ -134,7 +134,7 @@
                             </td>
                             <td>
                                 <span class="d-inline-flex align-items-center px-2.5 py-1 rounded-pill bg-light border text-dark fw-medium" style="font-size: 13px;" @if($customer->address) title="{{ $customer->address }}" @endif>
-                                    <i class="fas fa-map-marker-alt text-danger me-1.5" style="font-size: 11px;"></i>
+                                    <x-icon name="map-marker-alt" class="text-danger me-1.5 w-3.5 h-3.5" />
                                     {{ $customer->city ?: '-' }}
                                 </span>
                             </td>
@@ -169,7 +169,7 @@
                         @empty
                         <tr>
                             <td colspan="5" class="text-center py-4">
-                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <x-icon name="users" class="w-12 h-12 text-muted mb-3" />
                                 <p class="text-muted">No customers found</p>
                             </td>
                         </tr>

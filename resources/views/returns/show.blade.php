@@ -12,14 +12,14 @@
         </div>
         <div>
             <a href="{{ route('returns.index') }}" class="btn btn-outline-secondary me-2">
-                <i class="fas fa-arrow-left me-1"></i> Back
+                <x-icon name="arrow-left" class="w-4 h-4 me-1" /> Back
             </a>
             @if($return->status == 'Pending')
             <button class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#approveModal">
-                <i class="fas fa-check me-1"></i> Approve
+                <x-icon name="check" class="w-4 h-4 me-1" /> Approve
             </button>
             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                <i class="fas fa-times me-1"></i> Reject
+                <x-icon name="times" class="w-4 h-4 me-1" /> Reject
             </button>
             @endif
         </div>
@@ -31,7 +31,7 @@
             <!-- Status Badge -->
             <div class="alert alert-{{ $return->status == 'Approved' ? 'success' : ($return->status == 'Pending' ? 'warning' : 'danger') }} mb-3">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-{{ $return->status == 'Approved' ? 'check-circle' : ($return->status == 'Pending' ? 'clock' : 'times-circle') }} fa-2x me-3"></i>
+                    <x-icon :name="$return->status == 'Approved' ? 'check-circle' : ($return->status == 'Pending' ? 'clock' : 'times-circle')" class="w-8 h-8 me-3" />
                     <div>
                         <h5 class="mb-0">Return Status: {{ $return->status }}</h5>
                         <small>
@@ -167,11 +167,11 @@
                         <label class="text-muted small">Refund Method</label>
                         <div>
                             @if($return->refund_method == 'Cash')
-                                <i class="fas fa-money-bill-wave text-success"></i>
+                                <x-icon name="money-bill-wave" class="w-4 h-4 text-success" />
                             @elseif($return->refund_method == 'Store Credit')
-                                <i class="fas fa-ticket-alt text-primary"></i>
+                                <x-icon name="ticket-alt" class="w-4 h-4 text-primary" />
                             @else
-                                <i class="fas fa-credit-card text-info"></i>
+                                <x-icon name="credit-card" class="w-4 h-4 text-info" />
                             @endif
                             {{ $return->refund_method }}
                         </div>
@@ -200,7 +200,7 @@
 
                     @if($return->status == 'Approved')
                     <div class="alert alert-success small mb-0">
-                        <i class="fas fa-check-circle me-1"></i>
+                        <x-icon name="check-circle" class="w-4 h-4 me-1" />
                         Refund has been processed and customer notified.
                     </div>
                     @endif
@@ -258,7 +258,7 @@
                         <textarea class="form-control" name="admin_notes" rows="3" placeholder="Add notes about this approval..."></textarea>
                     </div>
                     <div class="alert alert-info small mb-0">
-                        <i class="fas fa-info-circle me-1"></i>
+                        <x-icon name="info-circle" class="w-4 h-4 me-1" />
                         Stock will be automatically updated upon approval.
                     </div>
                 </div>
@@ -291,7 +291,7 @@
                         <textarea class="form-control" name="admin_notes" rows="3" placeholder="Enter reason for rejection..." required></textarea>
                     </div>
                     <div class="alert alert-warning small mb-0">
-                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        <x-icon name="exclamation-triangle" class="w-4 h-4 me-1" />
                         Customer will be notified about the rejection.
                     </div>
                 </div>

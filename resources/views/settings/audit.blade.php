@@ -37,7 +37,7 @@
             <h2 class="text-lg font-semibold text-gray-900">Activity Log</h2>
             <div class="flex items-center space-x-3">
                 <a href="{{ route('settings.audit.export', request()->query()) }}" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
-                    <i class="fas fa-download mr-2"></i>Export CSV
+                    <x-icon name="download" class="w-4 h-4 mr-2" />Export CSV
                 </a>
             </div>
         </div>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="flex items-end">
                     <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium">
-                        <i class="fas fa-filter mr-2"></i>Filter
+                        <x-icon name="filter" class="w-4 h-4 mr-2" />Filter
                     </button>
                 </div>
                 <div class="flex items-end">
@@ -119,7 +119,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <button type="button" onclick="alert('{{ addslashes($log->description) }}\n\nTable: {{ $log->subject_table ?? '-' }}\nUser Agent: {{ Str::limit($log->user_agent ?? '-', 80) }}')" class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-eye"></i>
+                                    <x-icon name="eye" class="w-4 h-4" />
                                 </button>
                             </td>
                         </tr>
@@ -127,7 +127,7 @@
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                 <div class="flex flex-col items-center">
-                                    <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-4"></i>
+                                    <x-icon name="clipboard-list" class="w-4 h-4 text-4xl text-gray-300 mb-4" />
                                     <p class="text-lg font-medium text-gray-900 mb-1">No audit logs found</p>
                                     <p class="text-sm">System activities will be recorded here automatically.</p>
                                 </div>

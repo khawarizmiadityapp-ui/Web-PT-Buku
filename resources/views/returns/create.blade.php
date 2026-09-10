@@ -15,7 +15,7 @@
                             <p class="text-muted mb-0 small">Initiate a return for Order #INV-2026-0542</p>
                         </div>
                         <a href="{{ route('returns.index') }}" class="btn btn-sm btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-1"></i> Back
+                            <x-icon name="arrow-left" class="w-4 h-4 me-1" /> Back
                         </a>
                     </div>
 
@@ -26,7 +26,7 @@
                         <div class="card bg-light border-0 mb-3">
                             <div class="card-body">
                                 <h6 class="card-title mb-3">
-                                    <i class="fas fa-clipboard-list text-primary me-2"></i> Return Details
+                                    <x-icon name="clipboard-list" class="w-4 h-4 text-primary me-2" /> Return Details
                                 </h6>
                                 
                                 <!-- Reason for Return -->
@@ -94,25 +94,25 @@
                         <div class="card bg-light border-0 mb-3">
                             <div class="card-body">
                                 <h6 class="card-title mb-3">
-                                    <i class="fas fa-camera text-primary me-2"></i> Photo Evidence (Optional)
+                                    <x-icon name="camera" class="w-4 h-4 text-primary me-2" /> Photo Evidence (Optional)
                                 </h6>
                                 
                                 <div class="text-center py-4" id="uploadArea" style="border: 2px dashed #dee2e6; border-radius: 8px; cursor: pointer;"
                                      onclick="document.getElementById('proofImage').click()">
-                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-2"></i>
+                                    <x-icon name="cloud-upload-alt" class="w-12 h-12 text-muted mb-2" />
                                     <p class="mb-1">Click to upload or drag-and-drop</p>
                                     <small class="text-muted">PNG, JPG, JPEG, WEBP - Maks. 2MB</small>
                                     <input type="file" id="proofImage" name="proof_image" class="d-none" 
                                            accept="image/png,image/jpeg,image/jpg,image/webp" onchange="previewImage(this)">
                                 </div>
                                 @error('proof_image')
-                                    <div class="text-danger small mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</div>
+                                    <div class="text-danger small mt-2"><x-icon name="exclamation-circle" class="w-4 h-4 me-1" />{{ $message }}</div>
                                 @enderror
                                 
                                 <div id="imagePreview" class="mt-3" style="display: none;">
                                     <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
                                     <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removeImage()">
-                                        <i class="fas fa-times me-1"></i> Remove
+                                        <x-icon name="times" class="w-4 h-4 me-1" /> Remove
                                     </button>
                                 </div>
                             </div>
@@ -148,11 +148,11 @@
                         <div class="d-grid gap-2">
                             <button type="button" class="btn btn-outline-primary refund-btn active" 
                                     onclick="selectRefund('Cash')" data-method="Cash">
-                                <i class="fas fa-money-bill-wave me-2"></i> Cash
+                                <x-icon name="money-bill-wave" class="w-4 h-4 me-2" /> Cash
                             </button>
                             <button type="button" class="btn btn-outline-primary refund-btn" 
                                     onclick="selectRefund('QRIS')" data-method="QRIS">
-                                <i class="fas fa-qrcode me-2"></i> QRIS
+                                <x-icon name="qrcode" class="w-4 h-4 me-2" /> QRIS
                             </button>
                         </div>
                         <input type="hidden" name="refund_method" id="refundMethodInput" form="returnForm" value="Cash">
@@ -184,7 +184,7 @@
                     <!-- Actions -->
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-danger btn-lg" form="returnForm">
-                            <i class="fas fa-check me-2"></i> Process Return
+                            <x-icon name="check" class="w-4 h-4 me-2" /> Process Return
                         </button>
                         <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">
                             Cancel
@@ -193,7 +193,7 @@
 
                     <!-- Info Alert -->
                     <div class="alert alert-info mt-3 small mb-0">
-                        <i class="fas fa-info-circle me-1"></i>
+                        <x-icon name="info-circle" class="w-4 h-4 me-1" />
                         Returns will be processed within 24 hours after protocol examination at the warehouse center.
                     </div>
                 </div>
