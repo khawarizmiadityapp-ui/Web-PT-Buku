@@ -127,14 +127,26 @@
                     >
 
                     <!-- Status Filter -->
+                    <!-- Payment Status Filter -->
                     <select name="status" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
-                        <option value="">All Statuses</option>
-                        <option value="Paid" {{ request('status') == 'Paid' ? 'selected' : '' }}>Paid</option>
-                        <option value="Unpaid" {{ request('status') == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
-                        <option value="Overdue" {{ request('status') == 'Overdue' ? 'selected' : '' }}>Overdue</option>
+                        <option value="">Status Bayar: Semua</option>
+                        <option value="Paid" {{ request('status') == 'Paid' ? 'selected' : '' }}>Paid (Lunas)</option>
+                        <option value="Unpaid" {{ request('status') == 'Unpaid' ? 'selected' : '' }}>Unpaid (Belum Lunas)</option>
+                        <option value="Overdue" {{ request('status') == 'Overdue' ? 'selected' : '' }}>Overdue (Terlambat)</option>
                     </select>
 
-                    @if(request()->hasAny(['search', 'date_from', 'date_to', 'status']))
+                    <!-- Order Fulfillment Status Filter -->
+                    <select name="order_status" onchange="this.form.submit()" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
+                        <option value="">Status Pesanan: Semua</option>
+                        <option value="pending" {{ request('order_status') == 'pending' ? 'selected' : '' }}>Pesanan Dibuat (Pending)</option>
+                        <option value="confirmed" {{ request('order_status') == 'confirmed' ? 'selected' : '' }}>Dikonfirmasi</option>
+                        <option value="processing" {{ request('order_status') == 'processing' ? 'selected' : '' }}>Sedang Diproses</option>
+                        <option value="ready" {{ request('order_status') == 'ready' ? 'selected' : '' }}>Siap Dikirim</option>
+                        <option value="completed" {{ request('order_status') == 'completed' ? 'selected' : '' }}>Selesai</option>
+                        <option value="cancelled" {{ request('order_status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                    </select>
+
+                    @if(request()->hasAny(['search', 'date_from', 'date_to', 'status', 'order_status']))
                         <a href="{{ route('sales.invoices.index', array_filter(['tab' => request('tab')])) }}" class="px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 transition flex items-center gap-1">
                             <x-icon name="times-circle" class="w-4 h-4" /> Reset Filter
                         </a>
@@ -149,12 +161,12 @@
         <table class="w-full text-left border-collapse">
             <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                    <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Invoice Number</th>
+                    <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Invoice / Pesanan</th>
                     <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Date</th>
                     <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Customer</th>
                     <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Total Amount</th>
-                    <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Due Date</th>
                     <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Payment Status</th>
+                    <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Status Pesanan</th>
                     <th class="px-6 py-3.5 text-xs font-semibold text-gray-600 uppercase">Actions</th>
                 </tr>
             </thead>
@@ -162,21 +174,26 @@
                 @forelse($invoices as $invoice)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('sales.invoices.show', $invoice) }}" class="font-bold text-blue-600 hover:underline">
+                            <a href="{{ route('sales.invoices.show', $invoice) }}" class="font-bold text-blue-600 hover:underline block">
                                 {{ $invoice->invoice_number }}
                             </a>
+                            @if($invoice->order_code)
+                                <span class="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200 mt-1">
+                                    {{ $invoice->order_code }}
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-700">
                             {{ $invoice->date ? $invoice->date->format('M d, Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 font-medium text-gray-900">
-                            {{ $invoice->customer_name }}
+                            <div>{{ $invoice->customer_name }}</div>
+                            @if($invoice->customer_phone)
+                                <span class="text-xs text-gray-500 font-normal">{{ $invoice->customer_phone }}</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-900">
                             Rp {{ number_format($invoice->total_amount, 0, ',', '.') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-                            {{ $invoice->due_date ? $invoice->due_date->format('M d, Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($invoice->payment_status == 'Paid')
@@ -187,6 +204,15 @@
                                 <span class="px-3 py-1 text-xs font-semibold text-rose-700 bg-rose-100 rounded-full">Overdue</span>
                             @else
                                 <span class="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">{{ $invoice->payment_status }}</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($invoice->order_status)
+                                <span class="px-2.5 py-1 text-xs font-bold rounded-full border {{ $invoice->order_status_badge }}">
+                                    {{ $invoice->order_status_label }}
+                                </span>
+                            @else
+                                <span class="text-xs text-gray-400">-</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">

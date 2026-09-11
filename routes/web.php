@@ -14,11 +14,18 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\LandingController;
 
-// Redirect root to login
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Public Customer-Facing Routes (PT Buku Nusantara Landing & Ordering)
+Route::get('/', [LandingController::class, 'index'])->name('home');
+Route::get('/catalog', [LandingController::class, 'catalog'])->name('public.catalog');
+Route::get('/product/{product}', [LandingController::class, 'productDetail'])->name('public.product.detail');
+Route::post('/checkout', [LandingController::class, 'checkout'])->name('public.checkout');
+Route::get('/order-success/{orderCode}', [LandingController::class, 'orderSuccess'])->name('public.order.success');
+Route::get('/tracking', [LandingController::class, 'trackingPage'])->name('public.tracking');
+Route::get('/api/track-order', [LandingController::class, 'trackOrderApi'])->name('public.track.api');
+Route::get('/orders', [LandingController::class, 'orderHistoryPage'])->name('public.orders');
+Route::post('/api/orders/lookup', [LandingController::class, 'orderLookupApi'])->name('public.orders.lookup');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -106,6 +113,7 @@ Route::middleware('auth')->group(function () {
         Route::post('sales/invoices', [SalesInvoiceController::class, 'store'])->name('sales.invoices.store');
         Route::get('sales/invoices/{invoice}', [SalesInvoiceController::class, 'show'])->name('sales.invoices.show');
         Route::patch('sales/invoices/{invoice}/payment', [SalesInvoiceController::class, 'updatePayment'])->name('sales.invoices.updatePayment');
+        Route::patch('sales/invoices/{invoice}/order-status', [SalesInvoiceController::class, 'updateOrderStatus'])->name('sales.invoices.updateOrderStatus');
         Route::get('sales/report', [SalesInvoiceController::class, 'report'])->name('sales.report');
     });
 

@@ -23,13 +23,20 @@ class SalesInvoiceController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('invoice_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%");
+                  ->orWhere('order_code', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('customer_phone', 'like', "%{$search}%");
             });
         }
 
-        // Filter by status
+        // Filter by payment status
         if ($request->filled('status')) {
             $query->where('payment_status', $request->status);
+        }
+
+        // Filter by order fulfillment status
+        if ($request->filled('order_status')) {
+            $query->where('order_status', $request->order_status);
         }
 
         // Filter by date range
@@ -407,5 +414,20 @@ class SalesInvoiceController extends Controller
         $invoice->update($validated);
 
         return back()->with('success', 'Payment updated successfully!');
+    }
+
+    /**
+     * Update order fulfillment status and record timeline history
+     */
+    public function updateOrderStatus(Request $request, SalesInvoice $invoice)
+    {
+        $validated = $request->validate([
+            'order_status' => 'required|in:pending,confirmed,processing,ready,completed,cancelled',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $invoice->recordStatusChange($validated['order_status'], $validated['notes'] ?? null);
+
+        return back()->with('success', 'Status pesanan ' . ($invoice->order_code ?? $invoice->invoice_number) . ' berhasil diperbarui menjadi ' . $invoice->order_status_label . '.');
     }
 }
