@@ -267,8 +267,16 @@ class LandingController extends Controller
 
             // Find or create customer
             $phoneClean = preg_replace('/[^0-9]/', '', $validated['customer_phone']);
+            $phoneNoPrefix = $phoneClean;
+            if (str_starts_with($phoneNoPrefix, '62')) {
+                $phoneNoPrefix = substr($phoneNoPrefix, 2);
+            } elseif (str_starts_with($phoneNoPrefix, '0')) {
+                $phoneNoPrefix = substr($phoneNoPrefix, 1);
+            }
+
             $customer = Customer::where('phone', $validated['customer_phone'])
                 ->orWhere('phone', $phoneClean)
+                ->orWhere('phone', 'like', "%{$phoneNoPrefix}")
                 ->first();
 
             if (!$customer && !empty($validated['customer_email'])) {

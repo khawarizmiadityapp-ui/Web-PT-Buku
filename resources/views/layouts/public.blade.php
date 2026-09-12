@@ -126,6 +126,236 @@
         .animate-pulse-subtle {
             animation: pulse-subtle 2.5s infinite ease-in-out;
         }
+
+        /* Custom Country Selector & International Phone Input (Matches ERP System) */
+        .custom-country-select-hidden {
+            display: none !important;
+        }
+
+        .custom-country-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.55rem 0.75rem;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-right: none;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            white-space: nowrap;
+            border-top-left-radius: 0.75rem;
+            border-bottom-left-radius: 0.75rem;
+            height: 38px;
+            box-sizing: border-box;
+        }
+
+        .custom-country-btn:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .custom-country-btn:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .custom-country-btn.open {
+            background-color: #e2e8f0;
+        }
+
+        .custom-country-btn .flag-img {
+            width: 20px;
+            height: 14px;
+            border-radius: 2px;
+            object-fit: cover;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .custom-country-btn .dial-code {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #334155;
+            letter-spacing: -0.01em;
+        }
+
+        .custom-country-btn .chevron-icon {
+            width: 12px;
+            height: 12px;
+            color: #94a3b8;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .custom-country-btn.open .chevron-icon {
+            transform: rotate(180deg);
+            color: #4f46e5;
+        }
+
+        .custom-country-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            z-index: 100;
+            width: 290px;
+            max-width: calc(100vw - 32px);
+            background: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+            padding: 8px;
+            display: none;
+            animation: countryDropdownFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes countryDropdownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .custom-country-dropdown.show {
+            display: block;
+        }
+
+        .country-search-box {
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .country-search-box input {
+            width: 100%;
+            padding: 6px 10px 6px 30px !important;
+            font-size: 11px;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 0.5rem !important;
+            background-color: #f8fafc;
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .country-search-box input:focus {
+            border-color: #6366f1 !important;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+        }
+
+        .country-search-box .search-icon {
+            position: absolute;
+            left: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            width: 13px;
+            height: 13px;
+            pointer-events: none;
+        }
+
+        .country-list-scroll {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 2px;
+            overscroll-behavior: contain;
+        }
+
+        .country-list-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .country-list-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 8px;
+        }
+
+        .country-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            font-size: 11.5px;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .country-item:hover {
+            background-color: #eef2ff;
+            color: #4338ca;
+        }
+
+        .country-item.active {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            font-weight: 700;
+        }
+
+        .country-item-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .country-item-left .flag-img {
+            width: 20px;
+            height: 14px;
+            border-radius: 2px;
+            object-fit: cover;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+            flex-shrink: 0;
+        }
+
+        .country-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .country-item-dial {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 1.5px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            flex-shrink: 0;
+            font-family: monospace;
+        }
+
+        .country-item:hover .country-item-dial,
+        .country-item.active .country-item-dial {
+            background: #c7d2fe;
+            color: #312e81;
+        }
+
+        .country-empty-hint {
+            padding: 12px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .phone-input-joined {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            border-top-right-radius: 0.75rem !important;
+            border-bottom-right-radius: 0.75rem !important;
+            height: 38px;
+            box-sizing: border-box;
+        }
     </style>
 
     @yield('styles')
@@ -229,12 +459,9 @@
             <a href="{{ route('public.orders') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50">
                 Riwayat Pesanan
             </a>
-            <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
-                <a href="{{ route('home') }}#catalog" class="w-full text-center py-2.5 px-4 rounded-xl bg-brand-600 text-white font-bold text-sm shadow">
+            <div class="pt-3 border-t border-slate-100">
+                <a href="{{ route('home') }}#catalog" class="w-full block text-center py-2.5 px-4 rounded-xl bg-brand-600 text-white font-bold text-sm shadow hover:bg-brand-700 transition">
                     Pesan Sekarang
-                </a>
-                <a href="{{ route('login') }}" class="w-full text-center py-2 px-4 rounded-xl border border-slate-200 text-slate-600 font-medium text-xs">
-                    Login Portal Pegawai
                 </a>
             </div>
         </div>
@@ -401,7 +628,24 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor WhatsApp / HP *</label>
-                                    <input type="tel" name="customer_phone" required placeholder="Contoh: 081234567890" class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition">
+                                    <div class="relative flex items-center">
+                                        <select class="country-code-select custom-country-select-hidden">
+                                            <option value="+62" selected>🇮🇩 +62</option>
+                                        </select>
+                                        <input type="tel" 
+                                               id="checkout-phone-input"
+                                               class="phone-number-input phone-input-joined flex-1 px-3.5 py-2 text-xs bg-slate-50 border border-slate-300 focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition font-medium" 
+                                               placeholder="81234567890" 
+                                               required 
+                                               inputmode="numeric" 
+                                               pattern="[0-9]*"
+                                               maxlength="15">
+                                        <input type="hidden" name="customer_phone" id="checkout-customer-phone" value="">
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+                                        <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        <span>Ketik angka saja tanpa awalan 0 (contoh: <strong>81234567890</strong>)</span>
+                                    </p>
                                 </div>
                             </div>
 
@@ -574,7 +818,7 @@
     <!-- Corporate Footer -->
     <footer class="bg-corporate-dark text-slate-400 text-xs border-t border-slate-800 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                 <!-- Company Info -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="flex items-center gap-3">
@@ -631,21 +875,6 @@
                         <li><a href="{{ route('home') }}#how-it-works" class="hover:text-white transition">Proses Pengiriman</a></li>
                         <li><a href="{{ route('home') }}#contact" class="hover:text-white transition">Pusat Bantuan</a></li>
                     </ul>
-                </div>
-
-                <!-- Portal Pegawai & Certifications -->
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Portal Internal</h4>
-                    <p class="text-[11px] text-slate-400 mb-3">Akses operasional khusus karyawan dan staf administrasi:</p>
-                    <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs border border-slate-700 transition">
-                        <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
-                        <span>Login ERP Pegawai</span>
-                    </a>
-                    <div class="mt-4 pt-4 border-t border-slate-800 text-[10px] text-slate-400">
-                        Sistem Terintegrasi ERP PT Buku Nusantara v2.0
-                    </div>
                 </div>
             </div>
 
@@ -830,6 +1059,250 @@
             }
         }
 
+        // Comprehensive International Country List (Matches ERP Admin System)
+        const COUNTRY_LIST = [
+            { code: 'id', name: 'Indonesia', dial: '+62' },
+            { code: 'my', name: 'Malaysia', dial: '+60' },
+            { code: 'sg', name: 'Singapura', dial: '+65' },
+            { code: 'ph', name: 'Filipina', dial: '+63' },
+            { code: 'th', name: 'Thailand', dial: '+66' },
+            { code: 'vn', name: 'Vietnam', dial: '+84' },
+            { code: 'bn', name: 'Brunei', dial: '+673' },
+            { code: 'kh', name: 'Kamboja', dial: '+855' },
+            { code: 'mm', name: 'Myanmar', dial: '+95' },
+            { code: 'la', name: 'Laos', dial: '+856' },
+            { code: 'tl', name: 'Timor Leste', dial: '+670' },
+            { code: 'us', name: 'Amerika Serikat', dial: '+1' },
+            { code: 'ca', name: 'Kanada', dial: '+1' },
+            { code: 'gb', name: 'Inggris (UK)', dial: '+44' },
+            { code: 'au', name: 'Australia', dial: '+61' },
+            { code: 'jp', name: 'Jepang', dial: '+81' },
+            { code: 'kr', name: 'Korea Selatan', dial: '+82' },
+            { code: 'cn', name: 'China', dial: '+86' },
+            { code: 'hk', name: 'Hong Kong', dial: '+852' },
+            { code: 'tw', name: 'Taiwan', dial: '+886' },
+            { code: 'sa', name: 'Arab Saudi', dial: '+966' },
+            { code: 'ae', name: 'Uni Emirat Arab', dial: '+971' },
+            { code: 'qa', name: 'Qatar', dial: '+974' },
+            { code: 'kw', name: 'Kuwait', dial: '+965' },
+            { code: 'tr', name: 'Turki', dial: '+90' },
+            { code: 'de', name: 'Jerman', dial: '+49' },
+            { code: 'nl', name: 'Belanda', dial: '+31' },
+            { code: 'fr', name: 'Prancis', dial: '+33' },
+            { code: 'it', name: 'Italia', dial: '+39' },
+            { code: 'es', name: 'Spanyol', dial: '+34' },
+            { code: 'ch', name: 'Swiss', dial: '+41' },
+            { code: 'ru', name: 'Rusia', dial: '+7' },
+            { code: 'in', name: 'India', dial: '+91' },
+            { code: 'br', name: 'Brasil', dial: '+55' },
+            { code: 'za', name: 'Afrika Selatan', dial: '+27' },
+            { code: 'nz', name: 'Selandia Baru', dial: '+64' }
+        ];
+
+        function initPhoneInputs() {
+            document.querySelectorAll('.phone-number-input').forEach(function(input) {
+                if (input.dataset.phoneInitialized) return;
+                input.dataset.phoneInitialized = 'true';
+
+                const container = input.closest('.relative') || input.parentElement;
+                let countrySelect = container ? container.querySelector('.country-code-select') : null;
+
+                if (countrySelect) {
+                    countrySelect.classList.add('custom-country-select-hidden');
+                }
+
+                let currentCountry = COUNTRY_LIST[0]; // Default Indonesia (+62)
+
+                const form = input.closest('form') || document.getElementById('checkout-form');
+                const hidden = form ? form.querySelector('input[name="customer_phone"]') : document.getElementById('checkout-customer-phone');
+
+                const getDialCode = () => currentCountry.dial;
+                const getDialDigits = () => getDialCode().replace(/\D/g, '');
+
+                const cleanDigits = (val) => {
+                    if (!val) return '';
+                    let d = val.toString().replace(/\D/g, '');
+                    const dial = getDialDigits();
+                    if (dial && d.startsWith(dial)) {
+                        d = d.substring(dial.length);
+                    }
+                    if (d.startsWith('0')) {
+                        d = d.substring(1);
+                    }
+                    return d;
+                };
+
+                input.setAttribute('inputmode', 'numeric');
+                input.setAttribute('pattern', '[0-9]*');
+
+                // Build Custom Trigger Button
+                let customBtn = container.querySelector('.custom-country-btn');
+                if (!customBtn) {
+                    customBtn = document.createElement('button');
+                    customBtn.type = 'button';
+                    customBtn.className = 'custom-country-btn';
+                    customBtn.setAttribute('aria-haspopup', 'true');
+                    customBtn.innerHTML = `
+                        <img src="https://flagcdn.com/w40/${currentCountry.code}.png" class="flag-img" alt="${currentCountry.code.toUpperCase()}">
+                        <span class="dial-code">${currentCountry.dial}</span>
+                        <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+                        </svg>
+                    `;
+                    input.parentNode.insertBefore(customBtn, input);
+                }
+
+                // Build Custom Dropdown Popover
+                let customDropdown = container.querySelector('.custom-country-dropdown');
+                if (!customDropdown) {
+                    customDropdown = document.createElement('div');
+                    customDropdown.className = 'custom-country-dropdown';
+
+                    // Search box
+                    const searchBox = document.createElement('div');
+                    searchBox.className = 'country-search-box';
+                    searchBox.innerHTML = `
+                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <input type="text" placeholder="Cari negara atau kode (+60, MY)..." class="country-search-input" autocomplete="off">
+                    `;
+                    customDropdown.appendChild(searchBox);
+
+                    // Scrollable list
+                    const listScroll = document.createElement('div');
+                    listScroll.className = 'country-list-scroll';
+
+                    COUNTRY_LIST.forEach(country => {
+                        const item = document.createElement('div');
+                        item.className = 'country-item' + (country.code === currentCountry.code ? ' active' : '');
+                        item.dataset.code = country.code;
+                        item.dataset.dial = country.dial;
+                        item.dataset.name = country.name.toLowerCase();
+                        item.innerHTML = `
+                            <div class="country-item-left">
+                                <img src="https://flagcdn.com/w40/${country.code}.png" class="flag-img" alt="${country.code.toUpperCase()}">
+                                <span class="country-item-name">${country.name}</span>
+                            </div>
+                            <span class="country-item-dial">${country.dial}</span>
+                        `;
+
+                        item.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            currentCountry = country;
+
+                            customBtn.querySelector('.flag-img').src = `https://flagcdn.com/w40/${country.code}.png`;
+                            customBtn.querySelector('.flag-img').alt = country.code.toUpperCase();
+                            customBtn.querySelector('.dial-code').textContent = country.dial;
+
+                            listScroll.querySelectorAll('.country-item').forEach(el => el.classList.remove('active'));
+                            item.classList.add('active');
+
+                            if (countrySelect) {
+                                countrySelect.value = country.dial;
+                            }
+
+                            syncHidden();
+                            customDropdown.classList.remove('show');
+                            customBtn.classList.remove('open');
+                            input.focus();
+                        });
+
+                        listScroll.appendChild(item);
+                    });
+
+                    customDropdown.appendChild(listScroll);
+
+                    const emptyHint = document.createElement('div');
+                    emptyHint.className = 'country-empty-hint';
+                    emptyHint.textContent = 'Negara tidak ditemukan';
+                    emptyHint.style.display = 'none';
+                    customDropdown.appendChild(emptyHint);
+
+                    const searchInput = searchBox.querySelector('.country-search-input');
+                    searchInput.addEventListener('input', function() {
+                        const q = this.value.trim().toLowerCase();
+                        let matches = 0;
+                        listScroll.querySelectorAll('.country-item').forEach(item => {
+                            const name = item.dataset.name;
+                            const dial = item.dataset.dial;
+                            const code = item.dataset.code;
+                            if (!q || name.includes(q) || dial.includes(q) || code.includes(q)) {
+                                item.style.display = 'flex';
+                                matches++;
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                        emptyHint.style.display = matches === 0 ? 'block' : 'none';
+                    });
+
+                    container.appendChild(customDropdown);
+
+                    // Toggle Dropdown Button Click
+                    customBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const isOpen = customDropdown.classList.toggle('show');
+                        customBtn.classList.toggle('open', isOpen);
+
+                        if (isOpen) {
+                            searchInput.value = '';
+                            searchInput.dispatchEvent(new Event('input'));
+                            setTimeout(() => searchInput.focus(), 50);
+                        }
+                    });
+
+                    // Close when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!e.target.closest('.custom-country-btn') && !e.target.closest('.custom-country-dropdown')) {
+                            customDropdown.classList.remove('show');
+                            customBtn.classList.remove('open');
+                        }
+                    });
+                }
+
+                // Block non-numeric keystrokes (prevents typing letters)
+                input.addEventListener('keydown', function(e) {
+                    if (
+                        ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End', 'Enter'].includes(e.key) ||
+                        (e.ctrlKey || e.metaKey)
+                    ) {
+                        return;
+                    }
+                    if (!/^\d$/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Sync with hidden phone input
+                const syncHidden = () => {
+                    if (hidden) {
+                        hidden.value = input.value ? getDialCode() + input.value : '';
+                    }
+                };
+
+                input.addEventListener('input', function() {
+                    let val = cleanDigits(this.value);
+                    if (this.value !== val) {
+                        this.value = val;
+                    }
+                    syncHidden();
+                });
+
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text');
+                    const clean = cleanDigits(text);
+                    const start = this.selectionStart || 0;
+                    const end = this.selectionEnd || 0;
+                    const current = this.value || '';
+                    const next = current.substring(0, start) + clean + current.substring(end);
+                    this.value = cleanDigits(next);
+                    syncHidden();
+                });
+
+                syncHidden();
+            });
+        }
+
         // Checkout Modal Flow
         function openCheckoutModal() {
             const cart = getCart();
@@ -843,6 +1316,7 @@
             const modal = document.getElementById('checkout-modal');
             if (modal) {
                 modal.classList.remove('hidden');
+                setTimeout(initPhoneInputs, 50);
             }
         }
 
@@ -903,9 +1377,17 @@
             } else if (step === 3) {
                 // Validate step 2 inputs before moving to 3
                 const form = document.getElementById('checkout-form');
+                const phoneInput = document.getElementById('checkout-phone-input');
                 if (!form.customer_name.value || !form.customer_phone.value || !form.shipping_address.value || !form.city.value) {
                     showToast('warning', 'Harap lengkapi semua kolom wajib (Nama, No HP, Kota, Alamat)!');
                     goToCheckoutStep(2);
+                    return;
+                }
+
+                if (phoneInput && phoneInput.value.length < 8) {
+                    showToast('warning', 'Nomor WhatsApp / HP minimal 8 digit angka!');
+                    goToCheckoutStep(2);
+                    phoneInput.focus();
                     return;
                 }
 
@@ -1102,6 +1584,7 @@
         // DOM Loaded Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
             updateCartBadge();
+            initPhoneInputs();
 
             // Cart trigger listeners
             const openBtn = document.getElementById('cart-open-btn');
