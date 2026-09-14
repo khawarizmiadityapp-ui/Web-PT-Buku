@@ -11,6 +11,11 @@
             <p class="text-muted mb-0">Invoice: {{ $transaction->invoice_number }}</p>
         </div>
         <div>
+            @if($transaction->order_code)
+            <a href="{{ route('cashier.orders') }}" class="btn btn-outline-primary me-2">
+                <x-icon name="inbox" class="w-4 h-4 me-1" /> Pesanan Masuk
+            </a>
+            @endif
             <a href="{{ route('cashier.history') }}" class="btn btn-outline-secondary me-2">
                 <x-icon name="arrow-left" class="w-4 h-4 me-1" /> Back
             </a>
@@ -189,12 +194,57 @@
                             <div class="display-1 text-danger mb-2">
                                 <x-icon name="times-circle" class="w-4 h-4" />
                             </div>
-                            <h4 class="text-danger">UNPAID</h4>
-                            <p class="text-muted mb-0">Payment pending</p>
+                            <h4 class="text-danger">UNPAID (Belum Lunas)</h4>
+                            <p class="text-muted mb-3 small">Menunggu verifikasi pembayaran dari pelanggan</p>
+
+                            <form action="{{ route('cashier.confirmPayment', $transaction->id) }}" method="POST" onsubmit="return confirm('Konfirmasi bahwa pembayaran untuk faktur {{ $transaction->invoice_number }} telah diterima dan lunas?')">
+                                @csrf
+                                <div class="mb-2 text-start">
+                                    <label class="form-label small text-muted mb-1">Metode Pembayaran</label>
+                                    <select name="payment_method" class="form-select form-select-sm">
+                                        <option value="{{ $transaction->payment_method ?? 'QRIS' }}" selected>{{ $transaction->payment_method ?? 'QRIS' }} (Sesuai Pesanan)</option>
+                                        <option value="Cash">Cash (Tunai)</option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="QRIS">QRIS</option>
+                                        <option value="Card">Debit / Kartu</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label small text-muted mb-1">Catatan Verifikasi (Opsional)</label>
+                                    <input type="text" name="notes" class="form-control form-control-sm" placeholder="Contoh: Bukti transfer terverifikasi">
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                    <x-icon name="check-circle" class="w-4 h-4" />
+                                    <span>Konfirmasi Pembayaran Lunas</span>
+                                </button>
+                            </form>
                         @endif
                     </div>
                 </div>
             </div>
+
+            <!-- Order Fulfillment Status -->
+            @if($transaction->order_status || $transaction->order_code)
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="card-title mb-2 text-muted small text-uppercase">Status Pemrosesan Pesanan</h6>
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded-2 bg-light border">
+                        <span class="small text-muted">Tahap Pesanan:</span>
+                        <span class="badge bg-primary px-2.5 py-1.5">{{ $transaction->order_status_label }}</span>
+                    </div>
+                    @if($transaction->order_code)
+                    <div class="mt-2 small text-muted">
+                        Kode Order Online: <strong class="text-dark">{{ $transaction->order_code }}</strong>
+                    </div>
+                    @endif
+                    @if($transaction->shipping_address)
+                    <div class="mt-1 small text-muted">
+                        Alamat Kirim: <span class="text-dark">{{ $transaction->shipping_address }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
 
             @if($transaction->notes)
             <div class="card border-0 shadow-sm mt-3">

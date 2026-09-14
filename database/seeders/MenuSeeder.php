@@ -120,8 +120,9 @@ class MenuSeeder extends Seeder
         $cashierRole = 'Cashier';
         Menu::updateOrCreate(['name' => 'Dashboard', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'cashier.index', 'icon' => 'fas fa-th-large', 'order' => 1]);
         Menu::updateOrCreate(['name' => 'Transaction', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'cashier.transaction.enhanced', 'icon' => 'fas fa-cash-register', 'order' => 2]);
-        Menu::updateOrCreate(['name' => 'Returns', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'returns.index', 'icon' => 'fas fa-undo', 'order' => 3]);
+        Menu::updateOrCreate(['name' => 'Pesanan Masuk', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'cashier.orders', 'icon' => 'fas fa-inbox', 'order' => 3]);
         Menu::updateOrCreate(['name' => 'History', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'cashier.history', 'icon' => 'fas fa-history', 'order' => 4]);
-        Menu::updateOrCreate(['name' => 'Customer', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'customers.index', 'icon' => 'fas fa-users', 'order' => 5]);
+        Menu::updateOrCreate(['name' => 'Returns', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'returns.index', 'icon' => 'fas fa-undo', 'order' => 5]);
+        Menu::updateOrCreate(['name' => 'Customer', 'role' => $cashierRole, 'location' => 'sidebar'], ['route' => 'customers.index', 'icon' => 'fas fa-users', 'order' => 6]);
     }
 }

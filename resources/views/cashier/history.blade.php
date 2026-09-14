@@ -110,6 +110,9 @@
                                 <a href="{{ route('cashier.show', $transaction->id) }}" class="text-primary text-decoration-none fw-semibold">
                                     {{ $transaction->invoice_number }}
                                 </a>
+                                @if($transaction->order_code)
+                                    <div class="small text-muted" style="font-size: 11px;">{{ $transaction->order_code }}</div>
+                                @endif
                             </td>
                             <td>
                                 <div class="small">{{ $transaction->created_at->format('d M, H:i') }}</div>
@@ -132,15 +135,26 @@
                                 <strong>Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</strong>
                             </td>
                             <td>
-                                @if($transaction->payment_status == 'Paid')
-                                    <span class="badge badge-success">Success</span>
-                                @elseif($transaction->payment_status == 'Partial')
-                                    <span class="badge badge-warning">Partial</span>
-                                @elseif($transaction->payment_status == 'Refunded')
-                                    <span class="badge badge-refunded">Refunded</span>
-                                @else
-                                    <span class="badge badge-danger">Unpaid</span>
-                                @endif
+                                <div class="d-flex flex-column gap-1">
+                                    <div>
+                                        @if($transaction->payment_status == 'Paid')
+                                            <span class="badge badge-success">Paid</span>
+                                        @elseif($transaction->payment_status == 'Partial')
+                                            <span class="badge badge-warning">Partial</span>
+                                        @elseif($transaction->payment_status == 'Refunded')
+                                            <span class="badge badge-refunded">Refunded</span>
+                                        @else
+                                            <span class="badge badge-danger">Unpaid</span>
+                                        @endif
+                                    </div>
+                                    @if($transaction->order_status)
+                                        <div>
+                                            <span class="badge bg-light text-secondary border" style="font-size: 10px; font-weight: 500;">
+                                                📦 {{ $transaction->order_status_label }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
                             </td>
                             <td>
                                 <span class="text-muted small">{{ $transaction->payment_method ?? 'Cash' }}</span>
@@ -159,6 +173,16 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
                                         </a>
+                                        @if($transaction->payment_status !== 'Paid')
+                                        <form action="{{ route('cashier.confirmPayment', $transaction->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Konfirmasi pembayaran lunas untuk faktur {{ $transaction->invoice_number }}?')">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-light text-success p-2" title="Konfirmasi Lunas">
+                                                <svg class="bi" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                        @endif
                                         <a href="{{ route('cashier.print', $transaction->id) }}" title="Cetak Struk" class="btn btn-sm btn-light text-secondary p-2" target="_blank">
                                             <svg class="bi" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>

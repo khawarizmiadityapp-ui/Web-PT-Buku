@@ -221,6 +221,77 @@ class CashierController extends Controller
     }
 
     /**
+     * Show incoming online orders
+     */
+    public function incomingOrders(Request $request)
+    {
+        $query = SalesInvoice::with('customer', 'items.product')
+            ->whereNotNull('order_code');
+
+        // Filter tab
+        $tab = $request->get('tab', 'all');
+        if ($tab === 'unpaid') {
+            $query->where('payment_status', '!=', 'Paid');
+        } elseif ($tab === 'confirmed') {
+            $query->where('order_status', 'confirmed');
+        } elseif ($tab === 'processing') {
+            $query->whereIn('order_status', ['processing', 'ready']);
+        } elseif ($tab === 'completed') {
+            $query->where('order_status', 'completed');
+        }
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('order_code', 'like', "%{$search}%")
+                  ->orWhere('invoice_number', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('customer_phone', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter payment method
+        if ($request->filled('payment_method')) {
+            $query->where('payment_method', $request->payment_method);
+        }
+
+        // Filter payment status
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status', $request->payment_status);
+        }
+
+        // Filter order status
+        if ($request->filled('order_status')) {
+            $query->where('order_status', $request->order_status);
+        }
+
+        // Date range
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        // Metrics for summary
+        $stats = [
+            'total_incoming' => SalesInvoice::whereNotNull('order_code')->count(),
+            'unpaid_count' => SalesInvoice::whereNotNull('order_code')->where('payment_status', '!=', 'Paid')->count(),
+            'confirmed_count' => SalesInvoice::whereNotNull('order_code')->where('order_status', 'confirmed')->count(),
+            'processing_count' => SalesInvoice::whereNotNull('order_code')->whereIn('order_status', ['processing', 'ready'])->count(),
+            'today_orders' => SalesInvoice::whereNotNull('order_code')->whereDate('created_at', now()->toDateString())->count(),
+            'unpaid_total' => SalesInvoice::whereNotNull('order_code')->where('payment_status', '!=', 'Paid')->sum('total_amount'),
+        ];
+
+        return view('cashier.orders', compact('orders', 'stats', 'tab'));
+    }
+
+    /**
      * Show transaction history
      */
     public function history(Request $request)
@@ -286,6 +357,47 @@ class CashierController extends Controller
         $transaction = SalesInvoice::with('customer', 'items.product')->findOrFail($id);
         
         return view('cashier.show', compact('transaction'));
+    }
+
+    /**
+     * Confirm payment for an invoice (Mark as Paid and update order status to confirmed)
+     */
+    public function confirmPayment(Request $request, $id)
+    {
+        $invoice = SalesInvoice::findOrFail($id);
+
+        $validated = $request->validate([
+            'notes' => 'nullable|string|max:500',
+            'payment_method' => 'nullable|string|max:50',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $invoice->payment_status = 'Paid';
+            $invoice->paid_amount = $invoice->total_amount;
+            if (!empty($validated['payment_method'])) {
+                $invoice->payment_method = $validated['payment_method'];
+            }
+            if (!empty($validated['notes'])) {
+                $invoice->notes = ($invoice->notes ? $invoice->notes . ' | ' : '') . $validated['notes'];
+            }
+
+            // If order status is pending or empty, transition to confirmed
+            if ($invoice->order_status === 'pending' || empty($invoice->order_status)) {
+                $cashierName = auth()->user()->name ?? 'Kasir';
+                $invoice->recordStatusChange('confirmed', "Pembayaran sebesar Rp " . number_format($invoice->total_amount, 0, ',', '.') . " telah diverifikasi & dilunasi oleh Kasir ({$cashierName}). Pesanan siap diproses ke Gudang.");
+            } else {
+                $invoice->save();
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Pembayaran faktur ' . ($invoice->order_code ?? $invoice->invoice_number) . ' berhasil dikonfirmasi Lunas (Paid). Status pesanan telah diperbarui.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Cashier confirmPayment error: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengonfirmasi pembayaran: ' . $e->getMessage());
+        }
     }
 
     /**

@@ -51,9 +51,21 @@
                         }
                     @endphp
                     <!-- Single Menu -->
-                    <a href="{{ $menu->route ? route($menu->route) : '#' }}" class="{{ $isCurrentRoute ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
-                        <x-icon :name="$menu->icon ?? 'circle'" class="w-5 h-5" />
-                        <span class="font-medium">{{ $menu->name }}</span>
+                    <a href="{{ $menu->route ? route($menu->route) : '#' }}" class="{{ $isCurrentRoute ? 'sidebar-active' : '' }} flex items-center justify-between space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <x-icon :name="$menu->icon ?? 'circle'" class="w-5 h-5" />
+                            <span class="font-medium">{{ $menu->name }}</span>
+                        </div>
+                        @if($menu->route === 'cashier.orders')
+                            @php
+                                $pendingOnlineCount = \App\Models\SalesInvoice::whereNotNull('order_code')->where('payment_status', '!=', 'Paid')->count();
+                            @endphp
+                            @if($pendingOnlineCount > 0)
+                                <span class="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-xs">
+                                    {{ $pendingOnlineCount }}
+                                </span>
+                            @endif
+                        @endif
                     </a>
                 @endif
             @endforeach
@@ -71,14 +83,29 @@
                     <span class="font-medium">Transaction</span>
                 </a>
 
-                <a href="{{ route('returns.index') }}" class="{{ request()->routeIs('returns.*') ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
-                    <x-icon name="undo" class="w-5 h-5" />
-                    <span class="font-medium">Returns</span>
+                <a href="{{ route('cashier.orders') }}" class="{{ request()->routeIs('cashier.orders') ? 'sidebar-active' : '' }} flex items-center justify-between space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <x-icon name="inbox" class="w-5 h-5" />
+                        <span class="font-medium">Pesanan Masuk</span>
+                    </div>
+                    @php
+                        $pendingOnlineCount = \App\Models\SalesInvoice::whereNotNull('order_code')->where('payment_status', '!=', 'Paid')->count();
+                    @endphp
+                    @if($pendingOnlineCount > 0)
+                        <span class="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-xs">
+                            {{ $pendingOnlineCount }}
+                        </span>
+                    @endif
                 </a>
 
                 <a href="{{ route('cashier.history') }}" class="{{ request()->routeIs('cashier.history') ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
                     <x-icon name="history" class="w-5 h-5" />
                     <span class="font-medium">History</span>
+                </a>
+
+                <a href="{{ route('returns.index') }}" class="{{ request()->routeIs('returns.*') ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
+                    <x-icon name="undo" class="w-5 h-5" />
+                    <span class="font-medium">Returns</span>
                 </a>
 
                 <a href="{{ route('customers.index') }}" class="{{ request()->routeIs('customers.*') ? 'sidebar-active' : '' }} flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">

@@ -76,14 +76,8 @@
 
     <!-- Hero Foreground Content -->
     <div class="relative z-10 max-w-5xl mx-auto text-center pointer-events-none">
-        <!-- Eyebrow Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-brand-300 text-xs font-semibold tracking-wide mb-6 shadow-inner pointer-events-auto">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>PT Distribusi Buku dan Alat Tulis NUSANTARA</span>
-        </div>
-
         <!-- Headline -->
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6 pt-2">
             Solusi Buku & Alat Tulis<br>
             <span class="bg-gradient-to-r from-brand-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">
                 untuk Kebutuhan Anda
@@ -98,10 +92,10 @@
         <!-- CTAs -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto mb-14">
             <a href="#catalog" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-brand-600/30 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
-                <span>Pesan Sekarang</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
+                <span>Pesan Sekarang</span>
             </a>
 
             <a href="{{ route('public.tracking') }}" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 backdrop-blur-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">

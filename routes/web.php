@@ -73,8 +73,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/cashier/transaction', [CashierController::class, 'transaction'])->name('cashier.transaction');
         Route::get('/cashier/transaction-enhanced', [CashierController::class, 'transactionEnhanced'])->name('cashier.transaction.enhanced');
         Route::post('/cashier/process', [CashierController::class, 'processTransaction'])->name('cashier.process');
+        Route::get('/cashier/orders', [CashierController::class, 'incomingOrders'])->name('cashier.orders');
         Route::get('/cashier/history', [CashierController::class, 'history'])->name('cashier.history');
         Route::get('/cashier/{id}', [CashierController::class, 'show'])->name('cashier.show');
+        Route::post('/cashier/{id}/confirm-payment', [CashierController::class, 'confirmPayment'])->name('cashier.confirmPayment');
         Route::get('/cashier/print/{id}', [CashierController::class, 'printReceipt'])->name('cashier.print');
         Route::get('/cashier/search/product', [CashierController::class, 'searchProduct'])->name('cashier.search.product');
     });
